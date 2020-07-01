@@ -87,7 +87,7 @@ docker-compose down; docker-compose up -d --force-build
   * *persist-config.json*: configures the mongodb uri to the container service name. 
 * **data:** Data files (e,g, mongodb database, uploaded files)
 * **docker-compose.yaml:** Compose file that describes all services	
-* **init-letsencrypt.sh:** Initialize certbot. . See [Certbot Init](certbot-init) Section below.
+* **init-letsencrypt.sh:** Initialize certbot. See [Certbot Init](certbot-init) Section.
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**ARENA-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](update-sybmodules)).
 
 ## Compose Quick Reference
