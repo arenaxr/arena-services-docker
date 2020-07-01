@@ -19,7 +19,7 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules): 
 
 ```bash
-git clone git@github.com:conix-center/arena-services-docker.git --recurse-submodules```
+git clone git@github.com:conix-center/arena-services-docker.git --recurse-submodules
 ```
 
 3. Configure and init certbot.  Check that [init-letsencrypt.sh](init-letsencrypt.sh) has the right information about the domain(s) and execute it. See [Certbot Init](certbot-init) Section below.
