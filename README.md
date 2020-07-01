@@ -66,7 +66,7 @@ The web server files under ```/assets``` (e.g. ```https://mr.andrew.cmu.edu/asse
 To update the repositories added as submodules (**ARENA-core** and **arena-persist**), run:
 
 ```bash
-update-submodules.sh
+./update-submodules.sh
 ```
 
 After updating the submodules, to have the updates refected live, you will need to restart the services:
