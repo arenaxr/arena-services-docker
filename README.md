@@ -11,7 +11,7 @@ The [docker-compose.yaml](docker-compose.yaml) creates several containers with A
 
 We clone **ARENA-core** and **arena-persist** to create containers with these services. The **ARENA-core** files are copied into the web server container (called ```arena-web```) at build time (thus, updates to ARENA-core require a rebuild of the container). 
 
-Nginx and mosquitto are configured with TLS/SSL using certificates created by certbot (running as a service in a container), which will periodically attempt to renew the certificates. On the first execution, certbot must be initialized See [Certbot Init](certbot-init) Section below.
+Nginx and mosquitto are configured with TLS/SSL using certificates created by certbot (running as a service in a container), which will periodically attempt to renew the certificates. On the first execution, certbot must be initialized. See [Certbot Init](certbot-init) Section below.
 
 ## Quick Setup
 
