@@ -1,0 +1,65 @@
+version: '3'
+
+services:
+
+  arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
+    build: "ARENA-core" # builds container from ARENA-core Dockerfile
+    volumes:
+      - ./data/arena-assets:/usr/share/nginx/html/assets # mount droppy files folder on the webserver root /assets
+      - ./conf/arena-events.js:/usr/share/nginx/html/events.js # patch arena events.js to change default mqtt server !! TODO: separate ARENA defaults to a different file !!!
+      - ./conf/nginx-conf.d:/etc/nginx/conf.d # mount local nginx.conf.d folder to /etc/nginx/conf.d in the container
+      - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
+      - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
+    ports:
+      - "80:80" # map port 80 on the host to port 80 on the container
+      - "443:443"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'" # reload certificates every 6h
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt # mount certbot files; certificate files will be here
+      - ./data/certbot/www:/var/www/certbot # mount certbot files;
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'" # check for certificate updates every 12h
+
+  mongodb:
+    image: mongo # pull from https://hub.docker.com/_/mongo/
+    volumes: 
+      - ./data/mongodb:/data/db # permanent storage on the host
+    #ports: # uncomment to expose mongodb port to outside; safer to not expose
+    #  - 27017:27017/tcp 
+    restart: unless-stopped
+
+  arena-persist:
+    build: "arena-persist" # builds container from arena-persist Dockerfile
+    user: "node"
+    ports:
+      - 8884:8884/tcp
+    volumes:
+      - ./conf/persist-config.json:/home/node/app/config.json # mount updated config.json that uses the container name
+    command: "npm start"    
+    restart: unless-stopped
+
+  mqtt: 
+    image: eclipse-mosquitto # pulls from https://hub.docker.com/_/eclipse-mosquitto 
+    volumes:
+      - ./conf/mosquitto.conf:/mosquitto/config/mosquitto.conf # mount local confif file to /mosquitto/config/mosquitto.conf in the container
+      - ./data/certbot/conf:/etc/letsencrypt # mount certs volume (see conf/mosquitto.conf to see how the files are used)
+    ports:
+      - 1883:1883/tcp # mqtt; map port for listner configured in /conf/mosquitto.conf
+      - 9001:9001/tcp # mqtt-ws
+      - 8083:8083/tcp # mqtt-wss
+      - 8883:8883/tcp # mqtt-tls
+    restart: unless-stopped
+
+  droppy:
+    image: silverwind/droppy
+    #ports: # no need to expose droppy port; nxginx serves it under /upload/
+    #  - '3000:80' # map port 3000 in host to port 8989 in the container
+    #  - '3001:443' # map port 3000 in host to port 8989 in the container
+    volumes:
+      - ./conf/droppy:/config
+      - ./data/arena-assets:/files # mount files 
+    restart: unless-stopped

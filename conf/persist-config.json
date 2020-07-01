@@ -1,0 +1,10 @@
+{
+    "mqtt": {
+        "uri": "tcp://mqtt",
+        "topic_realm": "realm",
+        "statusTopic": "service_status"
+    },
+    "mongodb": {
+        "uri": "mongodb://mongodb/arena_persist"
+    }
+}
