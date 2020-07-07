@@ -15,7 +15,7 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 
 ## Quick Setup
 
-1. We need [docker](https://docs.docker.com/get-docker/), [docker-compose](https://docs.docker.com/compose/install/) and [openssl](https://www.openssl.org/) installed.
+1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) installed.
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules): 
 
 ```bash
