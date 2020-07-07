@@ -29,7 +29,7 @@ git clone git@github.com:conix-center/arena-services-docker.git --recurse-submod
 ```
 
 * If you see no errors; you are good to go. See [Certbot Init](certbot-init) Section below.
-* **If you edit the domains, also update ```conf/nginx-conf.d/arena-web.conf``` and ```conf/mosquitto.conf``` to reflect these changes (the location of the certificates might need to be updated)**.
+* **If you edit the domains, also update ```conf/nginx-conf.d/arena-web.conf``` and ```conf/mosquitto.conf``` to reflect these changes (the server name and location of the certificates might need to be updated)**.
 
 4. Create a user and password to protect the web server's ```/upload/``` area by opening the ```/upload``` URL (e.g. ```https://mr.andrew.cmu.edu/upload```)  in your browser. See details in the [Asset Upload](asset-upload) Section below.
 
@@ -40,7 +40,7 @@ Before starting services, we need to configure certbot with the right domains an
 1. Modify configuration:
 
 - Add domains and email addresses to **init-letsencrypt.sh**  (e.g. ```mr.andrew.cmu.edu```) 
-- Update ```conf/nginx-conf.d/arena-web.conf``` and ```conf/mosquitto.conf``` to reflect these changes (the server name and location of the certificates might need to be updated) ***.
+- Update ```conf/nginx-conf.d/arena-web.conf``` and ```conf/mosquitto.conf``` to reflect these changes (the server name and location of the certificates might need to be updated).
 2. Run the init script:
 
 ```bash
