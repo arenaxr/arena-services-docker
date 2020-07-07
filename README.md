@@ -22,23 +22,15 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 git clone git@github.com:conix-center/arena-services-docker.git --recurse-submodules
 ```
 
-3. Configure and init certbot.  Check that [init-letsencrypt.sh](init-letsencrypt.sh) has the right information about the domain(s) and run it: 
+3. Configure and init certbot. Check that [init-letsencrypt.sh](init-letsencrypt.sh) has the right information about the domain(s) and run it: 
 
 ```bash
  ./init-letsencrypt.sh
 ```
 
-* See [Certbot Init](certbot-init) Section below.
+* If you see no errors; you are good to go. See [Certbot Init](certbot-init) Section below.
 
 4. Create a user and password to protect the web server's ```/upload/``` area by opening the ```/upload``` URL (e.g. ```https://mr.andrew.cmu.edu/upload```)  in your browser. See details in the [Asset Upload](asset-upload) Section below.
-
-5. Start services:
-
-```bash
- docker-compose up
-```
-
-* After checking the output, start as daemon (see [Compose Quick Reference](compose-quick-reference)).
 
 ## Certbot Init
 

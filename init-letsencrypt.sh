@@ -8,7 +8,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(mr.andrew.cmu.edu)
+domains=(spatial.andrew.cmu.edu)
 rsa_key_size=4096
 data_path="./data/certbot"
 email="wiselab.develop@gmail.com" # Adding a valid address is strongly recommended
@@ -41,7 +41,7 @@ docker-compose run --rm --entrypoint "\
 echo
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d arena-web
+docker-compose up --force-recreate -d  
 echo
 
 echo "### Deleting dummy certificate for $domains ..."
@@ -92,5 +92,5 @@ then
 fi
 echo
 
-echo "### Reloading nginx ..."
-docker-compose exec arena-web nginx -s reload
+echo "### Restarting services ..."
+#docker-compose restart

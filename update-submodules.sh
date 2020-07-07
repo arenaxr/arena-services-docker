@@ -1,6 +1,16 @@
 #!/bin/bash
 
-git submodule update --init --recursive 
+cd ARENA-core
+git checkout master
+git pull
+
+cd ..
+
+cd arena-persist
+git checkout master
+git pull
+
+cd ..
 
 # commit the change in arena-services-docker repo 
 git add ARENA-core 
