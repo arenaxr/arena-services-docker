@@ -63,3 +63,15 @@ services:
       - ./conf/droppy:/config
       - ./data/arena-assets:/files # mount files 
     restart: unless-stopped
+
+  arts: 
+    build: "arts/arts-main" 
+    volumes:
+      - ./conf/arts-settings.py:/usr/src/app/arts_api/settings.py
+    environment:
+      - HOSTNAME="mr.andrew.cmu.edu"
+      - SECRET_KEY='##change-this-key-at-deploy-time##'
+    ports:
+      - "8000:8000"
+    command: "python manage.py runserver 0.0.0.0:8000"
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
