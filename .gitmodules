@@ -4,3 +4,6 @@
 [submodule "arena-persist"]
 	path = arena-persist
 	url = git@github.com:conix-center/arena-persist.git
+[submodule "arts"]
+	path = arts
+	url = git@github.com:conix-center/arts.git
