@@ -23,7 +23,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', os.environ['HOSTNAME']]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'arts']
 
 # Application definition
 
@@ -178,10 +178,10 @@ JWT_AUTH = {
 
 # pubsub settings
 PUBSUB = {
-	'mqtt_server': { 'host': 'mqtt', 'port': 1883, 'ws_port': 9001 },
-	'subscribe_topics': [
-		{ 'name': 'reg', 'topic': 'realm/proc/reg', 'on_message': 'on_reg_message'},
-		{ 'name': 'ctl', 'topic': 'realm/proc/control', 'on_message': 'on_ctl_message' },
-		{ 'name': 'dbg', 'topic': 'realm/proc/debug', 'on_message': 'on_dbg_message' }
-	]
+    'mqtt_server': { 'host': 'spatial.andrew.cmu.edu', 'port': 1883, 'ws_port': 9001, 'wss_port': 8083 },
+    'subscribe_topics': [
+        { 'name': 'reg', 'topic': 'realm/proc/reg', 'on_message': 'on_reg_message'},
+        { 'name': 'ctl', 'topic': 'realm/proc/control', 'on_message': 'on_ctl_message' },
+        { 'name': 'dbg', 'topic': 'realm/proc/debug', 'on_message': 'on_dbg_message' }
+    ]
 }

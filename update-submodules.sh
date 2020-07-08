@@ -20,5 +20,7 @@ cd ..
 
 # commit the change in arena-services-docker repo 
 git add ARENA-core 
+git add arena-persist
+git add arts
 git commit -m "Update submodules to latest commit in master"
 git push
