@@ -67,7 +67,7 @@ window.globals = {
     startCoords: getUrlParam('location', '0,1.6,0').replace(/,/g, ' '),
     themeParam: getUrlParam('theme', 'starry'),
     weatherParam: getUrlParam('weather', 'none'),
-    mqttParamZ: getUrlParam('mqttServer', location.hostname), // PATCH: changed default mqqtserver to equal webserver hostname
+    mqttParamZ: getUrlParam('mqttServer', location.hostname+(location.port ? ':'+location.port : '')), // PATCH: changed default mqqtserver to equal webserver hostname
     fixedCamera: getUrlParam('fixedCamera', ''),
     ATLASurl: getUrlParam('ATLASurl', '//atlas.conix.io'),
     vioTopic: "/topic/vio/",
