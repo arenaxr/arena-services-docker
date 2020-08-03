@@ -34,14 +34,14 @@ echo "### Creating dummy certificate for $domains ..."
 path="/etc/letsencrypt/live/$domains"
 mkdir -p "$data_path/conf/live/$domains"
 docker-compose run --rm --entrypoint "\
-  openssl req -x509 -nodes -newkey rsa:1024 -days 1\
+  openssl req -x509 -nodes -newkey rsa:2048 -days 1\
     -keyout '$path/privkey.pem' \
     -out '$path/fullchain.pem' \
     -subj '/CN=localhost'" certbot
 echo
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d  
+docker-compose up --force-recreate -d
 echo
 
 echo "### Deleting dummy certificate for $domains ..."
@@ -79,13 +79,13 @@ docker-compose run --rm --entrypoint "\
 
 if [ $? -ne 0 ]
 then
-  echo  
+  echo
   echo "### !!! Could not create certificate. Certbot failed (see errors above) !!! ###"
   echo "### !!! Creating dummy certificate for $domains !!! ###"
   path="/etc/letsencrypt/live/$domains"
   mkdir -p "$data_path/conf/live/$domains"
   docker-compose run --rm --entrypoint "\
-    openssl req -x509 -nodes -newkey rsa:1024 -days 1\
+    openssl req -x509 -nodes -newkey rsa:2048\
       -keyout '$path/privkey.pem' \
       -out '$path/fullchain.pem' \
       -subj '/CN=localhost'" certbot
