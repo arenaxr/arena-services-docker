@@ -133,7 +133,7 @@ docker-compose down; docker-compose up -d --force-build
 
 **Start the services in "detached" (daemon) mode (-d)**
 
-- ```docker-compose up -d``` (add ```--force-build  ``` to build containers after updating submodules)
+- ```docker-compose up -d``` (add ```--force-recreate  ``` to recreate containers after updating submodules)
 
 **Start just a particular service**
 
