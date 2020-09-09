@@ -1,6 +1,6 @@
 #!/bin/bash
 
-submodules=( "ARENA-core" "arena-persist" "arts" "arena-runtime-simulated")
+submodules=( "ARENA-core" "ARENA-auth" "arena-persist" "arts" "arena-runtime-simulated")
 
 for s in "${submodules[@]}"
 do
