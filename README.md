@@ -6,94 +6,70 @@ The [docker-compose.yaml](docker-compose.yaml) creates several containers with A
 * Database (MongoDB)
 * Pubsub (mosquitto)
 * Persistence service
+* Auth service
 * ARTS
-* File Upload (Droppy)
+* File Store
 * Certbot
 
-We clone **ARENA-core** and **arena-persist** to create containers with these services. The **ARENA-core** files are copied into the web server container (called ```arena-web```) at build time (thus, updates to ARENA-core require a rebuild of the container).
+Source repositories (such as ARENA-core, ARENA-auth, arena-persist) are submodules of this repo. Containers are created from these files. ARENA-core is served by the nginx container.
 
-Nginx and mosquitto are configured with TLS/SSL using certificates created by certbot (running as a service in a container), which will periodically attempt to renew the certificates. On the first execution, certbot must be initialized. See [Certbot Init](certbot-init) Section below.
+Nginx and mosquitto are configured with TLS/SSL using certificates created by certbot (running as a service in a container), which will periodically attempt to renew the certificates. On the first execution, the configuration files must be initialized by running **init.sh**.
 
 ## Quick Setup
 
-1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) installed.
+1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) installed. The [init](init.sh) script needs a bash shell and [openssl](https://www.openssl.org/).
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules):
 
 ```bash
 git clone git@github.com:conix-center/arena-services-docker.git --recurse-submodules
 ```
 
-3. Modify configuration:
-
-- Add domains and email addresses to **init-letsencrypt.sh**  (e.g. ```mr.andrew.cmu.edu```)
-- Update ```conf/nginx-conf.d/arena-web.conf``` and ```conf/mosquitto.conf``` to reflect these changes (the server name and location of the certificates might need to be updated).
-- Check hostname in the **arts** service config (```docker-compose.yaml```)
-
-4. Run letsencrypt init script:
+If ```recurse-submodules``` fails, or you forget to add it in the first clone, you can enter the repo folder and:
 
 ```bash
- ./init-letsencrypt.sh
+git submodule update --init
 ```
 
-* If you see no errors; you are good to go. For details, see [Certbot Init](certbot-init) Section below.
+3. Modify configuration:
 
-4. Create a user and password to protect the web server's ```/upload/``` area by opening the ```/upload``` URL (e.g. ```https://mr.andrew.cmu.edu/upload```)  in your browser. See details in the [Asset Upload](asset-upload) Section below.
+- Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup.
 
-## Certbot Init
+```bash
+HOSTNAME="arena.andrew.cmu.edu"
+EMAIL="wiselab.develop@gmail.com"
+```
 
-Before starting services, we need to configure certbot with the right domains and then execute **init-letsencrypt.sh** (needs [openssl](https://www.openssl.org/)):
+4. Run init script:
+
+```bash
+ ./init.sh
+```
+
+* If you see no errors; you are good to go. For details, see [Init Config](init-config) Section below.
+
+4. Open the file store management interface and change the default admin password (**user**:admin;**pass**:admin). To open the file store, point to ```/storemng``` (e.g. ```https://arena.andrew.cmu.edu/storemng```) in your browser. See details in the [File Store](file-store) Section below.
+
+## Init Config
+
+Before starting services, we need to create the configuration files for the services with the right domains and initialize letsencrypt.
 
 1. Modify configuration:
 
-- Add domains and email addresses to **init-letsencrypt.sh**  (e.g. ```mr.andrew.cmu.edu```)
-- Update ```conf/nginx-conf.d/arena-web.conf``` and ```conf/mosquitto.conf``` to reflect these changes (the server name and location of the certificates might need to be updated).
-- Check hostname in the **arts** service config (```docker-compose.yaml```)
+- Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup.
 
 2. Run the init script:
 
 ```bash
- ./init-letsencrypt.sh
+ ./init.sh
 ```
 
-## Services Config
+The init script will generate configuration files (from the templates in **conf/templates**) for the services using the hostname and email configured in **environment.env**, and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
 
-The host machine/domains are referenced in several config files. These need to be updated to reflect the machine/domain.
+## File Store
 
-- ```conf/nginx-conf.d/arena-web.conf```:
+The web server files under ```/store``` (e.g. ```https://arena.andrew.cmu.edu/store```) can be uploaded via a web interface available at ```/storemng```  (e.g. ```https://arena.andrew.cmu.edu/storemng```) . The store admin password should be change on the first execution and other users can then be added.
 
-```
-...
-ssl_certificate     /etc/letsencrypt/live/[change-to-reflect-hostname]/fullchain.pem;
-ssl_certificate_key /etc/letsencrypt/live/[change-to-reflect-hostname]/privkey.pem;
-...
-```
-
-- ```conf/mosquitto.conf```:
-```
-...
-listener 8083
-protocol websockets
-certfile /etc/letsencrypt/live/[change-to-reflect-hostname]/fullchain.pem
-keyfile /etc/letsencrypt/live/[change-to-reflect-hostname]/privkey.pem
-
-listener 8883
-protocol mqtt
-certfile /etc/letsencrypt/live/[change-to-reflect-hostname]/fullchain.pem
-keyfile /etc/letsencrypt/live/[change-to-reflect-hostname]/privkey.pem
-...
-```
-- ```conf/arts-settings.py```:
-```
-...
-    'mqtt_server': { 'host': '[change-to-reflect-hostname]', 'port': 1883, 'ws_port': 9001, 'wss_port': 8083 },
-...
-```
-
-## Assets Upload
-
-The web server files under ```/assets``` (e.g. ```https://mr.andrew.cmu.edu/assets```) can be uploaded via a web interface available at ```/upload```  (e.g. ```https://mr.andrew.cmu.edu/upload```) . The uploads area is protected by a user and password that needs to be setup the first time we access it.
-
-**Be sure to open the ```/upload``` URL on your browser and setup the user and password.**
+**Be sure to open the ```/storemng``` URL on your browser and change the *admin* user default password (*admin*).**
 
 ## Update Submodules
 
@@ -103,7 +79,7 @@ To update the repositories added as submodules (**ARENA-core** and **arena-persi
 ./update-submodules.sh
 ```
 
-After updating the submodules, to have the updates refected live, you will need to restart the services:
+After updating the submodules, to have the updates of built containers (persist, arts, python-rt) reflected live, you will need to restart the services and rebuild the containers:
 
 ```bash
 docker-compose down; docker-compose up -d --force-build
@@ -115,14 +91,19 @@ docker-compose down; docker-compose up -d --force-build
 
 * **ARENA-core:**	Contents of the ARENA-core repository (submodule).
 * **arena-persist:**	Contents of the arena-persist repository (submodule).
-* **conf:** Configuration files for the services (e.g. certificates, mosquito, nginx, persistence). Some important files described below.
-  * *mosquitto.conf*: configures listners on ports 8833 (mqtt), 9001 (mqtt-ws), 8083 (mqtt-wss) and 8883 (mqtt-tls); certificate files under ```/data/certbot/conf``` are mapped to ```/etc/letsencrypt``` in the container.
-  * *nginx-conf.d/arena-web.conf*: configures the web server to serve a proxy to port 9001 under ```/mqtt/```, forwards requests to```/persist/``` to the **arena-persist** service and requests tp ```/upload``` to the **droppy** service;  certificate files under ```/data/certbot/conf``` are mapped to ```/etc/letsencrypt``` in the container.
+* **arena-runtime-simulated:**	Contents of the arena-runtime-simulated repository (submodule).
+* **ARENA-auth:**	Contents of the ARENA-auth repository (submodule).
+* **arts:**	Contents of the arts repository (submodule).
+* **conf:** Configuration files for the services (e.g. certificates, mosquito, nginx, persistence). Most files are generated at init time, using the files in the **templates** folder. Some important files described below
+  * *templates/mosquitto.tmpl*: used to generate **mosquitto.conf**. Configures listners on ports 8833 (mqtt), 9001 (mqtt-ws), 8083 (mqtt-wss) and 8883 (mqtt-tls); certificate files under ```/data/certbot/conf``` are mapped to ```/etc/letsencrypt``` in the container.
+  * *templates/arena-web.tmpl*: used to generate **nginx-conf/arena-web.conf**. Configures the web server to serve a proxy to port 9001 under ```/mqtt/```, forwards requests to```/persist/``` to the **arena-persist** service and requests tp ```/storemng``` to the **store** service;  certificate files under ```/data/certbot/conf``` are mapped to ```/etc/letsencrypt``` in the container.
   * *persist-config.json*: configures the mongodb uri to the container service name.
-  * *arts-settings.py*: configuration of arts.
-* **data:** Data files (e,g, certificates generated by certbot, mongodb database, uploaded files).
+  * *templates/arts-settings.tmpl*: used to generate **arts-settings.py**, the configuration of arts.
+  * *templates/auth-config.tmpl*: used to generate **auth-config.json**, the configuration of the auth service.
+* **data:** Data files (e,g, certificates generated by certbot, mongodb database, ...).
 * **docker-compose.yaml:** Compose file that describes all services.
-* **init-letsencrypt.sh:** Initialize certbot. See [Certbot Init](certbot-init) Section.
+* **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
+* **init.sh:** Initialize config files. See [Init Config](init-config) Section.
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**ARENA-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](update-sybmodules)).
 
 ## Compose Quick Reference
