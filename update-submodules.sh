@@ -1,26 +1,17 @@
 #!/bin/bash
 
-cd ARENA-core
-git checkout master
-git pull
+submodules=( "ARENA-core" "arena-persist" "arts" "arena-runtime-simulated")
 
-cd ..
+for s in "${submodules[@]}"
+do
+	echo $s
+  cd $s
+  git checkout master
+  git pull
+  cd ..
+  git add $s
+done
 
-cd arena-persist
-git checkout master
-git pull
-
-cd ..
-
-cd arts
-git checkout master
-git pull
-
-cd ..
-
-# commit the change in arena-services-docker repo 
-git add ARENA-core 
-git add arena-persist
-git add arts
-git commit -m "Update submodules to latest commit in master"
+# commit the change in arena-services-docker repo
+git commit -m "Updated submodules to latest commit"
 git push

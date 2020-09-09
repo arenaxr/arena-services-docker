@@ -3,15 +3,17 @@
 # https://medium.com/@pentacent/nginx-and-lets-encrypt-with-docker-in-less-than-5-minutes-b4b8a60d3a71
 # https://github.com/wmnnd/nginx-certbot
 
+source environment.env
+
 if ! [ -x "$(command -v docker-compose)" ]; then
   echo 'Error: docker-compose is not installed.' >&2
   exit 1
 fi
 
-domains=(spatial.andrew.cmu.edu)
+domains=($HOSTNAME)
 rsa_key_size=4096
 data_path="./data/certbot"
-email="wiselab.develop@gmail.com" # Adding a valid address is strongly recommended
+email=$EMAIL # Adding a valid address is strongly recommended
 staging=0 # Set to 1 if you're testing your setup to avoid hitting request limits
 
 if [ -d "$data_path" ]; then
@@ -30,7 +32,7 @@ if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/
   echo
 fi
 
-echo "### Creating dummy certificate for $domains ..."
+echo "### Creating dummy certificate for $domains ... (needed to startup services)"
 path="/etc/letsencrypt/live/$domains"
 mkdir -p "$data_path/conf/live/$domains"
 docker-compose run --rm --entrypoint "\
@@ -50,7 +52,6 @@ docker-compose run --rm --entrypoint "\
   rm -Rf /etc/letsencrypt/archive/$domains && \
   rm -Rf /etc/letsencrypt/renewal/$domains.conf" certbot
 echo
-
 
 echo "### Requesting Let's Encrypt certificate for $domains ..."
 #Join $domains to -d args
@@ -92,5 +93,5 @@ then
 fi
 echo
 
-echo "### Restarting services ..."
-#docker-compose restart
+echo "### Stopping services ..."
+docker-compose down

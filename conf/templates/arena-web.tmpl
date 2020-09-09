@@ -1,0 +1,84 @@
+# we produce the final config file by passing this file through envsubst (will substiute env variables like ${HOSTNAME}, ...)
+# IMPORTANT: to avoid substitution on nginx variables, use '${ESC}' on the their '$' signs
+server {
+    server_name         ${HOSTNAME};
+    server_tokens off;
+    client_max_body_size 1000M;
+
+    listen              443 ssl;
+    ssl_certificate     /etc/letsencrypt/live/${HOSTNAME}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${HOSTNAME}/privkey.pem;
+    include             /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam         /etc/letsencrypt/ssl-dhparams.pem;
+
+    location /mqtt/ {
+        proxy_pass http://mqtt:9001;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade ${ESC}http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_read_timeout 86400;
+    }
+
+    location /persist/ {
+        add_header 'Access-Control-Allow-Origin' "${ESC}http_origin";
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
+        proxy_pass http://arena-persist:8884;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade ${ESC}http_upgrade;
+        proxy_set_header Connection "Upgrade";
+    }
+
+    location /arts-api/ {
+        proxy_pass http://arts:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade ${ESC}http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_read_timeout 86400;
+    }
+
+    location ^~ /pythonrt/ {
+        proxy_pass http://python-rt:5000/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade ${ESC}http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_read_timeout 86400;
+    }
+
+    location ^~ /storemng/ {
+        proxy_pass http://store:8080/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade ${ESC}http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_read_timeout 86400;
+    }
+
+    location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm index.nginx-debian.html;
+        add_header Access-Control-Allow-Origin "*";
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
+
+        location ~ \.(css|html|js)$ {
+            expires -1;
+            add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
+        }
+    }
+}
+
+server {
+    listen 80;
+    server_name  ${HOSTNAME};
+    server_tokens off;
+
+    location /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+    }
+
+    location / {
+        return 301 https://${ESC}host${ESC}request_uri;
+    }
+}
