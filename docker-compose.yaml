@@ -10,7 +10,7 @@ services:
       - ./conf/nginx-conf.d:/etc/nginx/conf.d # mount local nginx.conf.d folder to /etc/nginx/conf.d in the container
       - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
-      - arts-static-content:/usr/share/nginx/html/arts # serve arts static files      
+      - arts-static-content:/usr/share/nginx/html/arts # serve arts static files
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
@@ -35,8 +35,6 @@ services:
     image: mongo # pull from https://hub.docker.com/_/mongo/
     volumes:
       - ./data/mongodb:/data/db # permanent storage on the host
-    #ports: # uncomment to expose mongodb port to outside; safer to not expose
-    #  - 27017:27017/tcp
     restart: unless-stopped
 
   arena-persist:
@@ -80,8 +78,6 @@ services:
       - ./conf/arena-store-config.json:/arena-store/.config.json
       - ./ARENA-core/store:/srv-files
       - ./data/arena-store:/arena-store/data
-    #ports:
-    #  - "8081:8080"
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   arts:
@@ -113,6 +109,32 @@ services:
       - /var/run:/var/run:rw
       - /sys:/sys:ro
       - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./conf/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus/:/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   restarter:
     image: docker
