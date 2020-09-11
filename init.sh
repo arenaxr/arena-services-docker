@@ -4,6 +4,14 @@ echo -e "\n### Contents of environment.env:\n"
 cat environment.env
 echo
 
+data_folders=( "data/arena-store" "data/certbot"  "data/grafana"  "data/mongodb"  "data/prometheus")
+
+for d in "${data_folders[@]}"
+do
+  echo $d
+  [ ! -d "$d" ] && mkdir $d
+done
+
 echo -e "Please edit environment.env (shown above) to reflect your setup (hostname, email, ...). \n(this will generate certificates, nginx config and a new SECRET_KEY in environment.env)."
 read -p "Continue? " -r
 echo
