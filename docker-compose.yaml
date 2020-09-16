@@ -20,7 +20,6 @@ services:
       - arena-persist
       - store
       - arts
-      - python-rt
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   certbot:
@@ -92,7 +91,7 @@ services:
     command: "python manage.py runserver 0.0.0.0:8000"
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
-  python-rt:
+  py-runtime:
     build: "arena-runtime-simulated"
     volumes:
       - ./conf/arena-runtime-simulated.conf:/usr/src/app/config.json
@@ -111,12 +110,13 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
-  node-exporter:
+  arena-host-stats:
     image: prom/node-exporter:latest
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   prometheus:
     image: prom/prometheus:latest
+    user: "root"
     ports:
       - 9090:9090
     volumes:
@@ -130,16 +130,17 @@ services:
 
   grafana:
     image: grafana/grafana:latest
+    user: "root"
     ports:
       - 3000:3000
     volumes:
-      - ./data/grafana:/var/lib/grafana
+      - ./data/grafana:/var/lib/grafana:rw
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   restarter:
     image: docker
     volumes: ["/var/run/docker.sock:/var/run/docker.sock"]
-    command: ["/bin/sh", "-c", "while true; do sleep 24h; docker restart arts; docker restart python-rt; done"]
+    command: ["/bin/sh", "-c", "while true; do sleep 12h; docker restart py-runtime; done"]
     restart: unless-stopped
 
 volumes:
