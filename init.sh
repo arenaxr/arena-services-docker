@@ -39,6 +39,9 @@ envsubst < conf/templates/arena-web.tmpl > conf/nginx-conf.d/arena-web.conf
 echo -e "\n### Creating conf/mosquitto.conf from template (conf/templates/mosquitto.tmpl)\n"
 envsubst < conf/templates/mosquitto.tmpl > conf/mosquitto.conf
 
+echo -e "\n### Creating conf/mosquitto-br-conn.conf from template (conf/templates/mosquitto-br-conn.tmpl)\n"
+envsubst < conf/templates/mosquitto-br-conn.tmpl > conf/mosquitto-br-conn.conf
+
 echo -e "\n### Creating conf/arena-runtime-simulated.conf from template (conf/templates/arena-runtime-simulated.tmpl)\n"
 envsubst < conf/templates/arena-runtime-simulated.tmpl > conf/arena-runtime-simulated.conf
 

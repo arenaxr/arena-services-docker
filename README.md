@@ -17,7 +17,8 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 
 ## Quick Setup
 
-1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) installed. The [init](init.sh) script needs a bash shell and [openssl](https://www.openssl.org/).
+1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) installed. The [init](init.sh) script needs a bash shell. The ```backup``` service in docker-compose.yaml also assumes the existence of host user ```1001``` (which can be edited to another user).
+
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules):
 
 ```bash
@@ -45,7 +46,13 @@ EMAIL="wiselab.develop@gmail.com"
  ./init.sh
 ```
 
-* If you see no errors; you are good to go. For details, see [Init Config](init-config) Section below.
+5. If you see no errors; you are good to start all services:
+
+```bash
+ docker-compose up -d
+```
+
+For more details, see [Init Config](init-config) Section below.
 
 4. Open the file store management interface and change the default admin password (**user**:admin;**pass**:admin). To open the file store, point to ```/storemng``` (e.g. ```https://arena.andrew.cmu.edu/storemng```) in your browser. See details in the [File Store](file-store) Section below.
 
@@ -64,6 +71,12 @@ Before starting services, we need to create the configuration files for the serv
 ```
 
 The init script will generate configuration files (from the templates in **conf/templates**) for the services using the hostname and email configured in **environment.env**, and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
+
+3. Start all services:
+
+```bash
+ docker-compose up -d
+```
 
 ## File Store
 
