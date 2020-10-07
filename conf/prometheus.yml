@@ -18,3 +18,4 @@ scrape_configs:
       - targets:
         - arena-host-stats:9100
         - mr.andrew.cmu.edu:9100
+        - jitsi1.andrew.cmu.edu:9100

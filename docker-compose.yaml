@@ -6,7 +6,7 @@ services:
     image: "nginx" # creates container from nginx
     volumes:
       - ./ARENA-core:/usr/share/nginx/html # mount root html from ./ARENA-core
-      - ../dev/ARENA-core:/usr/share/nginx/html/dev # mount dev folder
+      - ../dev:/usr/share/nginx/html/dev # mount dev folder
       - ./conf/arena-defaults.js:/usr/share/nginx/html/defaults.js # set arena client code defaults
       - ./conf/nginx-conf.d:/etc/nginx/conf.d # mount local nginx.conf.d folder to /etc/nginx/conf.d in the container
       - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
@@ -107,6 +107,8 @@ services:
     #ports:
     #  - "8000:8000"
     command: "python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      - mqtt
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   py-runtime:
