@@ -5,7 +5,7 @@ cat environment.env
 echo
 
 data_folders=( "data/arena-store" "data/certbot"  "data/grafana"  "data/mongodb"  "data/prometheus")
-
+mkdir data
 for d in "${data_folders[@]}"
 do
   echo $d
