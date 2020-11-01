@@ -108,7 +108,7 @@ docker-compose down; docker-compose up -d --force-build
 * **ARENA-auth:**	Contents of the ARENA-auth repository (submodule).
 * **arts:**	Contents of the arts repository (submodule).
 * **conf:** Configuration files for the services (e.g. certificates, mosquito, nginx, persistence). Most files are generated at init time, using the files in the **templates** folder. Some important files described below
-  * *templates/mosquitto.tmpl*: used to generate **mosquitto.conf**. Configures listners on ports 8833 (mqtt), 9001 (mqtt-ws), 8083 (mqtt-wss) and 8883 (mqtt-tls); certificate files under ```/data/certbot/conf``` are mapped to ```/etc/letsencrypt``` in the container.
+  * *templates/mosquitto.tmpl*: used to generate **mosquitto.conf**. Configures listeners on ports 8833 (mqtt), 9001 (mqtt-ws), 8083 (mqtt-wss) and 8883 (mqtt-tls); certificate files under ```/data/certbot/conf``` are mapped to ```/etc/letsencrypt``` in the container.
   * *templates/arena-web.tmpl*: used to generate **nginx-conf/arena-web.conf**. Configures the web server to serve a proxy to port 9001 under ```/mqtt/```, forwards requests to```/persist/``` to the **arena-persist** service and requests tp ```/storemng``` to the **store** service;  certificate files under ```/data/certbot/conf``` are mapped to ```/etc/letsencrypt``` in the container.
   * *persist-config.json*: configures the mongodb uri to the container service name.
   * *templates/arts-settings.tmpl*: used to generate **arts-settings.py**, the configuration of arts.
