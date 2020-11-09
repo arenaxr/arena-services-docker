@@ -13,7 +13,6 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - arts-static-content:/usr/share/nginx/html/arts # serve arts static files
-      - mosq-static-content:/usr/share/nginx/html/network # serve mosquitto static files
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
@@ -68,7 +67,6 @@ services:
     volumes:
       - ./conf/mosquitto.conf:/mosquitto/config/mosquitto.conf # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/certbot/conf:/etc/letsencrypt # mount certs volume (see conf/mosquitto.conf to see how the files are used)
-      - mosq-static-content:/mosquitto/www/html
     ports:
       - 1883:1883/tcp # mqtt; map port for listener configured in /conf/mosquitto.conf
       - 9001:9001/tcp # mqtt-ws
@@ -175,4 +173,3 @@ services:
 
 volumes:
   arts-static-content:
-  mosq-static-content:
