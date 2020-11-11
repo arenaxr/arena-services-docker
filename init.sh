@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if ! [ -x "$(command -v docker-compose)" ]; then
+  echo 'Error: docker-compose is not installed.' >&2
+  exit 1
+fi
+
 echo -e "\n### Contents of environment.env:\n"
 cat environment.env
 echo
@@ -50,6 +55,9 @@ envsubst < conf/templates/arts-settings.tmpl > conf/arts-settings.py
 
 echo -e "\n### Creating conf/arena-defaults.js from template (conf/templates/arena-defaults.tmpl)\n"
 envsubst < conf/templates/arena-defaults.tmpl > conf/arena-defaults.js
+
+echo -e "\n### Creating conf/auth-config.json from template (conf/templates/auth-config.tmpl)\n"
+envsubst < conf/templates/auth-config.tmpl > conf/auth-config.json
 
 echo -e "\n### Init letsencrypt\n"
 ./init-letsencrypt.sh
