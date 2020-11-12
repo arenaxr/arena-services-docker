@@ -29,7 +29,7 @@ fi
 echo "### Creating dummy certificate for $domains ... (needed to startup services)"
 path="/etc/letsencrypt/live/$domains"
 mkdir -p "$data_path/conf/live/$domains"
-docker-compose -f docker-compose.prod.yaml run --rm --entrypoint "\
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml run --rm --entrypoint "\
   openssl req -x509 -nodes -newkey rsa:2048 -days 1\
     -keyout '$path/privkey.pem' \
     -out '$path/fullchain.pem' \
@@ -41,7 +41,7 @@ docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up --force-rec
 echo
 
 echo "### Deleting dummy certificate for $domains ..."
-docker-compose -f docker-compose.prod.yaml run --rm --entrypoint "\
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml run --rm --entrypoint "\
   rm -Rf /etc/letsencrypt/live/$domains && \
   rm -Rf /etc/letsencrypt/archive/$domains && \
   rm -Rf /etc/letsencrypt/renewal/$domains.conf" certbot
@@ -63,7 +63,7 @@ esac
 # Enable staging mode if needed
 if [ $staging != "0" ]; then staging_arg="--staging"; fi
 
-docker-compose -f docker-compose.prod.yaml run --rm --entrypoint "\
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml run --rm --entrypoint "\
   certbot certonly --webroot -w /var/www/certbot \
     $staging_arg \
     $email_arg \
@@ -79,7 +79,7 @@ then
   echo "### !!! Creating dummy certificate for $domains !!! ###"
   path="/etc/letsencrypt/live/$domains"
   mkdir -p "$data_path/conf/live/$domains"
-  docker-compose -f docker-compose.prod.yaml run --rm --entrypoint "\
+  docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml run --rm --entrypoint "\
     openssl req -x509 -nodes -newkey rsa:2048\
       -keyout '$path/privkey.pem' \
       -out '$path/fullchain.pem' \

@@ -16,6 +16,9 @@ services:
       - ../dev:/usr/share/nginx/html/dev # mount dev folder
       - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west # mount mqtt-west folder
       - ./conf/nginx-conf.d:/etc/nginx/conf.d # mount local nginx.conf.d folder to /etc/nginx/conf.d in the container
+    ports:
+      - "80:80" # map port 80 on the host to port 80 on the container
+      - "443:443"      
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'" # reload certificates every 6h
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
@@ -34,9 +37,16 @@ services:
     restart: unless-stopped
 
   arena-auth:
+    ports:
+      - 8888:8888/tcp
     restart: unless-stopped
 
   mqtt:
+    ports:
+      - 1883:1883/tcp # mqtt; map port for listener configured in /conf/mosquitto.conf
+      - 9001:9001/tcp # mqtt-ws
+      - 8083:8083/tcp # mqtt-wss
+      - 8883:8883/tcp # mqtt-tls
     restart: unless-stopped
 
   mqtt-br1:
