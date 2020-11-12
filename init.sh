@@ -9,14 +9,6 @@ echo -e "\n### Contents of environment.env:\n"
 cat environment.env
 echo
 
-data_folders=( "data/arena-store" "data/certbot"  "data/grafana"  "data/mongodb"  "data/prometheus")
-mkdir data
-for d in "${data_folders[@]}"
-do
-  echo $d
-  [ ! -d "$d" ] && mkdir $d
-done
-
 echo -e "Please edit environment.env (shown above) to reflect your setup (hostname, email, ...). \n(this will generate certificates, nginx config and a new SECRET_KEY in environment.env)."
 read -p "Continue? " -r
 echo
@@ -25,6 +17,15 @@ then
     echo "Stopped."
     exit 1
 fi
+
+echo -e "\n### Creating data folders\n"
+data_folders=( "data/arena-store" "data/grafana"  "data/mongodb"  "data/prometheus")
+mkdir data
+for d in "${data_folders[@]}"
+do
+  echo $d
+  [ ! -d "$d" ] && mkdir $d
+done
 
 echo -e "\n### Writing SECRET_KEY to environment.env (old file in environment.bak)\n"
 SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
