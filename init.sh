@@ -9,7 +9,7 @@ echo -e "\n### Contents of environment.env:\n"
 cat environment.env
 echo
 
-echo -e "Please edit environment.env (shown above) to reflect your setup (hostname, email, ...). \n(this will generate certificates, nginx config and a new SECRET_KEY in environment.env)."
+echo -e "Please edit environment.env (shown above) to reflect your setup (hostname, email, ...). \n(this will generate certificates, nginx config, ...)."
 read -p "Continue? " -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -26,13 +26,6 @@ do
   echo $d
   [ ! -d "$d" ] && mkdir $d
 done
-
-echo -e "\n### Writing SECRET_KEY to environment.env (old file in environment.bak)\n"
-SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
-grep -v '^SECRET_KEY' environment.env > environment.tmp
-echo "SECRET_KEY="$SECRET_KEY >> environment.tmp
-cp environment.env environment.bak
-mv environment.tmp environment.env
 
 # load environment
 export $(grep -v '^#' environment.env | xargs)
