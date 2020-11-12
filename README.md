@@ -46,11 +46,14 @@ EMAIL="wiselab.develop@gmail.com"
  ./init.sh
 ```
 
+* Note: you might need to execute ```sudo  docker-compose up -d``` if your user does not have permissions to access the docker service.
+
 5. If you see no errors; you are good to start all services:
 
 ```bash
  docker-compose up -d
 ```
+* Note: you might need to execute ```sudo  docker-compose up -d``` if your user does not have permissions to access the docker service.
 
 For more details, see [Init Config](init-config) Section below.
 
@@ -88,6 +91,8 @@ Before starting services, we need to create the configuration files for the serv
  ./init.sh
 ```
 
+* Note: you might need to execute ```sudo  docker-compose up -d``` if your user does not have permissions to access the docker service.
+
 The init script will generate configuration files (from the templates in **conf/templates**) for the services using the hostname and email configured in **environment.env**, and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
 
 3. Start all services:
@@ -101,6 +106,8 @@ The init script will generate configuration files (from the templates in **conf/
 ```bash
  docker-compose up -d
 ```
+
+* Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service.
 
 ## File Store
 
@@ -128,6 +135,8 @@ docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml down; docker-c
 docker-compose down; docker-compose up -d --force-build
 ```
 
+* Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service.
+
 *  See [Compose Quick Reference](compose-quick-reference) for the description of these commands.
 
 ## Files/Folders Description
@@ -153,7 +162,7 @@ docker-compose down; docker-compose up -d --force-build
 
 ## Compose Quick Reference
 
-**NOTE**: By default, docker-compose will use the configuration in ```docker-compose.override.yaml```. To start the production config, you need to indicate ```-f docker-compose.yaml -f docker-compose.prod.yaml```. See details about using multiple configuration files in the [docker the documentation](https://docs.docker.com/compose/extends/).
+**NOTE**: By default, docker-compose will use the configuration in ```docker-compose.override.yaml```. To start the production config, you need to indicate ```-f docker-compose.yaml -f docker-compose.prod.yaml```. See details about using multiple configuration files in the [docker the documentation](https://docs.docker.com/compose/extends/). *You might need to execute the docker commands with ```sudo``` if your user does not have permissions to access the docker service*.
 
 **Start services and see their output/logs**
 
