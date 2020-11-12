@@ -17,7 +17,7 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 
 ## Quick Setup
 
-1. We need [docker](https://docs.docker.com/get-docker/),  [docker-compose](https://docs.docker.com/compose/install/) and [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html) installed. The [init](init.sh) script needs a bash shell. The ```backup``` service in docker-compose.yaml also assumes the existence of host user ```1001``` (which can be edited to another user). See [Dependencies](dependencies-assumptions) section for details.
+1. We need [docker](https://docs.docker.com/get-docker/),  [docker-compose](https://docs.docker.com/compose/install/) and [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html) installed. The [init](init.sh) script needs a bash shell. See [Dependencies](dependencies-assumptions) section for details.
 
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules):
 
@@ -70,7 +70,7 @@ For more details, see [Init Config](init-config) Section below.
 ###Assumptions:
 
 * **init.sh:** assumes a bash shell
-* **backup user:**	The ```backup``` service tries to change to owner of the backuped files to a user with id ```1001```. This is the user id of the *host machine user* that needs to access the files backed up
+* **backup user:**	The ```backup``` service tries to change to owner of the files backed up to a user indicated in [environment.env](environment.env). This is the ```user:group``` of the *host machine user* that needs to access the files backed up.
 
 ## Init Config
 
@@ -78,9 +78,8 @@ Before starting services, we need to create the configuration files for the serv
 
 1. Modify configuration:
 
-- Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup.
-- **Localhost setup**: If you want a local development setup,  you can setup a hostname that resolves locally (for example ```arena-local```) by add the following line to your hosts file (```/etc/hosts```):
-
+- Edit hostname, email address and backup user (```user:group``` of the *host machine user* that needs to access the files backed up by the backup container configured in [docker-compose.prod.yaml](docker-compose.prod.yaml)) in [environment.env](environment.env). This should reflect your setup.
+- **Localhost setup**: If you want a local development setup, you can setup a hostname that resolves locally (for example ```arena-local```) by add the following line to your hosts file (```/etc/hosts```):
 ```bash
 127.0.0.1       arena-local
 ```
@@ -91,9 +90,9 @@ Before starting services, we need to create the configuration files for the serv
  ./init.sh
 ```
 
-* Note: you might need to execute ```sudo  docker-compose up -d``` if your user does not have permissions to access the docker service.
+The init script will generate configuration files (from the templates in [conf/templates](conf/templates)) for the services using the hostname and email configured in [environment.env](environment.env), and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
 
-The init script will generate configuration files (from the templates in **conf/templates**) for the services using the hostname and email configured in **environment.env**, and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
+* Note: you might need to execute ```sudo  docker-compose up -d``` if your user does not have permissions to access the docker service.
 
 3. Start all services:
 
@@ -111,7 +110,7 @@ The init script will generate configuration files (from the templates in **conf/
 
 ## File Store
 
-The web server files under ```/store``` (e.g. ```https://arena.andrew.cmu.edu/store```) can be uploaded via a web interface available at ```/storemng```  (e.g. ```https://arena.andrew.cmu.edu/storemng```) . The store admin password should be change on the first execution and other users can then be added.
+The web server files under ```/store``` (e.g. ```https://arena.andrew.cmu.edu/store```) can be uploaded via a web interface available at ```/storemng```  (e.g. ```https://arena.andrew.cmu.edu/storemng```) . The store admin password should be changed on the first execution and other users can then be added.
 
 **Be sure to open the ```/storemng``` URL on your browser and change the *admin* user default password (*admin*).**
 
@@ -162,7 +161,7 @@ docker-compose down; docker-compose up -d --force-build
 
 ## Compose Quick Reference
 
-**NOTE**: By default, docker-compose will use the configuration in ```docker-compose.override.yaml```. To start the production config, you need to indicate ```-f docker-compose.yaml -f docker-compose.prod.yaml```. See details about using multiple configuration files in the [docker the documentation](https://docs.docker.com/compose/extends/). *You might need to execute the docker commands with ```sudo``` if your user does not have permissions to access the docker service*.
+**NOTE**: By default, docker-compose will use the configuration in [docker-compose.override.yaml](docker-compose.override.yaml). To start the production config, you need to indicate ```-f docker-compose.yaml -f docker-compose.prod.yaml```. See details about using multiple configuration files in the [docker the documentation](https://docs.docker.com/compose/extends/). *You might need to execute the docker commands with ```sudo``` if your user does not have permissions to access the docker service*.
 
 **Start services and see their output/logs**
 
