@@ -37,6 +37,7 @@ services:
     command: "npm run start"
     depends_on:
       - mongodb
+      - mqtt
 
   arena-auth:
     build: "ARENA-auth" # builds container from arena-persist Dockerfile
