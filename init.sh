@@ -27,6 +27,13 @@ do
   [ ! -d "$d" ] && mkdir $d
 done
 
+echo -e "\n### Writing SECRET_KEY to environment.env (old file in environment.bak)\n"
+SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
+grep -v '^SECRET_KEY' environment.env > environment.tmp
+echo "SECRET_KEY="$SECRET_KEY >> environment.tmp
+cp environment.env environment.bak
+mv environment.tmp environment.env
+
 # load environment
 export $(grep -v '^#' environment.env | xargs)
 export ESC="$"
