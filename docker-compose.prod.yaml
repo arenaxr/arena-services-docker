@@ -1,9 +1,9 @@
 # this is the production docker compose; adds production config to the base docker-compose.yaml
 #
 # run production:
-#    docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+#    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
 #
-# NOTE: if -f is not given, 'docker-compose up' will use docker-compose.override.yml (https://docs.docker.com/compose/extends/)
+# NOTE: if -f is not given, 'docker-compose up' will use docker-compose.override.yaml (https://docs.docker.com/compose/extends/)
 
 version: '3'
 

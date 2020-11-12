@@ -94,7 +94,7 @@ The init script will generate configuration files (from the templates in **conf/
 
 - For production:
 ```bash
-  docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+  docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
 ```
 
 - For development (no monitoring/backups):
@@ -120,7 +120,7 @@ After updating the submodules, to have the updates of built containers (persist,
 
 - For production:
 ```bash
-docker-compose -f docker-compose.yml -f docker-compose.prod.yml down; docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --force-build
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml down; docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --force-build
 ```
 
 - For development:
@@ -153,7 +153,7 @@ docker-compose down; docker-compose up -d --force-build
 
 ## Compose Quick Reference
 
-**NOTE**: By default, docker-compose will use the configuration in ```docker-compose.override.yml```. To start the production config, you need to indicate ```-f docker-compose.yml -f docker-compose.prod.yml```. See details about using multiple configuration files in the [docker the documentation](https://docs.docker.com/compose/extends/).
+**NOTE**: By default, docker-compose will use the configuration in ```docker-compose.override.yaml```. To start the production config, you need to indicate ```-f docker-compose.yaml -f docker-compose.prod.yaml```. See details about using multiple configuration files in the [docker the documentation](https://docs.docker.com/compose/extends/).
 
 **Start services and see their output/logs**
 
@@ -165,7 +165,7 @@ docker-compose down; docker-compose up -d --force-build
 
 **Start just a particular service**
 
-- ```docker-compose start <service name in docker-compose.yml>```
+- ```docker-compose start <service name in docker-compose.yaml>```
 
 **Stop services**
 

@@ -3,7 +3,7 @@
 # run development:
 #    docker-compose up -d
 #
-# NOTE: if -f is not given, 'docker-compose up' will use docker-compose.override.yml (https://docs.docker.com/compose/extends/)
+# NOTE: if -f is not given, 'docker-compose up' will use docker-compose.override.yaml (https://docs.docker.com/compose/extends/)
 
 version: '3'
 
