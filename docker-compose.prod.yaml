@@ -18,7 +18,7 @@ services:
       - ./conf/nginx-conf.d:/etc/nginx/conf.d # mount local nginx.conf.d folder to /etc/nginx/conf.d in the container
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
-      - "443:443"      
+      - "443:443"
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'" # reload certificates every 6h
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
@@ -125,7 +125,9 @@ services:
     volumes:
       - ./data:/data
       - ./mongo-backup:/backup
-    command: ["/bin/sh", "-c", "while true; do cp -avr /data/mongodb /backup; chown -R 1001:1001 /backup; sleep 12h; done"]
+    env_file:
+     - environment.env
+    command: ["/bin/sh", "-c", "while true; do cp -avr /data/mongodb /backup; chown -R $BACKUP_USER /backup; sleep 12h; done"]
     restart: unless-stopped
 
 volumes:
