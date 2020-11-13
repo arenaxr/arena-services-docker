@@ -46,14 +46,20 @@ EMAIL="wiselab.develop@gmail.com"
  ./init.sh
 ```
 
-* Note: you might need to execute ```sudo  docker-compose up -d``` if your user does not have permissions to access the docker service.
+* Note: you might need to execute ```sudo ./init.sh``` if your user does not have permissions to access the docker service.
 
 5. If you see no errors; you are good to start all services:
 
 ```bash
- docker-compose up -d
+ ./start-prod.sh
 ```
-* Note: you might need to execute ```sudo  docker-compose up -d``` if your user does not have permissions to access the docker service.
+
+Or, for development,:
+```bash
+ ./start-dev.sh
+```
+
+* Note: you might need to execute using ```sudo``` if your user does not have permissions to access the docker service.
 
 For more details, see [Init Config](init-config) Section below.
 
@@ -106,7 +112,7 @@ The init script will generate configuration files (from the templates in [conf/t
  docker-compose up -d
 ```
 
-* Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service.
+* Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service. You can also use the ```start-prod.sh``` and ```start-dev.sh``` utility scripts.
 
 ## File Store
 
