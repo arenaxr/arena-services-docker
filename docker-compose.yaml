@@ -48,6 +48,12 @@ services:
     command: "node index.js -c ./config.json"
     restart: unless-stopped
 
+  arena-account:
+    build: "arena-account" # builds container from arena-account Dockerfile
+    env_file:
+      - environment.env
+    command: "python manage.py runserver 0.0.0.0:8000"
+
   mqtt:
     image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
     volumes:

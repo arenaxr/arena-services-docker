@@ -15,7 +15,7 @@ services:
       - ./ARENA-core:/usr/share/nginx/html # mount root html from ./ARENA-core
       - ../dev:/usr/share/nginx/html/dev # mount dev folder
       - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west # mount mqtt-west folder
-      - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web-web.conf # mount local nginx dev config
+      - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web-dev.conf # mount local nginx dev config
       - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - arts-static-content:/usr/share/nginx/html/arts # serve arts static files
@@ -43,33 +43,35 @@ services:
       - ./data/mongodb:/data/db # permanent storage on the host
 
   arena-persist:
-    image: node # pull from https://hub.docker.com/_/node/
+    build: "arena-persist" # builds container from arena-persist Dockerfile
     user: "node"
     ports:
       - 8884:8884/tcp
     volumes:
-      - ./arena-persist:/home/node/app # mount repo files inside container
       - ./conf/persist-config.json:/home/node/app/config.json # mount updated config.json that uses the container name
     working_dir: /home/node/app
-    command:  >
-      bash -c "npm install &&
-      npm run start"
+    command: "npm run start"
     depends_on:
       - mongodb
       - mqtt
 
   arena-auth:
-    image: node # pull from https://hub.docker.com/_/node/
+    build: "ARENA-auth" # builds container from arena-persist Dockerfile
     user: "root"
     ports:
       - 8888:8888/tcp
     volumes:
-      - ./ARENA-auth:/home/node/app # mount repo files inside container
       - ./conf/auth-config.json:/home/node/app/config.json # mount updated config.json that uses indicates right paths and secret
       - ./data/certbot/conf:/etc/letsencrypt
-    command: >
-      bash -c "cd /home/node/app; npm install &&
-      node index.js -c ./config.json"
+    command: "node index.js -c ./config.json"
+
+  arena-account:
+    build: "arena-account" # builds container from arena-account Dockerfile
+    env_file:
+      - environment.env
+    ports:
+      - "8000:8000"
+    command: "python manage.py runserver 0.0.0.0:8000"
 
   mqtt:
     image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
@@ -90,22 +92,16 @@ services:
       - ./data/arena-store:/arena-store/data
 
   arts:
-    image: python:3 # pull from https://hub.docker.com/_/python/
+    build: "arts/arts-main"
     volumes:
-      - ./arts/arts-main:/usr/src/app # mount repo files inside container
       - ./conf/arts-settings.py:/usr/src/app/arts_api/settings.py
       - arts-static-content:/usr/src/app/public # static arts visualization page
     env_file:
       - environment.env
     ports:
-      - "8000:8000"
+      - "8001:8000"
     working_dir: /usr/src/app
-    command: >
-      bash -c "pip install --no-cache-dir -r requirements.txt &&
-      python manage.py makemigrations --noinput &&
-      python manage.py migrate; rm -fr public/* &&
-      python manage.py collectstatic &&
-      python manage.py runserver 0.0.0.0:8000"
+    command: "python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - mqtt
 

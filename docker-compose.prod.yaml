@@ -41,6 +41,11 @@ services:
       - 8888:8888/tcp
     restart: unless-stopped
 
+  arena-account:
+    volumes:
+      - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py
+    restart: unless-stopped
+
   mqtt:
     ports:
       - 1883:1883/tcp # mqtt; map port for listener configured in /conf/mosquitto.conf

@@ -13,3 +13,6 @@
 [submodule "ARENA-auth"]
 	path = ARENA-auth
 	url = git@github.com:conix-center/ARENA-auth.git
+[submodule "arena-account"]
+	path = arena-account
+	url = git@github.com:conix-center/arena-account.git
