@@ -42,6 +42,10 @@ echo -e "\n### Creating conf/nginx-conf.d/arena-web.conf from template (conf/tem
 mkdir conf/nginx-conf.d 2> /dev/null
 envsubst < conf/templates/arena-web.tmpl > conf/nginx-conf.d/arena-web.conf
 
+echo -e "\n### Creating conf/arena-web-dev.conf from template (conf/templates/arena-web-dev.tmpl)\n"
+mkdir conf/nginx-conf.d 2> /dev/null
+envsubst < conf/templates/arena-web-dev.tmpl > conf/arena-web-dev.conf
+
 echo -e "\n### Creating conf/mosquitto.conf from template (conf/templates/mosquitto.tmpl)\n"
 envsubst < conf/templates/mosquitto.tmpl > conf/mosquitto.conf
 
