@@ -50,7 +50,10 @@ services:
     volumes:
       - ./arena-persist:/home/node/app # mount repo files inside container
       - ./conf/persist-config.json:/home/node/app/config.json # mount updated config.json that uses the container name
-    command: "npm install; npm run start"
+    working_dir: /home/node/app
+    command:  >
+      bash -c "npm install &&
+      npm run start"
     depends_on:
       - mongodb
       - mqtt
@@ -64,7 +67,9 @@ services:
       - ./ARENA-auth:/home/node/app # mount repo files inside container
       - ./conf/auth-config.json:/home/node/app/config.json # mount updated config.json that uses indicates right paths and secret
       - ./data/certbot/conf:/etc/letsencrypt
-    command: "npm install; node index.js -c ./config.json"
+    command: >
+      bash -c "cd /home/node/app; npm install &&
+      node index.js -c ./config.json"
 
   mqtt:
     image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
@@ -94,7 +99,13 @@ services:
       - environment.env
     ports:
       - "8000:8000"
-    command: "python manage.py makemigrations --noinput; RUN python manage.py migrate; rm -fr public; python manage.py collectstatic; python manage.py runserver 0.0.0.0:8000"
+    working_dir: /usr/src/app
+    command: >
+      bash -c "pip install --no-cache-dir -r requirements.txt &&
+      python manage.py makemigrations --noinput &&
+      python manage.py migrate; rm -fr public/* &&
+      python manage.py collectstatic &&
+      python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - mqtt
 
