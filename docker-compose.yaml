@@ -23,6 +23,7 @@ services:
       - arena-persist
       - store
       - arts
+      - arena-account
 
   mongodb:
     image: mongo # pull from https://hub.docker.com/_/mongo/
