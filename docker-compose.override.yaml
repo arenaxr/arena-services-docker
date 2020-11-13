@@ -15,7 +15,7 @@ services:
       - ./ARENA-core:/usr/share/nginx/html # mount root html from ./ARENA-core
       - ../dev:/usr/share/nginx/html/dev # mount dev folder
       - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west # mount mqtt-west folder
-      - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web-web.conf # mount local nginx.conf.d folder to /etc/nginx/conf.d in the container
+      - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web-web.conf # mount local nginx dev config
       - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - arts-static-content:/usr/share/nginx/html/arts # serve arts static files
@@ -28,7 +28,6 @@ services:
       - arena-persist
       - store
       - arts
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   certbot:
     image: certbot/certbot
@@ -42,30 +41,30 @@ services:
     image: mongo # pull from https://hub.docker.com/_/mongo/
     volumes:
       - ./data/mongodb:/data/db # permanent storage on the host
-    restart: unless-stopped
 
   arena-persist:
-    build: "arena-persist" # builds container from arena-persist Dockerfile
+    image: node # pull from https://hub.docker.com/_/node/
     user: "node"
-    #ports:
-    #  - 8884:8884/tcp
+    ports:
+      - 8884:8884/tcp
     volumes:
+      - ./arena-persist:/home/node/app # mount repo files inside container
       - ./conf/persist-config.json:/home/node/app/config.json # mount updated config.json that uses the container name
-    command: "npm run start"
+    command: "npm install; npm run start"
     depends_on:
       - mongodb
-    restart: unless-stopped
+      - mqtt
 
   arena-auth:
-    build: "ARENA-auth" # builds container from arena-persist Dockerfile
+    image: node # pull from https://hub.docker.com/_/node/
     user: "root"
     ports:
       - 8888:8888/tcp
     volumes:
+      - ./ARENA-auth:/home/node/app # mount repo files inside container
       - ./conf/auth-config.json:/home/node/app/config.json # mount updated config.json that uses indicates right paths and secret
       - ./data/certbot/conf:/etc/letsencrypt
-    command: "node index.js -c ./config.json"
-    restart: unless-stopped
+    command: "npm install; node index.js -c ./config.json"
 
   mqtt:
     image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
@@ -77,7 +76,6 @@ services:
       - 9001:9001/tcp # mqtt-ws
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
-    restart: unless-stopped
 
   store:
     image: "conixcenter/arena-store"  # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-store
@@ -85,21 +83,20 @@ services:
       - ./conf/arena-store-config.json:/arena-store/.config.json
       - ./ARENA-core/store:/srv-files
       - ./data/arena-store:/arena-store/data
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   arts:
-    build: "arts/arts-main"
+    image: python:3 # pull from https://hub.docker.com/_/python/
     volumes:
+      - ./arts/arts-main:/usr/src/app # mount repo files inside container
       - ./conf/arts-settings.py:/usr/src/app/arts_api/settings.py
       - arts-static-content:/usr/src/app/public # static arts visualization page
     env_file:
       - environment.env
-    #ports:
-    #  - "8000:8000"
-    command: "python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    command: "python manage.py makemigrations --noinput; RUN python manage.py migrate; rm -fr public; python manage.py collectstatic; python manage.py runserver 0.0.0.0:8000"
     depends_on:
       - mqtt
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   py-runtime:
     build: "arena-runtime-simulated"
@@ -107,7 +104,6 @@ services:
       - ./conf/arena-runtime-simulated.conf:/usr/src/app/config.json
     depends_on:
       - arts
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
 volumes:
   arts-static-content:
