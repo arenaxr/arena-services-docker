@@ -6,5 +6,5 @@ conf/arena-runtime-simulated.conf
 conf/auth-config.json
 conf/nginx-conf.d/
 data/
-environment.bak
-environment.env
+environment-secret.bak
+environment-secret.env
