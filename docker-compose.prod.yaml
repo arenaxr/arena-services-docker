@@ -59,6 +59,7 @@ services:
     volumes:
       - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/certbot/conf:/etc/letsencrypt # mount certs volume (see conf/mosquitto.conf to see how the files are used)
+    env_file: environment-secret.env
     restart: unless-stopped
 
   mqtt-br2:
@@ -66,6 +67,7 @@ services:
     volumes:
       - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/certbot/conf:/etc/letsencrypt # mount certs volume (see conf/mosquitto.conf to see how the files are used)
+    env_file: environment-secret.env
     restart: unless-stopped
 
   store:
@@ -130,8 +132,7 @@ services:
     volumes:
       - ./data:/data
       - ./mongo-backup:/backup
-    env_file:
-     - environment.env
+    env_file: environment.env
     command: ["/bin/sh", "-c", "while true; do cp -avr /data/mongodb /backup; chown -R $BACKUP_USER /backup; sleep 12h; done"]
     restart: unless-stopped
 
