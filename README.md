@@ -47,6 +47,7 @@ BACKUP_USER=1001:1001
  ./init.sh
 ```
 
+* On the first execution, answer Yes to all questions of the script.
 * Note: you might need to execute ```sudo ./init.sh``` if your user does not have permissions to access the docker service.
 
 5. If you see no errors; you are good to start all services:
