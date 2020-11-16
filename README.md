@@ -33,11 +33,12 @@ git submodule update --init
 
 3. Modify configuration:
 
-- Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup.
+- Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup (BACKUP_USER should be a ```user:group``` that exists in the host machine, to have access to backup files).
 
 ```bash
-HOSTNAME="arena.andrew.cmu.edu"
-EMAIL="wiselab.develop@gmail.com"
+HOSTNAME="full.domaini.name.of.your.host"
+EMAIL="nouser@nomail.com"
+BACKUP_USER=1001:1001
 ```
 
 4. Run init script:
