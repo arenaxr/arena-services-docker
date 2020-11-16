@@ -67,8 +67,7 @@ services:
 
   arena-account:
     build: "arena-account" # builds container from arena-account Dockerfile
-    env_file:
-      - environment.env
+    env_file: environment-secret.env
     ports:
       - "8000:8000"
     command: "python manage.py runserver 0.0.0.0:8000"
