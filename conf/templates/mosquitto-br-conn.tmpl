@@ -75,3 +75,11 @@ topic # both
 # -----------------------------------------------------------------
 
 persistence false
+
+# -----------------------------------------------------------------
+# mosquitto-jwt-auth plugin
+# -----------------------------------------------------------------
+
+#auth_plugin /usr/lib/libmosquitto_jwt_auth.so
+#auth_opt_jwt_alg HS256
+#auth_opt_jwt_sec_env SECRET_KEY_BASE64
