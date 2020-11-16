@@ -17,7 +17,7 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 
 ## Quick Setup
 
-1. We need [docker](https://docs.docker.com/get-docker/),  [docker-compose](https://docs.docker.com/compose/install/) and [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html) installed. The [init](init.sh) script needs a bash shell. See [Dependencies](dependencies-assumptions) section for details.
+1. We need [docker](https://docs.docker.com/get-docker/),  [docker-compose](https://docs.docker.com/compose/install/), [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html) and [base64](https://linux.die.net/man/1/base64) installed. The [init](init.sh) script needs a bash shell. See [Dependencies](dependencies-assumptions) section for details.
 
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules):
 
@@ -72,6 +72,7 @@ For more details, see [Init Config](init-config) Section below.
 * **docker:**	https://docs.docker.com/get-docker/
 * **docker-compose:**	https://docs.docker.com/compose/install/
 * **envsubst:**	utility part of [gettext](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html). See instructions on how to install in different OSes [here](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext).
+* **base64:**	part of [GNU core utils](https://www.gnu.org/software/coreutils/).
 
 ###Assumptions:
 
