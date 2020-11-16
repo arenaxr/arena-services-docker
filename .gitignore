@@ -1,3 +1,5 @@
+conf/arena-web-dev.conf
+conf/mosquitto-br-conn.conf
 conf/arts-settings.py
 conf/mosquitto.conf
 environment.env
@@ -8,3 +10,5 @@ conf/nginx-conf.d/
 data/
 environment-secret.bak
 environment-secret.env
+environment.bak
+mongo-backup/
