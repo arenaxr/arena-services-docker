@@ -13,8 +13,7 @@ services:
     image: "nginx" # creates container from nginx
     volumes:
       - ./ARENA-core:/usr/share/nginx/html # mount root html from ./ARENA-core
-      - ../dev:/usr/share/nginx/html/dev # mount dev folder
-      - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west # mount mqtt-west folder
+      - ./conf/arena-defaults.js:/usr/share/nginx/html/defaults.js # set arena client code defaults
       - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web-dev.conf # mount local nginx dev config
       - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)

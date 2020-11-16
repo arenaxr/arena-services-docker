@@ -13,6 +13,7 @@ services:
     image: "nginx" # creates container from nginx
     volumes:
       - ./ARENA-core:/usr/share/nginx/html # mount root html from ./ARENA-core
+      - ./conf/arena-defaults.js:/usr/share/nginx/html/defaults.js # set arena client code defaults
       - ../dev:/usr/share/nginx/html/dev # mount dev folder
       - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west # mount mqtt-west folder
       - ./conf/nginx-conf.d:/etc/nginx/conf.d # mount local nginx.conf.d folder to /etc/nginx/conf.d in the container
