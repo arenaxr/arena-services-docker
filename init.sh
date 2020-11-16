@@ -5,12 +5,22 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
+echo -e "\n### Creating SECRET_KEY to environment.env (old file in environment.bak). This will replace secret key (if exists)."
+read -p "Continue? (y/N) " -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
+  SECRET_KEY_BASE64=$(echo $SECRET_KEY | base64)
+  cp environment-secret.env environment-secret.bak
+  echo "SECRET_KEY="$SECRET_KEY > environment-secret.env
+  echo "SECRET_KEY_BASE64="$SECRET_KEY_BASE64 >> environment-secret.env
+fi
+
 echo -e "\n### Contents of environment.env:\n"
 cat environment.env
 echo
 
 echo -e "Please edit environment.env (shown above) to reflect your setup (hostname, email, ...). \n(this will generate certificates, nginx config, ...)."
-read -p "Continue? " -r
+read -p "Continue? (y/N)" -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
@@ -27,15 +37,9 @@ do
   [ ! -d "$d" ] && mkdir $d
 done
 
-echo -e "\n### Writing SECRET_KEY to environment.env (old file in environment.bak)\n"
-SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
-grep -v '^SECRET_KEY' environment.env > environment.tmp
-echo "SECRET_KEY="$SECRET_KEY >> environment.tmp
-cp environment.env environment.bak
-mv environment.tmp environment.env
-
 # load environment
 export $(grep -v '^#' environment.env | xargs)
+export $(grep -v '^#' environment-secret.env | xargs)
 export ESC="$"
 
 echo -e "\n### Creating conf/nginx-conf.d/arena-web.conf from template (conf/templates/arena-web.tmpl)\n"
