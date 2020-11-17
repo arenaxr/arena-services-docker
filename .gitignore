@@ -1,7 +1,7 @@
 conf/*
 environment.env
 data/
-environment-secret.bak
-environment-secret.env
-environment.bak
+secret.bak
+secret.env
+*bak
 mongo-backup/
