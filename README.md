@@ -33,7 +33,7 @@ git submodule update --init
 
 3. Modify configuration:
 
-- Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup.
+- Edit hostname and email addresses in [.env](.env). This should reflect your setup.
 
 ```bash
 HOSTNAME="full.domain.name.of.your.host"
@@ -41,7 +41,7 @@ EMAIL="nouser@nomail.com"
 BACKUP_USER=1001:1001
 GAUTH_CLIENTID="Google_OAuth_Client_ID"
 ```
-* ```HOSTNAME``` is the fully qualified domain name of your host. For local setup (no external name), see [Init Config](init-config).
+* ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup; see [Init Config](init-config).
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 * ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access the files backed up.
 * ```GAUTH_CLIENTID``` is the [Google Auth Client ID you will need to create for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
@@ -61,13 +61,9 @@ GAUTH_CLIENTID="Google_OAuth_Client_ID"
  ./prod.sh up
 ```
 
-Or, for development:
-```bash
- ./dev.sh up
-```
-
 * You might need to execute ```sudo``` (e.g. ```sudo ./prod.sh up```) if your user does not have permissions to access the docker service.
 * For more details, see [Init Config](init-config) Section below.
+* We also have configurations for development and staging. See the [utility scripts Section](utility-scripts)
 
 4. Open the file store management interface and change the default admin password (**user**:admin;**pass**:admin). To open the file store, point to ```/storemng``` (e.g. ```https://arena.andrew.cmu.edu/storemng```) in your browser. See details in the [File Store](file-store) Section below.
 
@@ -83,7 +79,7 @@ Or, for development:
 ### Assumptions:
 
 * **init.sh:** assumes a bash shell
-* **backup user:**	The ```backup``` service tries to change to owner of the files backed up to a user indicated in [environment.env](environment.env). This is the ```user:group``` of the *host machine user* that needs to access the files backed up.
+* **backup user:**	The ```backup``` service tries to change to owner of the files backed up to a user indicated in [.env](.env). This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up.
 * **OAuth**:** You will need to setup [Google OAuth for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
 
 ## Init Config
@@ -92,7 +88,7 @@ Before starting services, we need to create the configuration files for the serv
 
 1. Modify configuration:
 
-- Edit hostname, email address and backup user (```user:group``` of the *host machine user* that needs to access the files backed up by the backup container configured in [docker-compose.prod.yaml](docker-compose.prod.yaml)) in [environment.env](environment.env). This should reflect your setup.
+- Edit hostname, email address and backup user (```user:group``` of the *host machine user* that needs to access the files backed up by the backup container configured in [docker-compose.prod.yaml](docker-compose.prod.yaml)) in the file [.env](.env). This should reflect your setup.
 - Insert the [Google Auth Client ID for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
 - **Localhost setup**: If you want a local development setup, you can setup a hostname that resolves locally (for example ```arena-local```) by add the following line to your hosts file (```/etc/hosts```):
 ```bash
@@ -105,7 +101,7 @@ Before starting services, we need to create the configuration files for the serv
  ./init.sh
 ```
 
-The init script will generate configuration files (from the templates in [conf/templates](conf/templates)) for the services using the hostname and email configured in [environment.env](environment.env), and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
+The init script will generate configuration files (from the templates in [conf/templates](conf/templates)) for the services using the hostname and email configured in [.env](.env), and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
 
 * Note: you might need to execute ```sudo  docker-compose up -d``` if your user does not have permissions to access the docker service.
 
@@ -116,12 +112,18 @@ The init script will generate configuration files (from the templates in [conf/t
   docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
 ```
 
+- For staging (adds a dev folder on thw webserver):
+```bash
+  docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml -f docker-compose.staging.yaml up -d
+```
+
 - For development (no monitoring/backups):
 ```bash
  docker-compose up -d
 ```
 
-* Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service. You can also use the ```prod.sh up/down``` and ```dev.sh up/down``` utility scripts.
+* Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service.
+* Instead of the above commands, you can use the ```prod.sh```, ```dev.sh``` and  ```staging.sh``` [utility scripts](utility-scripts).
 
 ## File Store
 
@@ -171,9 +173,22 @@ docker-compose down; docker-compose up -d --force-build
 * **docker-compose.override.yaml:** Compose file that describes services. This is the file used by default by ```docker-compose``` and is intended for development purposes
 * **docker-compose.yaml:** Compose file that describes the base services. Use this with the ```docker-compose.prod.yaml``` to create the production config.
 * **docker-compose.prod.yaml:** Compose file that describes production services. Relies on the base config in ```docker-compose.yaml``` to create the final production config.
+* **docker-compose.staging.yaml:** Compose file that describes adds a dev folder on the web server. Relies on the base config in ```docker-compose.yaml``` and ```docker-compose.prod.yaml``` to create the final staging config.
 * **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
 * **init.sh:** Initialize config files. See [Init Config](init-config) Section.
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**ARENA-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](update-submodules)).
+
+## Utility scripts
+
+You can use the ```prod.sh```, ```dev.sh``` and  ```staging.sh``` utility scripts. These scripts call ```docker-compose``` with the right compose config files as follows:
+* ```prod.sh```: ```docker-compose.yaml``` and ```docker-compose.prod.yaml```
+* ```staging.sh```: ```docker-compose.yaml```, ```docker-compose.prod.yaml``` and ```docker-compose.staging.yaml```
+* ```dev.sh```: ```docker-compose.override.yaml```
+
+Call the script by passing any ```docker-compose``` subcommands (such as ```up```, ```down```), e.g.:
+* ```./prod.sh up -d```
+* ```./prod.sh down```
+* ```./dev.sh up```
 
 ## Compose Quick Reference
 
