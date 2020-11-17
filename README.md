@@ -72,17 +72,18 @@ Or, for development:
 
 ## Dependencies/Assumptions
 
-###Install:
+### Install:
 
 * **docker:**	https://docs.docker.com/get-docker/
 * **docker-compose:**	https://docs.docker.com/compose/install/
 * **envsubst:**	utility part of [gettext](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html). See instructions on how to install in different OSes [here](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext).
 * **base64:**	part of [GNU core utils](https://www.gnu.org/software/coreutils/).
 
-###Assumptions:
+### Assumptions:
 
 * **init.sh:** assumes a bash shell
 * **backup user:**	The ```backup``` service tries to change to owner of the files backed up to a user indicated in [environment.env](environment.env). This is the ```user:group``` of the *host machine user* that needs to access the files backed up.
+* **OAuth**:** You will need to setup [Google OAuth for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
 
 ## Init Config
 
@@ -91,6 +92,7 @@ Before starting services, we need to create the configuration files for the serv
 1. Modify configuration:
 
 - Edit hostname, email address and backup user (```user:group``` of the *host machine user* that needs to access the files backed up by the backup container configured in [docker-compose.prod.yaml](docker-compose.prod.yaml)) in [environment.env](environment.env). This should reflect your setup.
+- Insert the [Google Auth Client ID for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
 - **Localhost setup**: If you want a local development setup, you can setup a hostname that resolves locally (for example ```arena-local```) by add the following line to your hosts file (```/etc/hosts```):
 ```bash
 127.0.0.1       arena-local
