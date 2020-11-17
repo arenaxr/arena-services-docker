@@ -103,6 +103,14 @@ server {
             add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
         }
     }
+
+    # define error page
+    error_page 404 = @notfound;
+
+    # error page location redirect 301
+    location @notfound {
+        return 301 /index.html;
+    }
 }
 
 server {

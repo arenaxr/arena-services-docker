@@ -5,21 +5,21 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-echo -e "\n### Creating SECRET_KEY to environment.env (old file in environment.bak). This will replace secret key (if exists)."
+echo -e "\n### Creating SECRET_KEY to secret.env (old file in secret.env.bak). This will replace secret key (if exists)."
 read -p "Continue? (y/N) " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
   SECRET_KEY_BASE64=$(echo $SECRET_KEY | base64)
-  cp environment-secret.env environment-secret.bak
-  echo "SECRET_KEY="$SECRET_KEY > environment-secret.env
-  echo "SECRET_KEY_BASE64="$SECRET_KEY_BASE64 >> environment-secret.env
+  cp secret.env secret.env.bak
+  echo "SECRET_KEY="$SECRET_KEY > secret.env
+  echo "SECRET_KEY_BASE64="$SECRET_KEY_BASE64 >> secret.env
 fi
 
-echo -e "\n### Contents of environment.env:\n"
-cat environment.env
+echo -e "\n### Contents of .env:\n"
+cat .env
 echo
 
-echo -e "Please edit environment.env (shown above) to reflect your setup (hostname, email, ...). \n(this will generate certificates, nginx config, ...)."
+echo -e "Please edit the file .env (shown above) to reflect your setup (hostname, email, ...). \n(this will generate certificates, nginx config, ...)."
 read -p "Continue? (y/N)" -r
 echo
 if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -38,8 +38,8 @@ do
 done
 
 # load environment
-export $(grep -v '^#' environment.env | xargs)
-export $(grep -v '^#' environment-secret.env | xargs)
+export $(grep -v '^#' .env | xargs)
+export $(grep -v '^#' secret.env | xargs)
 export ESC="$"
 
 echo -e "\n### Creating config files (conf/*) from templates (conf-templates/*)"

@@ -13,7 +13,7 @@ services:
     image: "nginx" # creates container from nginx
     volumes:
     volumes:
-      - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf # mount nginx config      
+      - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf # mount nginx config
       - ./ARENA-core:/usr/share/nginx/html # mount root html from ./ARENA-core
       - ./conf/arena-defaults.js:/usr/share/nginx/html/defaults.js # set arena client code defaults
       - ../dev:/usr/share/nginx/html/dev # mount dev folder
@@ -137,7 +137,6 @@ services:
     volumes:
       - ./data:/data
       - ./mongo-backup:/backup
-    env_file: environment.env
     command: ["/bin/sh", "-c", "while true; do cp -avr /data/mongodb /backup; chown -R $BACKUP_USER /backup; sleep 12h; done"]
     restart: unless-stopped
 

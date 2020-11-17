@@ -66,7 +66,7 @@ services:
 
   arena-account:
     build: "arena-account" # builds container from arena-account Dockerfile
-    env_file: environment-secret.env
+    env_file: secret.env
     ports:
       - "8000:8000"
     command: "python manage.py runserver 0.0.0.0:8000"
@@ -76,7 +76,7 @@ services:
     volumes:
       - ./conf/mosquitto.conf:/mosquitto/config/mosquitto.conf # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/certbot/conf:/etc/letsencrypt # mount certs volume (see conf/mosquitto.conf to see how the files are used)
-    env_file: environment-secret.env
+    env_file: secret.env
     ports:
       - 1883:1883/tcp # mqtt; map port for listener configured in /conf/mosquitto.conf
       - 9001:9001/tcp # mqtt-ws
@@ -95,7 +95,7 @@ services:
     volumes:
       - ./conf/arts-settings.py:/usr/src/app/arts_api/settings.py
       - arts-static-content:/usr/src/app/public # static arts visualization page
-    env_file: environment-secret.env
+    env_file: secret.env
     ports:
       - "8001:8000"
     working_dir: /usr/src/app
