@@ -37,7 +37,7 @@ docker-compose run --rm --entrypoint "\
 echo
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d
+docker-compose -f docker-compose.letsencrypt.yaml up --force-recreate -d nginx
 echo
 
 echo "### Deleting dummy certificate for $domains ..."
