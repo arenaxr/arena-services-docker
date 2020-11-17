@@ -41,7 +41,8 @@ EMAIL="nouser@nomail.com"
 BACKUP_USER=1001:1001
 GAUTH_CLIENTID="Google_OAuth_Client_ID"
 ```
-
+* ```HOSTNAME``` is the fully qualified domain name of your host. For local setup (no external name), see [Init Config](init-config).
+* ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 * ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access the files backed up.
 * ```GAUTH_CLIENTID``` is the [Google Auth Client ID you will need to create for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
 
