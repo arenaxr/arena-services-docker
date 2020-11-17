@@ -120,7 +120,7 @@ The init script will generate configuration files (from the templates in [conf/t
  docker-compose up -d
 ```
 
-* Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service. You can also use the ```start-prod.sh``` and ```start-dev.sh``` utility scripts.
+* Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service. You can also use the ```prod.sh up/down``` and ```dev.sh up/down``` utility scripts.
 
 ## File Store
 
