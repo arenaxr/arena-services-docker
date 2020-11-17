@@ -12,11 +12,15 @@ services:
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
     image: "nginx" # creates container from nginx
     volumes:
+    volumes:
+      - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf # mount nginx config      
       - ./ARENA-core:/usr/share/nginx/html # mount root html from ./ARENA-core
       - ./conf/arena-defaults.js:/usr/share/nginx/html/defaults.js # set arena client code defaults
       - ../dev:/usr/share/nginx/html/dev # mount dev folder
       - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west # mount mqtt-west folder
-      - ./conf/nginx-conf.d:/etc/nginx/conf.d # mount local nginx.conf.d folder to /etc/nginx/conf.d in the container
+      - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
+      - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
+      - arts-static-content:/usr/share/nginx/html/arts # serve arts static files
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
