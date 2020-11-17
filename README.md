@@ -36,7 +36,7 @@ git submodule update --init
 - Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup.
 
 ```bash
-HOSTNAME="full.domaini.name.of.your.host"
+HOSTNAME="full.domain.name.of.your.host"
 EMAIL="nouser@nomail.com"
 BACKUP_USER=1001:1001
 GAUTH_CLIENTID="Google_OAuth_Client_ID"
@@ -51,23 +51,22 @@ GAUTH_CLIENTID="Google_OAuth_Client_ID"
  ./init.sh
 ```
 
-* On the first execution, answer Yes to all questions of the script.
-* Note: you might need to execute ```sudo ./init.sh``` if your user does not have permissions to access the docker service.
+* On the first execution, answer **Yes** to all questions of the script.
+* You might need to execute ```sudo ./init.sh``` if your user does not have permissions to access the docker service.
 
 5. If you see no errors; you are good to start all services:
 
 ```bash
- ./start-prod.sh
+ ./prod.sh up
 ```
 
-Or, for development,:
+Or, for development:
 ```bash
- ./start-dev.sh
+ ./dev.sh up
 ```
 
-* Note: you might need to execute using ```sudo``` if your user does not have permissions to access the docker service.
-
-For more details, see [Init Config](init-config) Section below.
+* You might need to execute ```sudo``` (e.g. ```sudo ./prod.sh up```) if your user does not have permissions to access the docker service.
+* For more details, see [Init Config](init-config) Section below.
 
 4. Open the file store management interface and change the default admin password (**user**:admin;**pass**:admin). To open the file store, point to ```/storemng``` (e.g. ```https://arena.andrew.cmu.edu/storemng```) in your browser. See details in the [File Store](file-store) Section below.
 
