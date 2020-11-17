@@ -52,7 +52,7 @@ GAUTH_CLIENTID="Google_OAuth_Client_ID"
  ./init.sh
 ```
 
-* On the first execution, answer **Yes** to all questions of the script.
+* On the first execution, answer **Yes** to all questions of the script. The script will attempt to create certificates using [letsencrypt](https://letsencrypt.org/). Self-signed certificates will be created instead if letsencrypt fails.
 * You might need to execute ```sudo ./init.sh``` if your user does not have permissions to access the docker service.
 
 5. If you see no errors; you are good to start all services:
