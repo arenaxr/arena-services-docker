@@ -66,6 +66,8 @@ services:
 
   arena-account:
     build: "arena-account" # builds container from arena-account Dockerfile
+    volumes:
+      - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py
     env_file: secret.env
     ports:
       - "8000:8000"
