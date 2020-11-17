@@ -33,13 +33,17 @@ git submodule update --init
 
 3. Modify configuration:
 
-- Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup (BACKUP_USER should be a ```user:group``` that exists in the host machine, to have access to backup files).
+- Edit hostname and email addresses in [environment.env](environment.env). This should reflect your setup.
 
 ```bash
 HOSTNAME="full.domaini.name.of.your.host"
 EMAIL="nouser@nomail.com"
 BACKUP_USER=1001:1001
+GAUTH_CLIENTID="Google_OAuth_Client_ID"
 ```
+
+* ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access the files backed up.
+* ```GAUTH_CLIENTID``` is the [Google Auth Client ID you will need to create for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
 
 4. Run init script:
 
