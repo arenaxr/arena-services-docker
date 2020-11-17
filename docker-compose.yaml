@@ -61,7 +61,6 @@ services:
     build: "arts/arts-main"
     volumes:
       - ./conf/arts-settings.py:/usr/src/app/arts_api/settings.py
-      - arts-static-content:/usr/src/app/public # static arts visualization page
     env_file: secret.env
     command: "python manage.py runserver 0.0.0.0:8000"
     depends_on:
@@ -73,6 +72,3 @@ services:
       - ./conf/arena-runtime-simulated.conf:/usr/src/app/config.json
     depends_on:
       - arts
-
-volumes:
-  arts-static-content:

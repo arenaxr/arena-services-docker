@@ -1,0 +1,15 @@
+# this is the staging docker compose; add dev folders in arena web
+#
+# run staging:
+#    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml -f docker-compose.staging.yaml up -d
+#
+# NOTE: if -f is not given, 'docker-compose up' will use docker-compose.override.yaml (https://docs.docker.com/compose/extends/)
+
+version: '3'
+
+services:
+
+  arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
+    volumes:
+      - ../dev:/usr/share/nginx/html/dev # mount dev folder
+      - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west # mount mqtt-west folder
