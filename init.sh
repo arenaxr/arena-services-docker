@@ -43,7 +43,7 @@ export $(grep -v '^#' environment-secret.env | xargs)
 export ESC="$"
 
 echo -e "\n### Creating config files (conf/*) from templates (conf-templates/*)"
-
+mkdir conf
 for t in $(ls conf-templates/)
 do
   f="${t%.*}"
