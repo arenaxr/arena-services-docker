@@ -14,7 +14,7 @@ services:
     volumes:
       - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web-dev.conf # mount local nginx dev config
       - ./ARENA-core:/usr/share/nginx/html # mount root html from ./ARENA-core
-      - ./conf/arena-defaults.js:/usr/share/nginx/html/defaults.js # set arena client code defaults
+      - ./conf/arena-defaults-dev.js:/usr/share/nginx/html/defaults.js # set arena client code defaults
       - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - arts-static-content:/usr/share/nginx/html/arts # serve arts static files
