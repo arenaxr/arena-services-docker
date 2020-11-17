@@ -47,7 +47,7 @@ mkdir conf
 for t in $(ls conf-templates/)
 do
   f="${t%.*}"
-  cp conf/$f conf/$f.bak 2>&1 > /dev/null
+  cp conf/$f conf/$f.bak >/dev/null 2>&1
   echo -e "\t conf-templates/$t -> conf/$f"
   envsubst < conf-templates/$t > conf/$f
 done
