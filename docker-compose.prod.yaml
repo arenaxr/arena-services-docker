@@ -18,6 +18,7 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - arts-static-content:/usr/share/nginx/html/arts # serve arts static files
+      - account-static-content:/usr/share/nginx/html/user/static # serve account static files
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
@@ -46,6 +47,7 @@ services:
   arena-account:
     volumes:
       - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py
+      - account-static-content:/usr/src/app/static # static content
     restart: unless-stopped
 
   mqtt:
@@ -141,3 +143,4 @@ services:
 
 volumes:
   arts-static-content:
+  account-static-content:
