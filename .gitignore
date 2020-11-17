@@ -1,12 +1,5 @@
-conf/arena-web-dev.conf
-conf/mosquitto-br-conn.conf
-conf/arts-settings.py
-conf/mosquitto.conf
+conf/*
 environment.env
-conf/arena-defaults.js
-conf/arena-runtime-simulated.conf
-conf/auth-config.json
-conf/nginx-conf.d/
 data/
 environment-secret.bak
 environment-secret.env
