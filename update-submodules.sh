@@ -19,6 +19,7 @@ read -p "Continue? (y/N) " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
 	for s in "${submodules[@]}"
 	do
+		repo=`echo $s | cut -d':' -f1`
 	  git add $repo
 	done
 
