@@ -1,3 +1,4 @@
+.env
 conf/*
 environment.env
 data/
