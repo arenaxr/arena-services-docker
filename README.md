@@ -40,11 +40,13 @@ HOSTNAME="full.domain.name.of.your.host"
 EMAIL="nouser@nomail.com"
 BACKUP_USER=1001:1001
 GAUTH_CLIENTID="Google_OAuth_Client_ID"
+ACCOUNT_SU_NAME="admin"
+ACCOUNT_SU_EMAIL="admin@example.com"
 ```
 * ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a localhost setup; see [Init Config](init-config).
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 * ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access the files backed up.
-* ```GAUTH_CLIENTID``` is the [Google Auth Client ID you will need to create for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
+* ```ACCOUNT_SU_NAME``` and ```ACCOUNT_SU_EMAIL``` are the account admin user and email.
 
 4. Run init script:
 
