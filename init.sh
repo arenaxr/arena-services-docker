@@ -39,6 +39,8 @@ do
   [ ! -d "$d" ] && mkdir $d
 done
 
+touch data/account/db.sqlite3
+
 # load environment
 export $(grep -v '^#' .env | xargs)
 export $(grep -v '^#' secret.env | xargs)
