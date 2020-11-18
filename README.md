@@ -40,8 +40,8 @@ HOSTNAME="full.domain.name.of.your.host"
 EMAIL="nouser@nomail.com"
 BACKUP_USER=1001:1001
 GAUTH_CLIENTID="Google_OAuth_Client_ID"
-ACCOUNT_SU_NAME="admin"
-ACCOUNT_SU_EMAIL="admin@example.com"
+ACCOUNT_ADMIN_NAME="admin"
+ACCOUNT_ADMIN_EMAIL="admin@example.com"
 ```
 * ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a localhost setup; see [Init Config](init-config).
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).

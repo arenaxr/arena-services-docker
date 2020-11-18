@@ -48,6 +48,10 @@ services:
     volumes:
       - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py
       - account-static-content:/usr/src/app/static # static content
+      - ./data/account/db.sqlite3:/usr/src/app/db.sqlite3 # account db
+    env_file:
+      - .env
+      - secret.env
     restart: unless-stopped
 
   mqtt:

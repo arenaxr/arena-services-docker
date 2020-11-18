@@ -10,11 +10,11 @@ read -p "Continue? (y/N) " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
   SECRET_KEY_BASE64=$(echo $SECRET_KEY | base64)
-  DJANGO_SU_PASSWORD=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c15)
+  ACCOUNT_SU_PASSWORD=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c15)
   cp secret.env secret.env.bak
   echo "SECRET_KEY="$SECRET_KEY > secret.env
   echo "SECRET_KEY_BASE64="$SECRET_KEY_BASE64 >> secret.env
-  echo "DJANGO_SU_PASSWORD="$DJANGO_SU_PASSWORD >> secret.env
+  echo "ACCOUNT_ADMIN_PASSWORD="$ACCOUNT_SU_PASSWORD >> secret.env
 fi
 
 echo -e "\n### Contents of .env:\n"
@@ -31,7 +31,7 @@ then
 fi
 
 echo -e "\n### Creating data folders\n"
-data_folders=( "data/arena-store" "data/grafana"  "data/mongodb"  "data/prometheus")
+data_folders=( "data/arena-store" "data/grafana"  "data/mongodb"  "data/prometheus" "data/account")
 mkdir data
 for d in "${data_folders[@]}"
 do
