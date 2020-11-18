@@ -26,6 +26,19 @@ if [ ! -e "$data_path/conf/options-ssl-nginx.conf" ] || [ ! -e "$data_path/conf/
   echo
 fi
 
+# if setting up a "localhost" domain, just create a self-signed certificate
+if [ $domains == "localhost" ]; then
+  echo "### Creating self-signed certificate for $domains"
+  path="/etc/letsencrypt/live/$domains"
+  mkdir -p "$data_path/conf/live/$domains"
+  docker-compose -f docker-compose.letsencrypt.yaml run --rm --entrypoint "\
+    openssl req -x509 -nodes -newkey rsa:2048\
+      -keyout '$path/privkey.pem' \
+      -out '$path/fullchain.pem' \
+      -subj '/CN=localhost'" certbot
+  exit 0
+fi
+
 echo "### Starting nginx ..."
 docker-compose -f docker-compose.letsencrypt.yaml up --force-recreate -d nginx
 echo
@@ -59,7 +72,7 @@ if [ $? -ne 0 ]
 then
   echo
   echo "### !!! Could not create certificate. Certbot failed (see errors above) !!! ###"
-  echo "### !!! Creating dummy certificate for $domains !!! ###"
+  echo "### !!! Creating self-signed certificate for $domains !!! ###"
   path="/etc/letsencrypt/live/$domains"
   mkdir -p "$data_path/conf/live/$domains"
   docker-compose -f docker-compose.letsencrypt.yaml run --rm --entrypoint "\
