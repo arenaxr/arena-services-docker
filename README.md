@@ -17,7 +17,7 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 
 ## Quick Setup
 
-1. We need [docker](https://docs.docker.com/get-docker/),  [docker-compose](https://docs.docker.com/compose/install/), [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html) and [base64](https://linux.die.net/man/1/base64) installed. The [init](init.sh) script needs a bash shell. See [Dependencies](dependencies-assumptions) section for details.
+1. We need [docker](https://docs.docker.com/get-docker/),  [docker-compose](https://docs.docker.com/compose/install/), [curl](https://curl.haxx.se/download.html), [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html), [base64](https://linux.die.net/man/1/base64) installed. The [init](init.sh) script needs a bash shell. See [Dependencies](dependencies-assumptions) section for details.
 
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules):
 
@@ -41,7 +41,7 @@ EMAIL="nouser@nomail.com"
 BACKUP_USER=1001:1001
 GAUTH_CLIENTID="Google_OAuth_Client_ID"
 ```
-* ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup; see [Init Config](init-config).
+* ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a localhost setup; see [Init Config](init-config).
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 * ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access the files backed up.
 * ```GAUTH_CLIENTID``` is the [Google Auth Client ID you will need to create for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
@@ -73,6 +73,7 @@ GAUTH_CLIENTID="Google_OAuth_Client_ID"
 
 * **docker:**	https://docs.docker.com/get-docker/
 * **docker-compose:**	https://docs.docker.com/compose/install/
+* **curl:**	[curl](https://curl.haxx.se/download.html)
 * **envsubst:**	utility part of [gettext](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html). See instructions on how to install in different OSes [here](https://www.drupal.org/docs/8/modules/potion/how-to-install-setup-gettext).
 * **base64:**	part of [GNU core utils](https://www.gnu.org/software/coreutils/).
 
@@ -90,10 +91,14 @@ Before starting services, we need to create the configuration files for the serv
 
 - Edit hostname, email address and backup user (```user:group``` of the *host machine user* that needs to access the files backed up by the backup container configured in [docker-compose.prod.yaml](docker-compose.prod.yaml)) in the file [.env](.env). This should reflect your setup.
 - Insert the [Google Auth Client ID for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
-- **Localhost setup**: If you want a local development setup, you can setup a hostname that resolves locally (for example ```arena-local```) by add the following line to your hosts file (```/etc/hosts```):
-```bash
-127.0.0.1       arena-local
-```
+> ### Localhost setup
+>
+> If you want a local development setup, you can configure ```HOSTNAME``` in the file ```.env``` to ```localhost```:
+>
+> ```bash
+> HOSTNAME="localhost"
+> ```
+> This will result in creating a self-signed certificate to be used with the services.
 
 2. Run the init script:
 
