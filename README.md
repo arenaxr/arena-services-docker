@@ -116,21 +116,21 @@ The init script will generate configuration files (from the templates in [conf/t
 
 - For production:
 ```bash
-  docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+  ./prod.sh up -d
 ```
 
 - For staging (adds a dev folder on thw webserver):
 ```bash
-  docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml -f docker-compose.staging.yaml up -d
+ ./staging.sh up -d
 ```
 
 - For development (no monitoring/backups):
 ```bash
- docker-compose up -d
+ ./dev.sh up -d
 ```
 
 * Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service.
-* Instead of the above commands, you can use the ```prod.sh```, ```dev.sh``` and  ```staging.sh``` [utility scripts](utility-scripts).
+* See [utility scripts](utility-scripts) for details.
 
 ## File Store
 
@@ -150,17 +150,12 @@ After updating the submodules, to have the updates of built containers (persist,
 
 - For production:
 ```bash
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml down; docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d --force-build
+[./prod.sh | ./staging.sh | ./dev.sh] up -d --force-recreate --build
 ```
 
-- For development:
-```bash
-docker-compose down; docker-compose up -d --force-build
-```
-
+* Use ```prod.sh```, ```staging.sh``` or ```dev.sh``` depending on which configuration you want to use.
 * Note: you might need to execute the above commands with ```sudo``` if your user does not have permissions to access the docker service.
-
-*  See [Compose Quick Reference](compose-quick-reference) for the description of these commands.
+* See [utility scripts](utility-scripts) for the description of these commands.
 
 ## Files/Folders Description
 
