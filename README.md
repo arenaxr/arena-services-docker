@@ -201,7 +201,7 @@ Call the script by passing any ```docker-compose``` subcommands (such as ```up``
 
 ### Script Arguments Quick Reference
 
-The utility scripts pass the arguments to **docker-compose**, so you can use them with all normal **docker-compose** subcommands. Here is a quick reference of a few of the most used subcommands.
+The utility scripts pass the arguments to **docker-compose**, so you can use them with all normal [**docker-compose** subcommands](https://docs.docker.com/compose/reference/). Here is a quick reference of a few of the most used subcommands.
 
 **Start services and see their output/logs**
 
