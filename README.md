@@ -1,6 +1,6 @@
 # Compose arena services
 
-The [docker-compose.yaml](docker-compose.yaml) creates several containers with ARENA services:
+Creates several containers with ARENA services:
 
 * Web server for ARENA (Nginx)
 * Database (MongoDB)
