@@ -17,7 +17,7 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 
 ## Quick Setup
 
-1. We need [docker](https://docs.docker.com/get-docker/),  [docker-compose](https://docs.docker.com/compose/install/), [curl](https://curl.haxx.se/download.html), [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html), [base64](https://linux.die.net/man/1/base64) installed. The [init](init.sh) script needs a bash shell. See [Dependencies](#dependencies-assumptions) section for details.
+1. We need [docker](https://docs.docker.com/get-docker/),  [docker-compose](https://docs.docker.com/compose/install/), [curl](https://curl.haxx.se/download.html), [envsubst](https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html), [base64](https://linux.die.net/man/1/base64) installed. The [init](init.sh) script needs a bash shell. See [Dependencies](#dependenciesassumptions) section for details.
 
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules):
 
@@ -43,7 +43,7 @@ GAUTH_CLIENTID="Google_OAuth_Client_ID"
 ACCOUNT_ADMIN_NAME="admin"
 ACCOUNT_ADMIN_EMAIL="admin@example.com"
 ```
-* ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a localhost setup; see [Init Config](init-config).
+* ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a localhost setup; see [Init Config](#init-config).
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 * ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access the files backed up.
 * ```ACCOUNT_SU_NAME``` and ```ACCOUNT_SU_EMAIL``` are the account admin user and email.
@@ -64,10 +64,10 @@ ACCOUNT_ADMIN_EMAIL="admin@example.com"
 ```
 
 * You might need to execute ```sudo``` (e.g. ```sudo ./prod.sh up```) if your user does not have permissions to access the docker service.
-* For more details, see [Init Config](init-config) Section below.
-* We also have configurations for development and staging. See the [utility scripts Section](utility-scripts)
+* For more details, see [Init Config](#init-config) Section below.
+* We also have configurations for development and staging. See the [utility scripts Section](#utility-scripts)
 
-4. Open the file store management interface and change the default admin password (**user**:admin;**pass**:admin). To open the file store, point to ```/storemng``` (e.g. ```https://arena.andrew.cmu.edu/storemng```) in your browser. See details in the [File Store](file-store) Section below.
+4. Open the file store management interface and change the default admin password (**user**:admin;**pass**:admin). To open the file store, point to ```/storemng``` (e.g. ```https://arena.andrew.cmu.edu/storemng```) in your browser. See details in the [File Store](#file-store) Section below.
 
 ## Dependencies/Assumptions
 
@@ -185,7 +185,7 @@ docker-compose down; docker-compose up -d --force-build
 * **init.sh:** Initialize config files. See [Init Config](init-config) Section.
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**ARENA-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](update-submodules)).
 
-## Utility scripts
+## Utility Scripts
 
 You can use the ```prod.sh```, ```dev.sh``` and  ```staging.sh``` utility scripts. These scripts call ```docker-compose``` with the right compose config files as follows:
 * ```prod.sh```: ```docker-compose.yaml``` and ```docker-compose.prod.yaml```
