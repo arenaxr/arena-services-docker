@@ -197,30 +197,32 @@ Call the script by passing any ```docker-compose``` subcommands (such as ```up``
 * ```./prod.sh down```
 * ```./dev.sh up```
 
-## Compose Quick Reference
+**NOTE**: *You might need to execute the scripts with ```sudo``` if your user does not have permissions to access the docker service*.
 
-**NOTE**: By default, docker-compose will use the configuration in [docker-compose.override.yaml](docker-compose.override.yaml). To start the production config, you need to indicate ```-f docker-compose.yaml -f docker-compose.prod.yaml```. See details about using multiple configuration files in the [docker the documentation](https://docs.docker.com/compose/extends/). *You might need to execute the docker commands with ```sudo``` if your user does not have permissions to access the docker service*.
+### Script Arguments Quick Reference
+
+The utility scripts pass the arguments to **docker-compose**, so you can use them with all normal **docker-compose** subcommands. Here is a quick reference of a few of the most used subcommands.
 
 **Start services and see their output/logs**
 
-- ```docker-compose up``` (add ```--force-build  ``` to build containers after updating submodules)
+- ```[/prod.sh | d/ev.sh | ./staging.sh] up``` (add ```--force-recreate --build``` to recreate abd build containers; usefull after updating code in submodules)
 
 **Start the services in "detached" (daemon) mode (-d)**
 
-- ```docker-compose up -d``` (add ```--force-recreate  ``` to recreate containers after updating submodules)
+- ```[/prod.sh | d/ev.sh | ./staging.sh] up -d``` (add ```--force-recreate  --build``` to recreate abd build containers)
 
 **Start just a particular service**
 
-- ```docker-compose start <service name in docker-compose.yaml>```
+- ```[/prod.sh | d/ev.sh | ./staging.sh] up <service name in docker-compose*.yaml>```
 
 **Stop services**
 
-- ```docker-compose down```
+- ```[/prod.sh | d/ev.sh | ./staging.sh] down```
 
-**Restart the services**
+**Start a particular service**
 
-- ```docker-compose restart```
+- ```[/prod.sh | d/ev.sh | ./staging.sh] stop <service name in docker-compose*.yaml>```
 
 **See logs**
 
-- ```docker-compose logs```
+- ```[/prod.sh | d/ev.sh | ./staging.sh] logs```
