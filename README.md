@@ -100,7 +100,7 @@ Before starting services, we need to create the configuration files for the serv
 > ```bash
 > HOSTNAME="localhost"
 > ```
-> This will result in creating a self-signed certificate to be used with the services.
+> This will result in creating a self-signed certificate to be used with the services. This is the name you will enter in your browser: [https://localhost](https:///localhost)
 
 2. Run the init script:
 
