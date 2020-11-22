@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#echo -e "\n### Init Submodules\n"
+echo -e "\n\e[1m### Init Submodules\e[0m\n"
 git submodule update --init
 
 echo -e "\n\e[1m### Init config files (create secrets.env, ./conf/* files, and ./data/* folders)\e[0m\n"
