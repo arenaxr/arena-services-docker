@@ -37,9 +37,9 @@ GAUTH_CLIENTID=Google_OAuth_Client_ID
 ACCOUNT_ADMIN_NAME=admin
 ACCOUNT_ADMIN_EMAIL=admin@example.com
 ```
-* ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a localhost setup; see [Init Config](#init-config).
+* ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup; see [Init Config](#init-config).
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
-* ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access the files backed up.
+* ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access files backed up by the backup container.
 * ```ACCOUNT_SU_NAME``` and ```ACCOUNT_SU_EMAIL``` are the account admin user and email.
 
 4. Run init script:
@@ -73,7 +73,7 @@ ACCOUNT_ADMIN_EMAIL=admin@example.com
 ### Assumptions:
 
 * **init.sh, prod.sh, dev.sh, staging.sh:** assume a bash shell
-* **backup user:**  The ```backup``` service tries to change to the owner of the files backed up to a user indicated in [.env](.env). This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up.
+* **backup user:**  The ```backup``` container tries to change to the owner of the files backed up to a user indicated in [.env](.env). This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up by this container.
 * **OAuth**:** You will need to set up [Google OAuth for your domain](https://developers.google.com/identity/protocols/oauth2/web-server).
 
 ## Init Config
@@ -84,15 +84,15 @@ Before starting services, we need to create the configuration files for the serv
 
 - Edit hostname, email address and backup user (```user:group``` of the *host machine user* that needs to access the files backed up by the backup container configured in [docker-compose.prod.yaml](docker-compose.prod.yaml)) in the file [.env](.env). This should reflect your setup.
 - Insert the [Google Auth Client ID for your setup](https://developers.google.com/identity/protocols/oauth2/web-server).
-> ### Localhost setup
+> ### Local setup
 >
-> If you want a local development setup, you can configure ```HOSTNAME``` in the file ```.env``` to a name that resolves locally on your machine (our script recognizes ```localhost```, or ```*.local``` as a local name):
+> If you want a local setup (usually for development), you can configure ```HOSTNAME``` in the file ```.env``` to a name that resolves locally on your machine (our script recognizes ```localhost```, or ```*.local``` as a local name):
 >
 > ```bash
 > HOSTNAME=arena.local
 > ```
 > This will result in creating a self-signed certificate to be used with the services. This is the name you will enter in your browser: [https://arena.local](https:///arena.local)
-> * **Make sure the above name resolves in your system (by adding it to [the ```hosts file```](https://linuxize.com/post/how-to-edit-your-hosts-file/))**.
+> **Make sure the above name resolves in your system (by adding it to [the ```hosts file```](https://linuxize.com/post/how-to-edit-your-hosts-file/))**.
 
 2. Run the init script:
 
@@ -111,7 +111,7 @@ The init script will generate configuration files (from the templates in [conf/t
   ./prod.sh up -d
 ```
 
-- For staging (adds a dev folder on thw webserver):
+- For staging (adds a dev folder on the webserver):
 ```bash
  ./staging.sh up -d
 ```
