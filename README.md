@@ -25,12 +25,6 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 git clone git@github.com:conix-center/arena-services-docker.git --recurse-submodules
 ```
 
-If ```recurse-submodules``` fails, or you forget to add it in the first clone, you can enter the repo folder and:
-
-```bash
-git submodule update --init
-```
-
 3. Modify configuration:
 
 - Edit hostname and email addresses in [.env](.env). This should reflect your setup.
