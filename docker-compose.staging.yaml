@@ -11,5 +11,5 @@ services:
 
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
     volumes:
-      - ../dev:/usr/share/nginx/html/dev # mount dev folder
-      - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west # mount mqtt-west folder
+      - ../dev:/usr/share/nginx/html/dev:ro # mount dev folder
+      - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west:ro # mount mqtt-west folder
