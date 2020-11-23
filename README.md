@@ -39,7 +39,7 @@ ACCOUNT_ADMIN_EMAIL=admin@example.com
 ```
 * ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a localhost setup; see [Init Config](#init-config).
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
-* ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access the files backed up.
+* ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access files backed up by the backup container.
 * ```ACCOUNT_SU_NAME``` and ```ACCOUNT_SU_EMAIL``` are the account admin user and email.
 
 4. Run init script:
@@ -73,7 +73,7 @@ ACCOUNT_ADMIN_EMAIL=admin@example.com
 ### Assumptions:
 
 * **init.sh, prod.sh, dev.sh, staging.sh:** assume a bash shell
-* **backup user:**  The ```backup``` service tries to change to the owner of the files backed up to a user indicated in [.env](.env). This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up.
+* **backup user:**  The ```backup``` service tries to change to the owner of the files backed up to a user indicated in [.env](.env). This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up by this service.
 * **OAuth**:** You will need to set up [Google OAuth for your domain](https://developers.google.com/identity/protocols/oauth2/web-server).
 
 ## Init Config
