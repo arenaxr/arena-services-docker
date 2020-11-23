@@ -111,7 +111,7 @@ The init script will generate configuration files (from the templates in [conf/t
   ./prod.sh up -d
 ```
 
-- For staging (adds a dev folder on thw webserver):
+- For staging (adds a dev folder on the webserver):
 ```bash
  ./staging.sh up -d
 ```
