@@ -4,7 +4,7 @@ echo -e "\n\e[1m### Init Submodules\e[0m\n"
 git submodule update --init
 
 echo -e "\n\e[1m### Init config files (create secrets.env, ./conf/* files, and ./data/* folders)\e[0m\n"
-docker run -it --env-file .env -e OWNER=`id -u`:`id -g` --rm -v $PWD:/work -w /work conixcenter/arena-services-docker-init-utils /work/init-config.sh 
+docker run -it --env-file .env --env-file secret.env -e OWNER=`id -u`:`id -g` --rm -v $PWD:/work -w /work conixcenter/arena-services-docker-init-utils /work/init-config.sh 
 
 if [ $? -ne 0 ]
 then
