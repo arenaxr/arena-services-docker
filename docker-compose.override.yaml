@@ -15,7 +15,7 @@ services:
       - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config      
       - ./ARENA-core:/usr/share/nginx/html:ro # set arena client code defaults
       - ./conf/arena-defaults-dev.js:/usr/share/nginx/html/defaults.js:ro # set arena client code defaults
-      - ./pubsubkey.pub:/usr/share/nginx/html/pubsubkey.pub:ro # pubsub public key available on the server
+      - ./data/keys//pubsubkey.pub:/usr/share/nginx/html/pubsubkey.pub:ro # pubsub public key available on the server
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
@@ -41,6 +41,7 @@ services:
       - 8884:8884/tcp
     volumes:
       - ./conf/persist-config.json:/home/node/app/config.json:ro # mount updated config.json that uses the container name
+      - ./data/keys/pubsubkey.pub:/home/node/app/pubsubkey.pub:ro # pubsub public key available to persist
     working_dir: /home/node/app
     command: "npm run start"
     depends_on:
