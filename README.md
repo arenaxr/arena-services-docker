@@ -168,16 +168,16 @@ After updating the submodules, to have the updates of built containers (persist,
 * **docker-compose.override.yaml:** Compose file that describes services. This is the file used by default by ```docker-compose``` and is intended for development purposes
 * **docker-compose.yaml:** Compose file that describes the base services. Use this with the ```docker-compose.prod.yaml``` to create the production config.
 * **docker-compose.prod.yaml:** Compose file that describes production services. Relies on the base config in ```docker-compose.yaml``` to create the final production config.
-* **docker-compose.staging.yaml:** Compose file that describes adds a dev folder on the web server. Relies on the base config in ```docker-compose.yaml``` and ```docker-compose.prod.yaml``` to create the final staging config.
+* **docker-compose.staging.yaml:** Compose file that describes adds a dev folder on the web server. Relies on the base config in ```docker-compose.yaml``` to create the final staging config.
 * **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
 * **init.sh:** Initialize config files. See [Init Config](init-config) Section.
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**ARENA-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](update-submodules)).
 
 ## Utility Scripts
 
-You can use the ```prod.sh```, ```dev.sh``` and  ```staging.sh``` utility scripts (with a bash shell). These scripts call ```docker-compose``` with the right compose config files as follows:
+You can use the ```prod.sh```, ```dev.sh``` and  ```staging.sh``` utility scripts (with a bash shell). These scripts call ```docker-compose``` with the right compose config files, where some files [extend each other]((https://docs.docker.com/compose/extends/)). The docker compose config files are used as follows:
 * **prod.sh**: ```docker-compose.yaml``` and ```docker-compose.prod.yaml```
-* **staging.sh**: ```docker-compose.yaml```, ```docker-compose.prod.yaml``` and ```docker-compose.staging.yaml```
+* **staging.sh**: ```docker-compose.yaml``` and ```docker-compose.staging.yaml```
 * **dev.sh**: ```docker-compose.override.yaml```
 
 Call the script by passing any ```docker-compose``` subcommands (such as ```up```, ```down```), e.g.:
