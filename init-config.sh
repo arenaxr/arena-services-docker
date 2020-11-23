@@ -48,9 +48,6 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
     exit 0
 fi
 
-# make sure account db file exists
-touch data/account/db.sqlite3 
-
 # setup escape var for envsubst templates
 export ESC="$"
 
