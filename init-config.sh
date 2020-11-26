@@ -34,6 +34,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 
   # generate service tokens
   export PERSIST_JWT=$(python /utils/genjwt.py -k ./data/keys/pubsubkey.pem arena-persist)
+  export ARTS_JWT=$(python /utils/genjwt.py -k ./data/keys/pubsubkey.pem arena-arts)
 fi
 
 echo -e "\n### Contents of .env:\n"
