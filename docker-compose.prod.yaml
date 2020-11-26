@@ -38,8 +38,6 @@ services:
     restart: unless-stopped
 
   arena-auth:
-    ports:
-      - 8888:8888/tcp
     restart: unless-stopped
 
   arena-account:

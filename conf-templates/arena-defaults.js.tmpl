@@ -1,4 +1,5 @@
 const defaults = {
+     realm: "realm",     
      updateMillis:100,
      scenenameParam:"render",
      userParam:"X",
@@ -12,9 +13,9 @@ const defaults = {
      screenSharePath:"screenshare",
      vioTopic:"/topic/vio/",
      graphTopic:"$NETWORK/latency",
-     mqttPath:["/mqtt/", "/mqtt1/", "/mqtt2/"],
+     mqttPath:["/mqtt/"],
      persistHost:"${HOSTNAME}",
      persistPath:"/persist/",
-     urlMqttAuth:"https://${HOSTNAME}:8888",
+     urlMqttAuth:"https://${HOSTNAME}/auth/",
      gAuthClientId:'${GAUTH_CLIENTID}'
 };
