@@ -17,7 +17,6 @@ services:
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
-
     depends_on:
       - mqtt
       - arena-persist
