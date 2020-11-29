@@ -90,9 +90,9 @@ Before starting services, we need to create the configuration files for the serv
 > If you want a local setup (usually for development), you can configure ```HOSTNAME``` in the file ```init.env``` to a name that resolves locally on your machine (our script recognizes ```localhost```, or ```*.local``` as a local name):
 >
 > ```bash
-> HOSTNAME=arena.local
+> HOSTNAME=localhost
 > ```
-> This will result in creating a self-signed certificate to be used with the services. This is the name you will enter in your browser: [https://arena.local](https:///arena.local)
+> This will result in creating a self-signed certificate to be used with the services. This is the name you will enter in your browser: [https://localhost](https:///localhost)
 > **Make sure the above name resolves in your system (by adding it to [the ```hosts file```](https://linuxize.com/post/how-to-edit-your-hosts-file/))**.
 > * Note: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
 
