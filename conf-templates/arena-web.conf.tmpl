@@ -104,17 +104,28 @@ server {
         proxy_set_header Connection "Upgrade";
         proxy_read_timeout 86400;
     }
-
-    location / {
+    location ~* / {
         root /usr/share/nginx/html;
-        index index.html index.htm index.nginx-debian.html;
-        try_files ${ESC}uri ${ESC}uri/ /index.html;
+        index index.html index.html;
         disable_symlinks off;
 
         add_header 'Access-Control-Allow-Origin' '*';
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
         add_header 'Access-Control-Allow-Credentials' 'true';
         add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
+
+        # Cover actual files in subdirectories of /namespace (e.g. /namespace/vendor/env.js)
+        location ~* ^/([\w.-]+)/([\w.-]+)/(.+) {
+            try_files ${ESC}uri ${ESC}uri/ /${ESC}2/${ESC}3 /${ESC}2/${ESC}3/ ${ESC}3 ${ESC}3/ /index.html;
+        }
+        # Cover /namespace/scenename and files in same path of /namespace (e.g. /namespace/events.js)
+        location ~* ^/([\w.-]+)(/[\w.-]+) {
+            try_files ${ESC}uri ${ESC}uri/ ${ESC}2 ${ESC}2/  /index.html;
+        }
+        # Catch all for /scenename
+        location ~* / {
+            try_files ${ESC}uri ${ESC}uri/ /index.html;
+        }
 
         location ~ \.(css|html|js)$ {
             expires -1;
@@ -124,8 +135,8 @@ server {
         location ^~ /store/users/ {
             autoindex on;
         }
-
     }
+
 }
 
 server {
