@@ -18,6 +18,7 @@ services:
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - account-static-content:/usr/share/nginx/account-static # serve account static files
+      - ./conf/arena-gauth.json:/usr/share/nginx/html/signin/google/gauth.json:ro # set arena client code defaults
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"

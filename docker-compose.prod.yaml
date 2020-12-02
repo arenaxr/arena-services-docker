@@ -17,6 +17,7 @@ services:
       - ./conf/arena-defaults.js:/usr/share/nginx/html/defaults.js:ro # set arena client code defaults
       - arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
+      - ./conf/arena-gauth.json:/usr/share/nginx/html/signin/google/gauth.json:ro # set arena client code defaults
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
@@ -125,7 +126,7 @@ services:
 
   restarter:
     image: docker
-    volumes: 
+    volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
     command: [ "/bin/sh", "-c", "while true; do sleep 12h; docker restart py-runtime; done" ]
     restart: unless-stopped
