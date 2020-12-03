@@ -13,12 +13,13 @@ services:
     volumes:
       - ./conf/arena-web-staging.conf:/etc/nginx/conf.d/arena-web-staging.conf:ro # mount nginx config
       - ./ARENA-core:/usr/share/nginx/html:ro # mount root html from ./ARENA-core
-      - ./conf/arena-web-conf:/usr/share/nginx/html/conf:ro # arena client code conf 
+      - ./conf/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
       - ./conf/arena-web-conf/arena-defaults-dev.js:/usr/share/nginx/html/conf/defaults.js:ro # set arena client code defaults
       - arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
       - ../dev:/usr/share/nginx/html/dev:ro # mount dev folder
       - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west:ro # mount mqtt-west folder
+      - ./conf/arena-web-conf/arena-gauth.json:/usr/share/nginx/html/conf/gauth.json:ro # set arena client code defaults
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
