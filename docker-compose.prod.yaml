@@ -18,7 +18,6 @@ services:
       - ./conf/arena-web-conf/arena-defaults.js:/usr/share/nginx/html/conf/defaults.js:ro # set arena client code defaults
       - arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
-      - ./conf/arena-web-conf/arena-gauth.json:/usr/share/nginx/html/conf/gauth.json:ro # set arena client code defaults
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"

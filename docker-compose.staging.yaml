@@ -19,7 +19,6 @@ services:
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
       - ../dev:/usr/share/nginx/html/dev:ro # mount dev folder
       - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west:ro # mount mqtt-west folder
-      - ./conf/arena-web-conf/arena-gauth.json:/usr/share/nginx/html/conf/gauth.json:ro # set arena client code defaults
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
