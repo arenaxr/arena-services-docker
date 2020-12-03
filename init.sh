@@ -7,10 +7,6 @@ then
   cp init.env .env
 fi
 
-# compose files assume this file exists but is replaced by the conf/arena-defaults*.js files (exact file depending on the configuration)
-touch ARENA-core/defaults.js
-touch ARENA-core/signin/google/gauth.json
-
 echo -e "\n\e[1m### Init config files (create secrets.env, ./conf/* files, and ./data/* folders)\e[0m\n"
 docker run -it --env-file .env --env-file secret.env -e OWNER=`id -u`:`id -g` --rm -v $PWD:/work -w /work conixcenter/arena-services-docker-init-utils /work/init-config.sh
 
