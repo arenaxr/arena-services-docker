@@ -14,12 +14,11 @@ services:
     volumes:
       - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       - ./ARENA-core:/usr/share/nginx/html:ro # set arena client code defaults
-      - ./conf/arena-web-conf:/usr/share/nginx/html/conf:ro # arena client code conf 
+      - ./conf/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
       - ./conf/arena-web-conf/arena-defaults-dev.js:/usr/share/nginx/html/conf/defaults.js:ro # set arena client code defaults
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - account-static-content:/usr/share/nginx/account-static # serve account static files
-      - ./conf/arena-gauth.json:/usr/share/nginx/html/signin/google/gauth.json:ro # set arena client code defaults
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
