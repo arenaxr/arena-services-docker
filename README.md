@@ -33,9 +33,12 @@ git clone git@github.com:conix-center/arena-services-docker.git --recurse-submod
 HOSTNAME=full.domain.name.of.your.host
 EMAIL=nouser@nomail.com
 BACKUP_USER=1001:1001
-GAUTH_CLIENTID=Google_OAuth_Client_ID
-ACCOUNT_ADMIN_NAME=admin
-ACCOUNT_ADMIN_EMAIL=admin@example.com
+GAUTH_CLIENTID=Google_OAuth_Web_Client_ID
+GAUTH_CLIENTSECRET=Google_OAuth_Web_Client_Secret
+GAUTH_INSTALLED_CLIENTID=Google_OAuth_Installed_Client_ID
+GAUTH_INSTALLED_CLIENTSECRET=Google_OAuth_Installed_Client_Secret
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=admin@example.com
 ```
 * ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup; see [Init Config](#init-config).
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
