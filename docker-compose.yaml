@@ -28,6 +28,7 @@ services:
     image: mongo # pull from https://hub.docker.com/_/mongo/
     volumes:
       - ./data/mongodb:/data/db:rw # permanent storage on the host
+      - ./data/backup:/backup:rw # backup storage on the host
 
   arena-persist:
     build: "arena-persist" # builds container from arena-persist Dockerfile
