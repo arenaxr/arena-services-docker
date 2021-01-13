@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /**
  * @fileoverview Define ARENA defaults
  *
@@ -6,23 +7,22 @@
  * @date 2020
  */
 
-const window.ARENADefaults = {
-     realm: "realm",
-     camUpdateIntervalMs:100,
-     namespace:"public",
-     sceneName:"lobby",
-     userName:"Anonymous",
-     startCoords:"0,1.6,0",
-     mqttHost:"${HOSTNAME}",
-     ATLASurl:"//atlas.conix.io",
-     screenSharePath:"screenshare",
-     vioTopic:"/topic/vio/",
-     graphTopic:"${ESC}NETWORK",
-     latencyTopic:"${ESC}NETWORK/latency",
-     mqttPath:["/mqtt/"],
-     persistHost:"${HOSTNAME}",
-     persistPath:"/persist/",
-     urlMqttAuth:"https://${HOSTNAME}/auth/",
-     gAuthClientId:'${GAUTH_CLIENTID}',
-     supportDevFolders:true
+const ARENADefaults = {
+    realm: 'realm',
+    camUpdateIntervalMs: 100,
+    namespace: 'public',
+    sceneName: 'lobby',
+    userName: 'Anonymous',
+    startCoords: '0,1.6,0',
+    mqttHost: '${HOSTNAME}',
+    ATLASurl: '//atlas.conix.io',
+    vioTopic: '/topic/vio/',
+    graphTopic: '${ESC}NETWORK',
+    latencyTopic: '${ESC}NETWORK/latency',
+    mqttPath: ['/mqtt/'],
+    persistHost: '${HOSTNAME}',
+    persistPath: '/persist/',
+    urlMqttAuth: 'https://${HOSTNAME}/auth/',
+    gAuthClientId: '${GAUTH_CLIENTID}',
+    supportDevFolders: true,
 };
