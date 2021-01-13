@@ -1,14 +1,19 @@
-const defaults = {
+/**
+ * @fileoverview Define ARENA defaults
+ *
+ * Open source software under the terms in /LICENSE
+ * Copyright (c) 2020, The CONIX Research Center. All rights reserved.
+ * @date 2020
+ */
+
+const window.ARENADefaults = {
      realm: "realm",
-     updateMillis:100,
-     scenenameParam:"render",
-     userParam:"X",
+     camUpdateIntervalMs:100,
+     namespace:"public",
+     sceneName:"lobby",
+     userName:"Anonymous",
      startCoords:"0,1.6,0",
-     themeParam:"starry",
-     weatherParam:"none",
-     mqttParamZ:"${HOSTNAME}",
-     screenSharePath:"screenshare",
-     fixedCamera:"",
+     mqttHost:"${HOSTNAME}",
      ATLASurl:"//atlas.conix.io",
      screenSharePath:"screenshare",
      vioTopic:"/topic/vio/",

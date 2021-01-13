@@ -26,10 +26,42 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'arena-account']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'arena-account', '${HOSTNAME}']
 
 USE_X_FORWARDED_HOST = True
 MQTT_TOKEN_PRIVKEY = "/home/node/app/pubsubkey.pem"
+
+# TODO (mwfarb): this list can be reduced after webserver refactor
+# namespaces that are reserved for the webserver, see ARENA-core and nginx
+USERNAME_RESERVED = [
+    'aframe',
+    'apriltag',
+    'ar',
+    'audio',
+    'auth',  # proxy
+    'build',
+    'chat',
+    'conf',
+    'face-tracking',
+    'icons',
+    'images',
+    'libs',
+    'models',
+    'mqtt',  # proxy
+    'network',
+    'node_modules',
+    'persist',  # proxy
+    'public',  # public namespace (tentative)
+    'runtime-mngr',
+    'screenshare',
+    'scene',  # public namespace (tentative)
+    'signin',
+    'store',
+    'storemng',  # proxy
+    'textures',
+    'user',  # proxy
+    'vendor',
+]
 
 # Application definition
 
@@ -47,7 +79,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.github',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -58,6 +89,12 @@ AUTHENTICATION_BACKENDS = (
 # allauth social accounts
 SITE_ID = 2  # must match our domain Site used in admin: Sites
 LOGIN_REDIRECT_URL = '/user/login_callback'
+# require social accounts to use the signup form
+SOCIALACCOUNT_AUTO_SIGNUP = False
+SOCIALACCOUNT_EMAIL_REQUIRED = True
+
+#ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.SocialSignupForm'
+SOCIALACCOUNT_FORMS = {'signup': 'users.forms.SocialSignupForm'}
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
