@@ -34,6 +34,8 @@ MQTT_TOKEN_PRIVKEY = "/home/node/app/pubsubkey.pem"
 # TODO (mwfarb): this list can be reduced after webserver refactor
 # namespaces that are reserved for the webserver, see ARENA-core and nginx
 USERNAME_RESERVED = [
+    '.cache',
+    '.github',
     'aframe',
     'apriltag',
     'ar',
@@ -42,6 +44,7 @@ USERNAME_RESERVED = [
     'build',
     'chat',
     'conf',
+    'dist',
     'face-tracking',
     'icons',
     'images',
@@ -54,7 +57,8 @@ USERNAME_RESERVED = [
     'public',  # public namespace (tentative)
     'runtime-mngr',
     'screenshare',
-    'scene',  # public namespace (tentative)
+    'scene',
+    'src',
     'signin',
     'store',
     'storemng',  # proxy
@@ -72,13 +76,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
     'crispy_forms',
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_framework_swagger',
+    'drf_yasg',
+    'users.apps.UsersConfig',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -86,18 +94,37 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+        'rest_framework.renderers.OpenAPIRenderer',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.JSONParser',
+    ],
+}
+
 # allauth social accounts
 SITE_ID = 2  # must match our domain Site used in admin: Sites
 LOGIN_REDIRECT_URL = '/user/login_callback'
 # require social accounts to use the signup form
 SOCIALACCOUNT_AUTO_SIGNUP = False
 SOCIALACCOUNT_EMAIL_REQUIRED = True
+#SOCIALACCOUNT_STORE_TOKENS = False
 
-#ACCOUNT_SIGNUP_FORM_CLASS = 'users.forms.SocialSignupForm'
 SOCIALACCOUNT_FORMS = {'signup': 'users.forms.SocialSignupForm'}
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        "APP": {
+            "client_id": os.getenv('GAUTH_CLIENTID'),
+            "secret": os.getenv('GAUTH_CLIENTSECRET'),
+            "key": ""
+        },
         'SCOPE': [
             'profile',
             'email',
@@ -120,6 +147,27 @@ MESSAGE_TAGS = {
 
 # TODO (mwfarb): For production, change backend to an email sending service.
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        '*': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
