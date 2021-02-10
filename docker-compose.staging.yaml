@@ -80,7 +80,7 @@ services:
     env_file:
       - secret.env
     restart: unless-stopped # service will respawn unless we tell docker to stop it
-      
+
   py-runtime:
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
