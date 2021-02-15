@@ -17,7 +17,6 @@ services:
       - arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
       - ../dev:/usr/share/nginx/html/dev:ro # mount dev folder
-      - ../dev/mqtt-west:/usr/share/nginx/html/mqtt-west:ro # mount mqtt-west folder
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
       - "443:443"
