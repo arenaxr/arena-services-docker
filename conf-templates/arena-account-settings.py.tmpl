@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'arena-account', '${HOSTNAME}']
 
@@ -107,6 +107,9 @@ REST_FRAMEWORK = {
         'rest_framework.parsers.JSONParser',
     ],
 }
+
+# allauth general config
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # https for docker, http for localhost:8000
 
 # allauth social accounts
 SITE_ID = 2  # must match our domain Site used in admin: Sites
