@@ -24,12 +24,16 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   chown $OWNER secret.env # change ownership of file created
 fi
 
-echo -e "\n### Creating RSA key pair for JWT (conf/keys/pubsubkey.pem). This will replace old keys (if exist; backup will be in data/keys/pubsubkeyspem.bak)."
+echo -e "\n### Creating RSA key pair for JWT (conf/keys/jwt.priv.pem). This will replace old keys (if exist; backup will be in data/keys/jwt.priv.pem.bak)."
 read -p "Create RSA key pair ? (y/N) " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  openssl genrsa -out ./data/keys/pubsubkey.pem 4096
-  openssl rsa -in ./data/keys/pubsubkey.pem -RSAPublicKey_out -outform pem -out ./data/keys/pubsubkey.pub
-  openssl rsa -in ./data/keys/pubsubkey.pem -RSAPublicKey_out -outform DER -out ./data/keys/pubsubkey.der
+  [ -f ./data/keys/jwt.priv.pem ] && cp ./data/keys/jwt.priv.pem data/keys/jwt.priv.pem.bak
+  rm ./data/keys/*
+  openssl genrsa -out ./data/keys/jwt.priv.pem 4096
+  openssl rsa -in ./data/keys/jwt.priv.pem -pubout -outform PEM -out ./data/keys/jwt.public.pem
+  openssl rsa -in ./data/keys/jwt.priv.pem -RSAPublicKey_out -outform DER -out ./data/keys/jwt.public.der # mqtt auth plugin requires RSAPublicKey format
+  # change ownership public keys
+  chown $OWNER ./data/keys/jwt.public*
 fi
 
 echo -e "\n### Creating Service Tokens. This will replace service tokens in secret.env (if exists; backup will be in secret.env.bak)."
@@ -42,7 +46,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   for s in "${services[@]}"
   do
     tn="SERVICE_${s^^}_JWT"
-    echo "$tn=$(python /utils/genjwt.py -k ./data/keys/pubsubkey.pem $s)" >> secret.env
+    echo "$tn=$(python /utils/genjwt.py -k ./data/keys/jwt.priv.pem $s)" >> secret.env
   done
 fi
 
