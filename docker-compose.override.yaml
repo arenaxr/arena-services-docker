@@ -54,6 +54,7 @@ services:
       - account-static-content:/usr/src/app/static # static content
       - ./data/keys/jwt.priv.pem:/home/node/app/pubsubkey.pem:ro # pubsub key available to service
       - ./data/account:/usr/src/app/db # account db
+    tty: true
     env_file:
       - .env
       - secret.env
