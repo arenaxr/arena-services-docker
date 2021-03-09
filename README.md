@@ -31,6 +31,7 @@ git clone git@github.com:conix-center/arena-services-docker.git --recurse-submod
 
 ```bash
 HOSTNAME=full.domain.name.of.your.host
+JITSI_HOSTNAME=full.domain.name.of.your.jitsi.host
 EMAIL=nouser@nomail.com
 BACKUP_USER=1001:1001
 GAUTH_CLIENTID=Google_OAuth_Web_Client_ID
@@ -41,6 +42,8 @@ DJANGO_SUPERUSER_USERNAME=admin
 DJANGO_SUPERUSER_EMAIL=admin@example.com
 ```
 * ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup; see [Init Config](#init-config).
+
+* ```JITSI_HOSTNAME``` is the fully qualified domain name (FQDN) of the jitsi server you will use. 
 
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 
