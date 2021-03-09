@@ -34,6 +34,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   openssl rsa -in ./data/keys/jwt.priv.pem -RSAPublicKey_out -outform DER -out ./data/keys/jwt.public.der # mqtt auth plugin requires RSAPublicKey format
   # change ownership public keys
   chown $OWNER ./data/keys/jwt.public*
+  # copy public key to /conf/sha256(hostname).pem to be used for Atlassian Service Authentication Protocol (ASAP)
+  PUB_KEY_FILENAME=$(echo -n $HOSTNAME | shasum -a 256).pem
+  echo ./data/keys/jwt.public.pem > ./conf/arena-web-conf/$PUB_KEY_FILENAME
 fi
 
 echo -e "\n### Creating Service Tokens. This will replace service tokens in secret.env (if exists; backup will be in secret.env.bak)."
@@ -83,5 +86,26 @@ do
   chown $OWNER conf/$f
 done
 
-# copy public key
-[ -f "./data/keys/pubsubkey.pub" ] && cp ./data/keys/pubsubkey.pub ./conf/arena-web-conf/ 
+if [[ ! -z "$JITSI_HOSTNAME" ]]; then
+    echo -e "\n### If you are going to setup a Jitsi server on this machine, you will configure nginx to redirect http requests to a Jitsi virtual host (JITSI_HOSTNAME is an alias to the IP of the machine)."
+    read -p "Add server block to redirect requests to Jitsi ? (y/N) " -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        TMPFN=/tmp/$(openssl rand -base64 12)
+        cat > $TMPFN <<  EOF
+server {
+    server_name         $JITSI_HOSTNAME;
+    listen              80;
+    location /.well-known/acme-challenge/ {  
+        proxy_pass http://$JITSI_HOSTNAME:8000;       
+    }    
+    location / {  
+        rewrite ^ https://$JITSI_HOSTNAME:8443$request_uri? permanent;
+    }    
+}
+EOF
+        # add server block to production and staging
+        cat $TMPFN >> ./conf/arena-web.conf
+        cat $TMPFN >> ./conf/arena-web-staging.conf
+        rm $TMPFN
+    fi
+fi 
