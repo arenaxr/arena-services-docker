@@ -91,15 +91,16 @@ if [[ ! -z "$JITSI_HOSTNAME" ]]; then
     read -p "Add server block to redirect requests to Jitsi ? (y/N) " -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         TMPFN=/tmp/$(openssl rand -base64 12)
+        JITSI_HOSTNAME_NOPORT=$(echo $JITSI_HOSTNAME | cut -f1 -d":")
         cat > $TMPFN <<  EOF
 server {
-    server_name         $JITSI_HOSTNAME;
+    server_name         $JITSI_HOSTNAME_NOPORT;
     listen              80;
     location /.well-known/acme-challenge/ {  
-        proxy_pass http://$JITSI_HOSTNAME:8000;       
+        proxy_pass http://$JITSI_HOSTNAME_NOPORT:8000;
     }    
     location / {  
-        return 301 https://$JITSI_HOSTNAME:8443$request_uri;
+        return 301 https://JITSI_HOSTNAME$request_uri;
     }    
 }
 EOF
