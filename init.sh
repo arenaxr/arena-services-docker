@@ -10,8 +10,17 @@ fi
 # TMP: create ARENA-core/user/static
 [ ! -d "ARENA-core/user/static" ] && mkdir -p ARENA-core/user/static
 
+echo -e "\n\e[1m### Building ARENA core\e[0m\n"
+docker run -it -e OWNER=`id -u`:`id -g` --rm -v $PWD/ARENA-core:/ARENA-core -w /ARENA-core conixcenter/arena-services-docker-init-utils npm run build
+
 echo -e "\n\e[1m### Init config files (create secrets.env, ./conf/* files, and ./data/* folders)\e[0m\n"
 docker run -it --env-file .env --env-file secret.env -e OWNER=`id -u`:`id -g` --rm -v $PWD:/work -w /work conixcenter/arena-services-docker-init-utils /work/init-config.sh
+
+if [ $? -ne 0 ]
+then
+    echo -e "\n\e[1m### Init config failed. Stopping here.\e[0m\n"
+    exit 1
+fi
 
 if [ $? -ne 0 ]
 then
