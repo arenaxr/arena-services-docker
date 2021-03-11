@@ -100,7 +100,7 @@ server {
         proxy_pass http://$JITSI_HOSTNAME_NOPORT:8000;
     }    
     location / {  
-        return 301 https://JITSI_HOSTNAME$request_uri;
+        return 301 https://$JITSI_HOSTNAME$request_uri;
     }    
 }
 EOF
