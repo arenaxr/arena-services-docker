@@ -99,7 +99,7 @@ server {
         proxy_pass http://$JITSI_HOSTNAME:8000;       
     }    
     location / {  
-        rewrite ^ https://$JITSI_HOSTNAME:8443$request_uri? permanent;
+        return 301 https://$JITSI_HOSTNAME:8443$request_uri;
     }    
 }
 EOF
