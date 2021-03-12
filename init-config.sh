@@ -35,8 +35,8 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   # change ownership public keys
   chown $OWNER ./data/keys/jwt.public*
   # copy public key to /conf/sha256(hostname).pem to be used for Atlassian Service Authentication Protocol (ASAP)
-  PUB_KEY_FILENAME=$(echo -n $HOSTNAME | shasum -a 256).pem
-  echo ./data/keys/jwt.public.pem > ./conf/arena-web-conf/$PUB_KEY_FILENAME
+  HOSTSHA256=$(echo -n $HOSTNAME | shasum -a 256)
+  echo ./data/keys/jwt.public.pem > ./conf/arena-web-conf/${HOSTSHA256%???}.pem
 fi
 
 echo -e "\n### Creating Service Tokens. This will replace service tokens in secret.env (if exists; backup will be in secret.env.bak)."
