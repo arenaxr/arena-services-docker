@@ -90,7 +90,7 @@ if [[ ! -z "$JITSI_HOSTNAME" ]]; then
     echo -e "\n### If you are going to setup a Jitsi server on this machine, you will configure nginx to redirect http requests to a Jitsi virtual host (JITSI_HOSTNAME is an alias to the IP of the machine)."
     read -p "Add server block to redirect requests to Jitsi ? (y/N) " -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        TMPFN=/tmp/$(openssl rand -base64 12)
+        TMPFN=/tmp/nginx_tmpcfg
         JITSI_HOSTNAME_NOPORT=$(echo $JITSI_HOSTNAME | cut -f1 -d":")
         cat > $TMPFN <<  EOF
 server {

@@ -17,7 +17,7 @@ def generate_token(username, keypath):
     with open(keypath, 'r') as keyfile:
         key = keyfile.read()
     token = jwt.encode(claim, key, algorithm='RS256')
-    print(token)
+    print(token.decode())
 
 
 if __name__ == '__main__':
