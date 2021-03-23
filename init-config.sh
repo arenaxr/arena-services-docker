@@ -72,6 +72,13 @@ fi
 # setup escape var for envsubst templates
 export ESC="$"
 
+# create a list of hostnames for python config files
+HOSTNAMES_LIST=""
+for host in $(echo "$HOSTNAME $ADDITIONAL_HOSTNAMES"|tr ' ' '\n'); do
+  HOSTNAMES_LIST="$HOSTNAMES_LIST '$host',"
+done
+HOSTNAMES_LIST=${HOSTNAMES_LIST::-1} # remove last comma
+
 for t in $(find conf-templates/ -type f)
 do
   t="${t:15}" # remove "conf-templates/"
