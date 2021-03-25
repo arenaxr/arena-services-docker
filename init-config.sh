@@ -34,10 +34,12 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   openssl rsa -in ./data/keys/jwt.priv.pem -RSAPublicKey_out -outform DER -out ./data/keys/jwt.public.der # mqtt auth plugin requires RSAPublicKey format
   # change ownership public keys
   chown $OWNER ./data/keys/jwt.public*
-  # copy public key to /conf/sha256(hostname).pem to be used for Atlassian Service Authentication Protocol (ASAP)
-  HOSTSHA256=$(echo -n $HOSTNAME | shasum -a 256)
-  cat ./data/keys/jwt.public.pem > ./conf/arena-web-conf/${HOSTSHA256%???}.pem
 fi
+
+rm ./conf/arena-web-conf/*.pem
+# copy public key to /conf/sha256(hostname).pem to be used for Atlassian Service Authentication Protocol (ASAP)
+HOSTSHA256=$(echo -n $HOSTNAME | shasum -a 256)
+cat ./data/keys/jwt.public.pem > ./conf/arena-web-conf/${HOSTSHA256%???}.pem
 
 echo -e "\n### Creating Service Tokens. This will replace service tokens in secret.env (if exists; backup will be in secret.env.bak)."
 read -p "Create Service Tokens ? (y/N) " -r
