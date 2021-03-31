@@ -1,7 +1,7 @@
 # we produce the final config file by passing this file through envsubst (will substitute env variables like ${HOSTNAME}, ...)
 # IMPORTANT: to avoid substitution on nginx variables, use '${ESC}' on the their '$' signs
 server {
-    server_name         ${HOSTNAME} ${ADDITIONAL_HOSTNAMES};
+    server_name         ${HOSTNAME};
     server_tokens off;
     client_max_body_size 1000M;
 
