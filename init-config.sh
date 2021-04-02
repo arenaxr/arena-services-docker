@@ -119,7 +119,7 @@ server {
         proxy_pass http://arena-account:8000;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
-        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Upgrade \$http_upgrade;
         proxy_set_header Connection "Upgrade";
         proxy_read_timeout 86400;
     }
