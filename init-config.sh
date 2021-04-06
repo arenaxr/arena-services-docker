@@ -11,12 +11,14 @@ done
 
 [ ! -d conf ] && mkdir conf && chown $OWNER conf
 
+touch secret.env
+
 echo -e "\n### Creating secret.env (with secret keys, admin password). This will replace old secret.env (if exists; backup will be in secret.env.bak)."
 read -p "Create secret.env ? (y/N) " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
   SECRET_KEY_BASE64=$(echo $SECRET_KEY | base64)
-  [ -f secret.env ] && cp secret.env secret.env.bak
+  cp secret.env secret.env.bak
   echo "SECRET_KEY=$SECRET_KEY" > secret.env
   echo "SECRET_KEY_BASE64=$SECRET_KEY_BASE64" >> secret.env
   echo "DJANGO_SUPERUSER_PASSWORD=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c15)" >> secret.env
@@ -34,7 +36,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   chown $OWNER ./data/keys/jwt.public*
 fi
 
-rm ./conf/arena-web-conf/*.pem
+rm ./conf/arena-web-conf/*.pem 2>/dev/null
 # copy public key to /conf/sha256(hostname).pem to be used for Atlassian Service Authentication Protocol (ASAP)
 HOSTSHA256=$(echo -n $HOSTNAME | shasum -a 256)
 cat ./data/keys/jwt.public.pem > ./conf/arena-web-conf/${HOSTSHA256%???}.pem
@@ -45,12 +47,22 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   grep -v '^SERVICE_' secret.env > secret.tmp # remove all service tokens
   cp secret.env secret.env.bak
   cp secret.tmp secret.env
-  services=( "arena_persist" "arena_arts" "py_runtime" "mqttbr")
+  services=("arena_persist" "arena_arts" "py_runtime" "mqttbr")
   for s in "${services[@]}"
   do
     tn="SERVICE_${s^^}_JWT"
     echo "$tn=$(python /utils/genjwt.py -k ./data/keys/jwt.priv.pem $s)" >> secret.env
   done
+  # generate a token for cli tools (for developers) and announce it in slack
+  cli_token_json=$(python /utils/genjwt.py -k ./data/keys/jwt.priv.pem -j cli)
+  echo $cli_token_json > ./data/keys/cli_token.json 
+  if [[ ! -z "$SLACK_DEV_CHANNEL_WEBHOOK" ]]; then
+    username=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['username'])")
+    cli_token=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
+    alias_name="${HOSTNAME%%.*}"
+    curl_data="{\"text\":\"New MQTT token for $HOSTNAME\", \"attachments\": [ {\"text\":\"\`\`\`alias ${alias_name}_pub='mosquitto_pub -h $HOSTNAME -p 8883 -u $username -P $cli_token'\`\`\`\"}, {\"text\":\"\`\`\`alias ${alias_name}_sub='mosquitto_sub -h $HOSTNAME -p 8883 -u $username -P $cli_token'\`\`\`\"} ]}"
+    curl -X POST -H 'Content-type: application/json' --data "$curl_data" $SLACK_DEV_CHANNEL_WEBHOOK
+  fi
 fi
 
 # load secrets 
