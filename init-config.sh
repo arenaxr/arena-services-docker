@@ -63,6 +63,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     curl_data="{\"text\":\"New MQTT token for $HOSTNAME\", \"attachments\": [ {\"text\":\"\`\`\`alias ${alias_name}_pub='mosquitto_pub -h $HOSTNAME -p 8883 -u $username -P $cli_token'\`\`\`\"}, {\"text\":\"\`\`\`alias ${alias_name}_sub='mosquitto_sub -h $HOSTNAME -p 8883 -u $username -P $cli_token'\`\`\`\"} ]}"
     curl -X POST -H 'Content-type: application/json' --data "$curl_data" $SLACK_DEV_CHANNEL_WEBHOOK
   fi
+  echo -e "\n Service tokens created. !NOTE!: For new service tokens to be used, you need to create config files (reply Y to the next question)."
 fi
 
 # load secrets 
