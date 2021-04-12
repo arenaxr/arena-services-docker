@@ -107,6 +107,8 @@ server {
         add_header 'Access-Control-Allow-Credentials' 'true';
         add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
 
+        add_header Content-Security-Policy "default-src 'none'; script-src 'self' 'sha256-yfJaugPeh7oO5kkG2N8w7ascfBzM+6zN9encOau5C2Q=' 'unsafe-eval'; connect-src 'self' blob: https://arena-cdn.conix.io https://dl.dropboxusercontent https://cdn.aframe.io; img-src 'self' data: https://arena-cdn.conix.io https://dl.dropboxusercontent https://cdn.aframe.io; style-src 'self' 'unsafe-inline'; base-uri 'self'; form-action 'self'; font-src 'self' https://cdn.aframe.io; media-src 'self' https://arena-cdn.conix.io https://dl.dropboxusercontent; worker-src 'self' blob:" ;
+
         # Staging /dev/username folders
         location ~* ^/dev {
             autoindex on;
