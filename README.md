@@ -109,7 +109,7 @@ Before starting services, we need to create the configuration files for the serv
 > ```
 > This will result in creating a self-signed certificate to be used with the services. This is the name you will enter in your browser: `https://localhost`
 >
-> * **Make sure the above name resolves in your system (by adding it to [the `hosts` file](https://linuxize.com/post/how-to-edit-your-hosts-file/)**.
+> * **Make sure the above name resolves in your system (by adding it to [the `hosts` file](https://en.wikipedia.org/wiki/Hosts_(file))**.
 > * Note: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
 
 > ### Setup (public) jitsi in the same machine
