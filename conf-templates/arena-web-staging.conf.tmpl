@@ -108,7 +108,7 @@ server {
         add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
 
         add_header Content-Security-Policy "default-src 'none'; 
-                                            script-src 'self' 'sha256-yfJaugPeh7oO5kkG2N8w7ascfBzM+6zN9encOau5C2Q=' 'unsafe-eval' https://cdn.jsdelivr.net; 
+                                            script-src 'self' 'sha256-yfJaugPeh7oO5kkG2N8w7ascfBzM+6zN9encOau5C2Q=' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com;
                                             connect-src 'self' blob: wss://*.andrew.cmu.edu wss://*.conix.io https://*.andrew.cmu.edu https://*.arenaxr.org https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io; 
                                             img-src 'self' data: https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io; 
                                             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; 
