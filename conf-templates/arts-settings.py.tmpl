@@ -181,7 +181,7 @@ JWT_AUTH = {
 
 # pubsub settings
 PUBSUB = {
-    'mqtt_server': { 'host': '${HOSTNAME}', 'port': 1883, 'ws_port': 9001, 'wss_port': 8083, 'ws_path': '/mqtt'},
+    'mqtt_server': { 'host': '${HOSTNAME}', 'port': 1883, 'ws_port': 9001, 'wss_port': 8083, 'ws_path': 'mqtt/'},
     'mqtt_username': 'arena_arts',
     'mqtt_password': '${SERVICE_ARENA_ARTS_JWT}',
     'subscribe_topics': [
