@@ -49,8 +49,6 @@ services:
 
   mqtt:
     ports:
-      - 1883:1883/tcp # mqtt; map port for listener configured in /conf/mosquitto.conf
-      - 9001:9001/tcp # mqtt-ws
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
     restart: unless-stopped

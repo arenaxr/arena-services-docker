@@ -30,12 +30,14 @@ protocol websockets
 
 listener 8083
 protocol websockets
-certfile /etc/letsencrypt/live/${HOSTNAME}/fullchain.pem
+certfile /etc/letsencrypt/live/${HOSTNAME}/cert.pem
+cafile /etc/letsencrypt/live/${HOSTNAME}/chain.pem
 keyfile /etc/letsencrypt/live/${HOSTNAME}/privkey.pem
 
 listener 8883
 protocol mqtt
-certfile /etc/letsencrypt/live/${HOSTNAME}/fullchain.pem
+certfile /etc/letsencrypt/live/${HOSTNAME}/cert.pem
+cafile /etc/letsencrypt/live/${HOSTNAME}/chain.pem
 keyfile /etc/letsencrypt/live/${HOSTNAME}/privkey.pem
 
 # =================================================================
