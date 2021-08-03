@@ -30,8 +30,10 @@ if [ $HOSTNAME = "localhost" ] || [ $local = "local" ]; then
   mkdir -p $path
   openssl req -x509 -nodes -newkey rsa:$rsa_key_size\
       -keyout "$path/privkey.pem" \
-      -out "$path/fullchain.pem" \
+      -out "$path/cert.pem" \
       -subj "/CN=$domains"
+  cp -f "$path/cert.pem" "$path/chain.pem"
+  cp -f "$path/cert.pem" "$path/fullchain.pem"
   exit 0
 fi
 
@@ -64,8 +66,10 @@ then
   mkdir -p $path
   openssl req -x509 -nodes -newkey rsa:$rsa_key_size\
       -keyout "$path/privkey.pem" \
-      -out "$path/fullchain.pem" \
+      -out "$path/cert.pem" \
       -subj "/CN=$domains"
+  cp -f "$path/cert.pem" "$path/chain.pem"
+  cp -f "$path/cert.pem" "$path/fullchain.pem"
   exit 0
 fi
 echo
