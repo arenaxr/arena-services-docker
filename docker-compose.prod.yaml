@@ -73,14 +73,6 @@ services:
       - mqtt
     restart: unless-stopped
 
-  store:
-    image: "conixcenter/arena-store"  # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-store
-    volumes:
-      - ./conf/arena-store-config.json:/arena-store/.config.json:ro
-      - ./ARENA-core/store:/srv-files:rw
-      - ./data/arena-store:/arena-store/data:rw
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
-
   arts:
     #volumes:
       #- arts-static-content:/usr/src/app/public:ro # static arts visualization page

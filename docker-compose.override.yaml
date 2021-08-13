@@ -75,12 +75,5 @@ services:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
 
-  store:
-    image: "conixcenter/arena-store"  # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-store
-    volumes:
-      - ./conf/arena-store-config.json:/arena-store/.config.json:ro
-      - ./ARENA-core/store:/srv-files:rw
-      - ./data/arena-store:/arena-store/data:rw
-
 volumes:
   account-static-content:
