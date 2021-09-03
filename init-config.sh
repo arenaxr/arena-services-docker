@@ -106,6 +106,12 @@ do
   chown $OWNER conf/$f
 done
 
+for t in $(find conf/arena-web-conf/*js -type f)
+do
+    f="${t%.*}" # remove trailing ".js"
+    node /utils/jsDefaultsToJson.js "$PWD/$t" > $f.json 
+done
+
 # add server block to redirect additional hostnames
 if [[ ! -z "$ADDITIONAL_HOSTNAMES" ]]; then
         TMPFN=/tmp/nginx_tmpcfg
