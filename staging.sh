@@ -6,6 +6,7 @@
 
 # copy arena client defaults
 cp ./conf/arena-web-conf/arena-defaults-dev.js ./conf/arena-web-conf/defaults.js
+cp ./conf/arena-web-conf/arena-defaults-dev.json ./conf/arena-web-conf/defaults.json
 
 # force static volumes to be created again on "up"
 if [[ "$*" == *up* ]]
