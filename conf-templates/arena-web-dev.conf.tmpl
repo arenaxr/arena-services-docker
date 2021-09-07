@@ -57,6 +57,10 @@ server {
     }
 
     location ^~ /storemng/ {
+        add_header 'Access-Control-Allow-Origin' "${ESC}http_origin";
+        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+        add_header 'Access-Control-Allow-Credentials' 'true';
+        add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
         proxy_pass http://store:8080/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade ${ESC}http_upgrade;
@@ -80,17 +84,18 @@ server {
         add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
 
         add_header Content-Security-Policy "default-src 'none';
-                                            script-src 'self' https://arenaxr.org 'sha256-yfJaugPeh7oO5kkG2N8w7ascfBzM+6zN9encOau5C2Q=' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com;
-                                            connect-src 'self' blob: wss://*.andrew.cmu.edu wss://*.conix.io https://mr.andrew.cmu.edu https://jitsi0.andrew.cmu.edu:8443 https://jitsi1.andrew.cmu.edu  https://arenaxr.org https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io;
+                                            script-src 'self' https://arenaxr.org 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com;
+                                            connect-src 'self' blob: wss://arenaxr.org wss://*.andrew.cmu.edu wss://*.conix.io https://mr.andrew.cmu.edu https://jitsi0.andrew.cmu.edu:8443 https://jitsi1.andrew.cmu.edu https://arenaxr.org https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io;
                                             img-src 'self' data: blob: https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io https://aframe.io;
                                             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://maxcdn.bootstrapcdn.com;
                                             base-uri 'self';
                                             form-action 'self';
-                                            font-src 'self' https://cdn.aframe.io https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com;
+                                            font-src 'self' data: https://cdn.aframe.io https://fonts.gstatic.com https://maxcdn.bootstrapcdn.com;
                                             media-src 'self' https://*.conix.io https://dl.dropboxusercontent.com https://www.youtube-nocookie.com;
                                             worker-src 'self' blob:;
                                             child-src 'self';
-                                            frame-src https://www.youtube-nocookie.com";
+                                            frame-src 'self' https://www.youtube-nocookie.com;
+                                            prefetch-src 'self';";
 
         # Cover actual files in subdirectories of /namespace (e.g. /namespace/vendor/env.js)
         location ~* ^/([\w.-]+)/([\w.-]+)/(.+) {
