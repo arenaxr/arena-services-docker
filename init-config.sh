@@ -22,6 +22,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "SECRET_KEY=$SECRET_KEY" > secret.env
   echo "SECRET_KEY_BASE64=$SECRET_KEY_BASE64" >> secret.env
   echo "DJANGO_SUPERUSER_PASSWORD=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c15)" >> secret.env
+  echo "STORE_ADMIN_PASSWORD=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c15)" >> secret.env
 fi
 
 echo -e "\n### Creating RSA key pair for JWT (conf/keys/jwt.priv.pem). This will replace old keys (if exist; backup will be in data/keys/jwt.priv.pem.bak)."
@@ -110,6 +111,7 @@ for t in $(find conf/arena-web-conf/*js -type f)
 do
     f="${t%.*}" # remove trailing ".js"
     node /utils/jsDefaultsToJson.js "$PWD/$t" > $f.json 
+    chown $OWNER $f.json
 done
 
 # add server block to redirect additional hostnames
