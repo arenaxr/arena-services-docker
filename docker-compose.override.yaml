@@ -75,5 +75,13 @@ services:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
 
+  store:
+    image: "filebrowser/filebrowser"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
+    volumes:
+      - ./conf/arena-store-config.json:/.filebrowser.json:ro
+      - ./store-branding:/arena-store/frontend/arena-branding:ro
+      - ./ARENA-core/store:/srv-files:rw
+      - ./data/arena-store:/arena-store/data:rw
+
 volumes:
   account-static-content:
