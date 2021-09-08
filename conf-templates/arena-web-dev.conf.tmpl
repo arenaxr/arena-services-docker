@@ -95,7 +95,8 @@ server {
                                             worker-src 'self' blob:;
                                             child-src 'self';
                                             frame-src 'self' https://www.youtube-nocookie.com;
-                                            prefetch-src 'self';";
+                                            prefetch-src 'self';
+                                            manifest-src 'self' blob:;";
 
         # Cover actual files in subdirectories of /namespace (e.g. /namespace/vendor/env.js)
         location ~* ^/([\w.-]+)/([\w.-]+)/(.+) {

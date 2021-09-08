@@ -123,7 +123,8 @@ server {
                                             worker-src 'self' blob:;
                                             child-src 'self';
                                             frame-src 'self' https://www.youtube-nocookie.com;
-                                            prefetch-src 'self';";
+                                            prefetch-src 'self';
+                                            manifest-src 'self' blob:;";
 
         # Staging /dev/username folders
         location ~* ^/dev {
