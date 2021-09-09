@@ -17,6 +17,7 @@ services:
       - ./conf/arena-web-conf:/usr/share/nginx/html/conf:ro # arena client code conf
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
+      #- arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
       - account-static-content:/usr/share/nginx/account-static:ro # serve account static files
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
@@ -26,6 +27,7 @@ services:
       - mqtt
       - arena-persist
       - store
+      - arts
       - arena-account
 
   mongodb:
@@ -75,6 +77,24 @@ services:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
 
+  arts:
+    build: "arts/arts-main"
+    volumes:
+      - ./conf/arts-settings.py:/usr/src/app/arts_api/settings.py:ro
+      #- arts-static-content:/usr/src/app/public:ro # static arts visualization page
+    tty: true
+    env_file: secret.env
+    command: ["./wait-for-it.sh", "mqtt:1883", "--", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+    depends_on:
+      - mqtt
+
+  py-runtime:
+    build: "arena-runtime-simulated"
+    volumes:
+      - ./conf/arena-runtime-simulated.conf:/usr/src/app/config.json:ro
+    depends_on:
+      - arts
+
   store:
     # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
     image: "filebrowser/filebrowser:v2.16.1"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser:v2.16.1
@@ -85,4 +105,5 @@ services:
       - ./data/arena-store:/arena-store/data:rw
 
 volumes:
+  #arts-static-content:
   account-static-content:

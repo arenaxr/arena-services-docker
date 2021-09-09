@@ -56,6 +56,22 @@ server {
         proxy_read_timeout 86400;
     }
 
+    location ^~ /arts-api/ {
+        proxy_pass http://arts:8000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade ${ESC}http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_read_timeout 86400;
+    }
+
+    location ^~ /pythonrt/ {
+        proxy_pass http://py-runtime:5000/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade ${ESC}http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_read_timeout 86400;
+    }
+
     location ^~ /storemng/ {
         add_header 'Access-Control-Allow-Origin' "${ESC}http_origin";
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
@@ -115,7 +131,9 @@ server {
             expires -1;
             add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
         }
+
     }
+
 }
 
 server {
