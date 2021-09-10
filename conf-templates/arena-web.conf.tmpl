@@ -115,7 +115,7 @@ server {
 
     location ~* / {
         root /usr/share/nginx/html;
-        index landing.html index.html;
+        index custom_landing.html landing.html index.html;
         disable_symlinks off;
 
         add_header 'Access-Control-Allow-Origin' '*';
