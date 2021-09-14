@@ -32,3 +32,9 @@ const fbInlineScript =
     const blob = new Blob([stringManifest], {type: 'application/json'});
     const manifestURL = URL.createObjectURL(blob);
     document.querySelector('#manifestPlaceholder').setAttribute('href', manifestURL);`
+
+const scriptHash = require("crypto")
+  .createHash("sha256")
+  .update(fbInlineScript)
+  .digest("base64");
+console.log(scriptHash);

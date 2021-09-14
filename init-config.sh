@@ -99,6 +99,14 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   # create share
   export FS_SHARE_HASH=$(curl -H "X-Auth: ${fsauth_token}" "https://${HOSTNAME}/storemng/api/share/public/" | \
     python3 -c "import sys, json; print(json.load(sys.stdin)['hash'])")
+  echo "New FS_SHARE_HASH=$FS_SHARE_HASH"
+  echo "FS_SHARE_HASH=$FS_SHARE_HASH" > secret.env
+
+  # gen hash of filebrowser javascript launch script for CSP
+  fs_launch_script=$(node /utils/filebrowserScriptToHash.js)
+  echo "New FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH"
+  echo "FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH" > secret.env
+
 fi
 
 # create a list of hostnames for python config files
