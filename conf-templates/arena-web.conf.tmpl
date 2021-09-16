@@ -113,6 +113,11 @@ server {
         autoindex on;
     }
 
+    location ^~ /conf/ {
+        root /usr/share/nginx/html;
+        autoindex off;
+    }
+
     location ~* / {
         root /usr/share/nginx/html;
         index custom_landing.html landing.html index.html;

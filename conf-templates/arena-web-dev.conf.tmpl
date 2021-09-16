@@ -88,6 +88,11 @@ server {
         root /usr/share/nginx/html;
         autoindex on;
     }
+    
+    location ^~ /conf/ {
+        root /usr/share/nginx/html;
+        autoindex off;
+    }
 
     location ~* / {
         root /usr/share/nginx/html;
