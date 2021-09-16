@@ -56,7 +56,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   done
   # generate a token for cli tools (for developers) and announce it in slack
   cli_token_json=$(python /utils/genjwt.py -k ./data/keys/jwt.priv.pem -j cli)
-  echo $cli_token_json > ./data/keys/cli_token.json 
+  echo $cli_token_json > ./data/keys/cli_token.json
   if [[ ! -z "$SLACK_DEV_CHANNEL_WEBHOOK" ]]; then
     username=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['username'])")
     cli_token=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
@@ -67,7 +67,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo -e "\n Service tokens created. !NOTE!: For new service tokens to be used, you need to create config files (reply Y to the next question)."
 fi
 
-# load secrets 
+# load secrets
 export $(grep -v '^#' secret.env | xargs)
 
 echo "STORE_TMP_PORT = $STORE_TMP_PORT"
@@ -109,6 +109,33 @@ fi
 # setup escape var for envsubst templates
 export ESC="$"
 
+# TODO: test and debug
+# filebrowser rest api needs to be launched for this to run
+echo -e "\n### Generating filestore public share."
+read -p "Is filebrowser running and ready to update shared link? (y/N) " -r
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  grep -v '^FS_' secret.env > secret.tmp # remove all fs tokens
+  cp secret.env secret.env.bak
+  cp secret.tmp secret.env
+  # create public share folder if needed
+  mkdir ARENA-core/store/public
+  # get auth to create share
+  fsauth_data='{"username": "'"$STORE_ADMIN_USERNAME"'", "password": "'"$STORE_ADMIN_PASSWORD"'"}'
+  fsauth_token=$(curl -X POST -d "$fsauth_data" -H "Content-Type: application/json" "https://$HOSTNAME/storemng/api/login")
+  echo "$fsauth_token"
+  # create share
+  export FS_SHARE_HASH=$(curl -X POST -d "{}" -H "Content-Type: application/json" -H "X-Auth: $fsauth_token" "https://$HOSTNAME/storemng/api/share/public/" | \
+    python3 -c "import sys, json; print(json.load(sys.stdin)['hash'])")
+  echo "New FS_SHARE_HASH=$FS_SHARE_HASH"
+  echo "FS_SHARE_HASH=$FS_SHARE_HASH" >> secret.env
+
+  # gen hash of filebrowser javascript launch script for CSP
+  export FS_LAUNCH_JS_HASH=$(node ./init-utils/filebrowserScriptToHash.js)
+  echo "New FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH"
+  echo "FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH" >> secret.env
+
+fi
+
 # create a list of hostnames for python config files
 HOSTNAMES_LIST=""
 for host in $(echo "$HOSTNAME $ADDITIONAL_HOSTNAMES"|tr ' ' '\n'); do
@@ -120,8 +147,8 @@ for t in $(find conf-templates/ -type f)
 do
   t="${t:15}" # remove "conf-templates/"
   f="${t%.*}" # remove trailing ".tmpl"
-  d="$(dirname $f)" # get folder inside conf-templates 
-  if [[ ! $d = "." ]]; then 
+  d="$(dirname $f)" # get folder inside conf-templates
+  if [[ ! $d = "." ]]; then
     [ ! -d "conf/$d" ] && mkdir "conf/$d" && chown $OWNER "conf/$d" # create destinatinon folder if needed
   fi
   cp conf/$f conf/$f.bak >/dev/null 2>&1
@@ -133,7 +160,7 @@ done
 for t in $(find conf/arena-web-conf/*js -type f)
 do
     f="${t%.*}" # remove trailing ".js"
-    node /utils/jsDefaultsToJson.js "$PWD/$t" > $f.json 
+    node /utils/jsDefaultsToJson.js "$PWD/$t" > $f.json
     chown $OWNER $f.json
 done
 
@@ -189,12 +216,12 @@ if [[ ! -z "$JITSI_HOSTNAME" ]]; then
 server {
     server_name         $JITSI_HOSTNAME_NOPORT;
     listen              80;
-    location /.well-known/acme-challenge/ {  
+    location /.well-known/acme-challenge/ {
         proxy_pass http://$JITSI_HOSTNAME_NOPORT:8000;
-    }    
-    location / {  
+    }
+    location / {
         return 301 https://$JITSI_HOSTNAME\$request_uri;
-    }    
+    }
 }
 EOF
         # add server block to production and staging
@@ -202,4 +229,4 @@ EOF
         cat $TMPFN >> ./conf/arena-web-staging.conf
         rm $TMPFN
     fi
-fi 
+fi

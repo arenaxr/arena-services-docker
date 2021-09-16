@@ -84,15 +84,20 @@ server {
         proxy_read_timeout 86400;
     }
 
-    location ^~ /store/ {
-        root /usr/share/nginx/html;
-        autoindex on;
+    location ^~ /store/public/(.*)$ {
+        rewrite ^ /storemng/api/public/dl/${FS_SHARE_HASH}/$1?$args permanent;
     }
     
     location ^~ /conf/ {
         root /usr/share/nginx/html;
         autoindex off;
     }
+
+    # close public routing of all store files, use share feature instead
+    # location ^~ /store/ {
+    #     root /usr/share/nginx/html;
+    #     autoindex on;
+    # }
 
     location ~* / {
         root /usr/share/nginx/html;
