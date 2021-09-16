@@ -95,10 +95,10 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   #mkdir /var/www/html/store/public
   # get auth to create share
   fsauth_data='{"username": "'"$STORE_ADMIN_USERNAME"'", "password": "'"$STORE_ADMIN_PASSWORD"'"}'
-  fsauth_token=$(curl -L -k -X POST -d "$fsauth_data" -H "Content-Type: application/json" "https://$HOSTNAME/storemng/api/login")
+  fsauth_token=$(curl -X POST -d "$fsauth_data" -H "Content-Type: application/json" "https://$HOSTNAME/storemng/api/login")
   echo "$fsauth_token"
   # create share
-  export FS_SHARE_HASH=$(curl -L -k -X POST -d "{}" -H "Content-Type: application/json" -H "X-Auth: $fsauth_token" "https://$HOSTNAME/storemng/api/share/public/" | \
+  export FS_SHARE_HASH=$(curl -X POST -d "{}" -H "Content-Type: application/json" -H "X-Auth: $fsauth_token" "https://$HOSTNAME/storemng/api/share/public/" | \
     python3 -c "import sys, json; print(json.load(sys.stdin)['hash'])")
   echo "New FS_SHARE_HASH=$FS_SHARE_HASH"
   echo "FS_SHARE_HASH=$FS_SHARE_HASH" > secret.env
