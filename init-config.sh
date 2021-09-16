@@ -91,8 +91,11 @@ export ESC="$"
 echo -e "\n### Generating filestore public share."
 read -p "Is filebrowser running and ready to update shared link? (y/N) " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
+  grep -v '^FS_' secret.env > secret.tmp # remove all fs tokens
+  cp secret.env secret.env.bak
+  cp secret.tmp secret.env
   # create public share folder if needed
-  #mkdir /var/www/html/store/public
+  mkdir ARENA-core/store/public
   # get auth to create share
   fsauth_data='{"username": "'"$STORE_ADMIN_USERNAME"'", "password": "'"$STORE_ADMIN_PASSWORD"'"}'
   fsauth_token=$(curl -L -k -X POST -d "$fsauth_data" -H "Content-Type: application/json" "https://$HOSTNAME/storemng/api/login")
@@ -101,12 +104,12 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   export FS_SHARE_HASH=$(curl -L -k -X POST -d "{}" -H "Content-Type: application/json" -H "X-Auth: $fsauth_token" "https://$HOSTNAME/storemng/api/share/public/" | \
     python3 -c "import sys, json; print(json.load(sys.stdin)['hash'])")
   echo "New FS_SHARE_HASH=$FS_SHARE_HASH"
-  echo "FS_SHARE_HASH=$FS_SHARE_HASH" > secret.env
+  echo "FS_SHARE_HASH=$FS_SHARE_HASH" >> secret.env
 
   # gen hash of filebrowser javascript launch script for CSP
   export FS_LAUNCH_JS_HASH=$(node ./init-utils/filebrowserScriptToHash.js)
   echo "New FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH"
-  echo "FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH" > secret.env
+  echo "FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH" >> secret.env
 
 fi
 
