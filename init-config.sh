@@ -70,6 +70,29 @@ fi
 # load secrets 
 export $(grep -v '^#' secret.env | xargs)
 
+echo "STORE_TMP_PORT = $STORE_TMP_PORT"
+if [ "$STORE_TMP_PORT" == "none" ]
+then
+    echo -e "\n### Skipping filestore share and hash setup (instance failed to start)."
+else
+    echo -e "\n### Generating filestore public share and inline js hash."
+    read -p "Create a public share on filebrowser ? Usually you only want to say say if this is the first time running this script. (y/N) " -r
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        [ ! -d "ARENA-core/store/public" ] && mkdir ARENA-core/store/public
+        fsauth_data='{"username": "'"$STORE_ADMIN_USERNAME"'", "password": "'"$STORE_ADMIN_PASSWORD"'"}'
+        fsauth_token=$(curl -X POST -d "$fsauth_data" -H "Content-Type: application/json" "http://host.docker.internal:$STORE_TMP_PORT/api/login")
+        # create share
+        export FS_SHARE_HASH=$(curl -X POST -d "{}" -H "Content-Type: application/json" -H "X-Auth: $fsauth_token" "http://host.docker.internal:$STORE_TMP_PORT/api/share/public/" | \
+            python3 -c "import sys, json; print(json.load(sys.stdin)['hash'])")
+
+        echo "New FS_SHARE_HASH=$FS_SHARE_HASH"
+    fi
+
+    # gen hash of filebrowser javascript launch script for CSP
+    export FS_LAUNCH_JS_HASH=$(node ./init-utils/filebrowserScriptToHash.js http://host.docker.internal:$STORE_TMP_PORT)
+    echo "New FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH"
+fi
+
 echo -e "\n### Creating config files (conf/*) from templates (conf-templates/*) and .env"
 echo -e "\n\nContents of .env:\n"
 cat .env
