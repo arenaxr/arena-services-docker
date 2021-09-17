@@ -4,6 +4,12 @@ cleanup_and_exit () {
     echo -e "\n\e[1m### Stopping here. Doing Cleanup...\e[0m\n"
     # stop temp filebrowser container before exiting
     docker stop storetmp
+    # sync filestore password
+    export $(grep '^STORE_ADMIN_PASSWORD' secret.env | xargs)
+    [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it \
+        -v ${PWD}/conf/arena-store-config.json:/.filebrowser.json \
+        -v ${PWD}/data/arena-store:/arena-store/data:rw \
+        filebrowser/filebrowser users update admin -p $STORE_ADMIN_PASSWORD
     # start compose filebrowser, if we stopped it
     [[ ! -z "${START_COMPOSE_FILESTORE}" ]] && docker-compose up -d store
     echo -e "\n\e[1m### Cleanup done.\e[0m\n"
@@ -21,6 +27,7 @@ fi
 # build arena-core js
 ./build-arena-core.sh 
 
+START_COMPOSE_FILESTORE=""
 # stop filestore if up
 if docker ps | grep -q "arena-services-docker_store_1"; then
     docker-compose stop store
@@ -51,7 +58,7 @@ fi
 touch secret.env &>/dev/null
 echo -e "\n\e[1m### Init config files (create secrets.env, ./conf/* files, and ./data/* folders)\e[0m\n"
 docker run --add-host host.docker.internal:host-gateway -it --env-file .env --env-file secret.env -e OWNER=`id -u`:`id -g` -e STORE_TMP_PORT=$STORE_TMP_PORT --rm -v $PWD:/work -w /work conixcenter/arena-services-docker-init-utils /work/init-config.sh
-
+    
 if [ $? -ne 0 ]
 then
     echo -e "\n\e[1m### Init config failed.\e[0m\n"
