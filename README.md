@@ -41,6 +41,7 @@ GAUTH_INSTALLED_CLIENTID=Google_OAuth_Installed_Client_ID
 GAUTH_INSTALLED_CLIENTSECRET=Google_OAuth_Installed_Client_Secret
 DJANGO_SUPERUSER_USERNAME=admin
 DJANGO_SUPERUSER_EMAIL=admin@example.com
+STORE_ADMIN_USERNAME=admin
 ```
 * ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup; see [Init Config](#init-config).
 
@@ -48,13 +49,15 @@ DJANGO_SUPERUSER_EMAIL=admin@example.com
 
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 
-* ```BACKUP_USER``` is the ```user:group``` of the *host machine user* that needs to access files backed up by the backup container.
+* ```BACKUP_USER``` is the ```userid:groupid``` of the *host machine user* that needs to access files backed up by the backup container (must be numberic ids of a host machine user).
 
 * ```ARENA_DOCKER_REPO_FOLDER``` is the full path to the the location of this repository e.g. ```/home/user/arena-services-docker```.
 
 * ```ACCOUNT_SU_NAME``` and ```ACCOUNT_SU_EMAIL``` are the account admin user and email.
 
-> The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
+* ```STORE_ADMIN_USERNAME``` the filestore admin user (usually should be kept as `admin`).
+
+> IMPORTANT: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
 
 > If you are setting up a jitsi server in the same machine, see [Init Config](#init-config) for details.
 
@@ -77,8 +80,6 @@ DJANGO_SUPERUSER_EMAIL=admin@example.com
 > For more details, see [Init Config](#init-config) Section below.
 > We also have configurations for development and staging. See the [utility scripts Section](#utility-scripts)
 
-4. Open the file store management interface and change the default admin password (**user**:admin;**pass**:admin). To open the file store, point to ```/storemng``` (e.g. ```https://arena.andrew.cmu.edu/storemng```) in your browser. See details in the [File Store](#file-store) Section below.
-
 ## Dependencies/Assumptions
 
 ### Install:
@@ -100,6 +101,7 @@ Before starting services, we need to create the configuration files for the serv
 
 - Edit hostname, email address and backup user (```user:group``` of the *host machine user* that needs to access the files backed up by the backup container configured in [docker-compose.prod.yaml](docker-compose.prod.yaml)) in the file [init.env](init.env). This should reflect your setup.
 - Insert the [Google Auth Web Client ID/Secret for your setup](https://developers.google.com/identity/protocols/oauth2/web-server) and the [Google Auth Limited-Input Client ID/Secret for your setup](https://developers.google.com/identity/protocols/oauth2/limited-input-device).
+
 > ### Local setup
 >
 > If you want a local setup (usually for development), you can configure ```HOSTNAME``` in the file ```init.env``` to a name that resolves locally on your machine (our script recognizes ```localhost```, or ```*.local``` as a local name):
@@ -107,7 +109,7 @@ Before starting services, we need to create the configuration files for the serv
 > ```bash
 > HOSTNAME=localhost
 > ```
-> This will result in creating a self-signed certificate to be used with the services. This is the name you will enter in your browser: `https://localhost`
+> This will result in creating a self-signed certificate to be used with the services. This (`HOSTNAME`) is the name you will enter in your browser: `https://localhost`
 >
 > * **Make sure the above name resolves in your system (by adding it to [the `hosts` file](https://en.wikipedia.org/wiki/Hosts_(file))**.
 > * Note: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
@@ -131,7 +133,8 @@ The first time you run the script, you will want to answer **Y**es to all questi
 The init script will generate configuration files (from the templates in [conf-templates](conf-templates)) for the services using the hostname and email configured in [init.env](init.env), and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
 
 > You might need to execute ```sudo  ./init.sh``` if [your user does not have permissions to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
-> The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
+
+> IMPORTANT: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
 
 3. Start all services:
 
@@ -152,12 +155,6 @@ The init script will generate configuration files (from the templates in [conf-t
 
 > You might need to execute the above commands with ```sudo``` (e.g. ```sudo ./prod.sh up```) if [your user does not have permissions to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
 > See [utility scripts](#utility-scripts) for details.
-
-## File Store
-
-The web server files under ```/store``` (e.g. ```https://arena.andrew.cmu.edu/store```) can be uploaded via a web interface available at ```/storemng```  (e.g. ```https://arena.andrew.cmu.edu/storemng```) . The store admin password should be changed on the first execution and other users can then be added.
-
-**Be sure to open the ```/storemng``` URL on your browser and change the *admin* user default password (*admin*).**
 
 ## Update Submodules
 
