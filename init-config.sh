@@ -76,16 +76,23 @@ then
     echo -e "\n### Skipping filestore share and hash setup (instance failed to start)."
 else
     echo -e "\n### Generating filestore public share and inline js hash."
-    read -p "Create a public share on filebrowser ? Usually you only want to say say if this is the first time running this script. (y/N) " -r
+    read -p "Create a public share on filebrowser ? (y/N) " -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         [ ! -d "ARENA-core/store/public" ] && mkdir ARENA-core/store/public
         fsauth_data='{"username": "'"$STORE_ADMIN_USERNAME"'", "password": "'"$STORE_ADMIN_PASSWORD"'"}'
         fsauth_token=$(curl -X POST -d "$fsauth_data" -H "Content-Type: application/json" "http://host.docker.internal:$STORE_TMP_PORT/api/login")
-        # create share
-        export FS_SHARE_HASH=$(curl -X POST -d "{}" -H "Content-Type: application/json" -H "X-Auth: $fsauth_token" "http://host.docker.internal:$STORE_TMP_PORT/api/share/public/" | \
-            python3 -c "import sys, json; print(json.load(sys.stdin)['hash'])")
 
-        echo "New FS_SHARE_HASH=$FS_SHARE_HASH"
+        # get share
+        export FS_SHARE_HASH=$(curl -X GET -d "{}" -H "Content-Type: application/json" -H "X-Auth: $fsauth_token" "http://localhost:$STORE_TMP_PORT/api/share/public/" )
+        if [ "$FS_SHARE_HASH" == "[]" ]
+        then
+            # create share
+            export FS_SHARE_HASH=$(curl -X POST -d "{}" -H "Content-Type: application/json" -H "X-Auth: $fsauth_token" "http://localhost:$STORE_TMP_PORT/api/share/public/" | \
+                python3 -c "import sys, json; print(json.load(sys.stdin)['hash'])")
+            echo "Share created: $FS_SHARE_HASH"
+        else
+                echo "Share already exists: $FS_SHARE_HASH"
+        fi
     fi
 
     # gen hash of filebrowser javascript launch script for CSP
