@@ -97,6 +97,12 @@ STORE_ADMIN_USERNAME=admin
 
 Before starting services, we need to create the configuration files for the services with the right domains and create certificates (using letsencrypt/openssl).
 
+NOTE: On MacOS, you may need to install GNU core utils so ensure some bash commands we use (`timeout`, ...) are available:
+```bash
+brew install coreutils
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+```
+
 1. Modify configuration:
 
 - Edit hostname, email address and backup user (```user:group``` of the *host machine user* that needs to access the files backed up by the backup container configured in [docker-compose.prod.yaml](docker-compose.prod.yaml)) in the file [init.env](init.env). This should reflect your setup.
@@ -241,4 +247,3 @@ The utility scripts pass the arguments to **docker-compose**. You can use them w
 **See logs**
 
 - ```[/prod.sh | d/ev.sh | ./staging.sh] logs```
-
