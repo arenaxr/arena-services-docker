@@ -53,7 +53,7 @@ STORE_ADMIN_USERNAME=admin
 
 * ```ARENA_DOCKER_REPO_FOLDER``` is the full path to the the location of this repository e.g. ```/home/user/arena-services-docker```.
 
-* ```ACCOUNT_SU_NAME``` and ```ACCOUNT_SU_EMAIL``` are the account admin user and email.
+* ```DJANGO_SUPERUSER_NAME``` and ```DJANGO_SUPERUSER_EMAIL``` are the account admin user and email.
 
 * ```STORE_ADMIN_USERNAME``` the filestore admin user (usually should be kept as `admin`).
 
