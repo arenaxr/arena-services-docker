@@ -53,7 +53,7 @@ STORE_ADMIN_USERNAME=admin
 
 * ```ARENA_DOCKER_REPO_FOLDER``` is the full path to the the location of this repository e.g. ```/home/user/arena-services-docker```.
 
-* ```ACCOUNT_SU_NAME``` and ```ACCOUNT_SU_EMAIL``` are the account admin user and email.
+* ```DJANGO_SUPERUSER_NAME``` and ```DJANGO_SUPERUSER_EMAIL``` are the account admin user and email.
 
 * ```STORE_ADMIN_USERNAME``` the filestore admin user (usually should be kept as `admin`).
 
@@ -96,6 +96,12 @@ STORE_ADMIN_USERNAME=admin
 ## Init Config
 
 Before starting services, we need to create the configuration files for the services with the right domains and create certificates (using letsencrypt/openssl).
+
+NOTE: On MacOS, you may need to install GNU core utils so ensure some bash commands we use (`timeout`, ...) are available:
+```bash
+brew install coreutils
+export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+```
 
 1. Modify configuration:
 
@@ -241,4 +247,3 @@ The utility scripts pass the arguments to **docker-compose**. You can use them w
 **See logs**
 
 - ```[/prod.sh | d/ev.sh | ./staging.sh] logs```
-
