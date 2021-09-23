@@ -21,6 +21,8 @@ then
   cp init.env .env
 fi
 
+docker pull conixcenter/arena-services-docker-init-utils
+
 # TMP: create ARENA-core/user/static
 [ ! -d "ARENA-core/user/static" ] && mkdir -p ARENA-core/user/static
 
