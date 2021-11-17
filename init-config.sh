@@ -52,10 +52,10 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   for s in "${services[@]}"
   do
     tn="SERVICE_${s^^}_JWT"
-    echo "$tn=$(python /utils/genjwt.py -k ./data/keys/jwt.priv.pem $s)" >> secret.env
+    echo "$tn=$(python /utils/genjwt.py -i $HOSTNAME -k ./data/keys/jwt.priv.pem $s)" >> secret.env
   done
   # generate a token for cli tools (for developers) and announce it in slack
-  cli_token_json=$(python /utils/genjwt.py -k ./data/keys/jwt.priv.pem -j cli)
+  cli_token_json=$(python /utils/genjwt.py -i $HOSTNAME -k ./data/keys/jwt.priv.pem -j cli)
   echo $cli_token_json > ./data/keys/cli_token.json
   if [[ ! -z "$SLACK_DEV_CHANNEL_WEBHOOK" ]]; then
     username=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['username'])")
