@@ -16,9 +16,9 @@
         "pipe_stdin_stdout": true
 	},
 	"topics": [
-		{ "topic": "realm/proc/reg", "type": "reg"},
-		{ "topic": "realm/proc/control", "type": "ctl"},
-		{ "topic": "realm/proc/debug", "type": "dbg"}
+		{ "topic": "${ARENA_REALM}/proc/reg", "type": "reg"},
+		{ "topic": "${ARENA_REALM}/proc/control", "type": "ctl"},
+		{ "topic": "${ARENA_REALM}/proc/debug", "type": "dbg"}
 	],
 	"store_url": "https://${HOSTNAME}/store"
 }

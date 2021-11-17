@@ -185,8 +185,8 @@ PUBSUB = {
     'mqtt_username': 'arena_arts',
     'mqtt_password': '${SERVICE_ARENA_ARTS_JWT}',
     'subscribe_topics': [
-        { 'name': 'reg', 'topic': 'realm/proc/reg', 'on_message': 'on_reg_message'},
-        { 'name': 'ctl', 'topic': 'realm/proc/control', 'on_message': 'on_ctl_message' },
-        { 'name': 'dbg', 'topic': 'realm/proc/debug', 'on_message': 'on_dbg_message' }
+        { 'name': 'reg', 'topic': '${ARENA_REALM}/proc/reg', 'on_message': 'on_reg_message'},
+        { 'name': 'ctl', 'topic': '${ARENA_REALM}/proc/control', 'on_message': 'on_ctl_message' },
+        { 'name': 'dbg', 'topic': '${ARENA_REALM}/proc/debug', 'on_message': 'on_dbg_message' }
     ]
 }
