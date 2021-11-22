@@ -117,7 +117,7 @@ server {
         add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
 
         add_header Content-Security-Policy "default-src 'none';
-                                            script-src 'self' 'unsafe-eval' https://${HOSTNAME} 'sha256-yfJaugPeh7oO5kkG2N8w7ascfBzM+6zN9encOau5C2Q=' https://cdn.jsdelivr.net https://unpkg.com https://www.youtube-nocookie.com/ 'sha256-${FS_LAUNCH_JS_HASH}';
+                                            script-src 'self' 'unsafe-eval' https://${HOSTNAME} https://arenaxr.org 'sha256-yfJaugPeh7oO5kkG2N8w7ascfBzM+6zN9encOau5C2Q=' https://cdn.jsdelivr.net https://unpkg.com https://www.youtube-nocookie.com/ 'sha256-${FS_LAUNCH_JS_HASH}';
                                             connect-src 'self' data: blob: wss://${HOSTNAME} wss://*.andrew.cmu.edu wss://*.conix.io wss://jitsi0.andrew.cmu.edu:8443 https://mr.andrew.cmu.edu https://jitsi0.andrew.cmu.edu:8443 https://jitsi1.andrew.cmu.edu https://${HOSTNAME} https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io;
                                             img-src 'self' data: blob: https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io https://aframe.io;
                                             style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://maxcdn.bootstrapcdn.com https://use.fontawesome.com/releases/v5.15.2/css/all.css;
