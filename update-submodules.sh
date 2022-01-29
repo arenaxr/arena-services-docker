@@ -1,17 +1,15 @@
 #!/bin/bash
 
-submodules=( "ARENA-core:master" "arena-account:main" "arena-persist:master" "arts:master" "arena-runtime-simulated:master")
+submodules=($(git config --file .gitmodules --get-regexp path | awk '{ print $2 }'))
 
-echo -e "\n###Pulling lastest version of submodules."
-for s in "${submodules[@]}"
+for sm in "${submodules[@]}"
 do
-	echo $s
-	repo=`echo $s | cut -d':' -f1`
-	branch=`echo $s | cut -d':' -f2`
-  cd $repo
-  git checkout $branch
-  git pull
-  cd ..
+	echo $sm
+    cd $sm
+    branch=$(git branch --show-current) 
+    git checkout $branch
+    git pull
+    cd ..
 done
 
 echo -e "\n### Want to commit and push the update to the submodules ?"
