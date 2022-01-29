@@ -144,45 +144,46 @@ do
     chown $OWNER $f.json
 done
 
+# TODO: Re-enable additions hostnames - They are not allowing certbot to renew certificates
 # add server block to redirect additional hostnames
-if [[ ! -z "$ADDITIONAL_HOSTNAMES" ]]; then
-        TMPFN=/tmp/nginx_tmpcfg
-        cat > $TMPFN <<  EOF
+# if [[ ! -z "$ADDITIONAL_HOSTNAMES" ]]; then
+#         TMPFN=/tmp/nginx_tmpcfg
+#         cat > $TMPFN <<  EOF
 
-server {
-    server_name         $ADDITIONAL_HOSTNAMES;
-    server_tokens off;
-    client_max_body_size 1000M;
+# server {
+#     server_name         $ADDITIONAL_HOSTNAMES;
+#     server_tokens off;
+#     client_max_body_size 1000M;
 
-    listen              443 ssl;
-    ssl_certificate     /etc/letsencrypt/live/arenaxr.org/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/arenaxr.org/privkey.pem;
-    include             /etc/letsencrypt/options-ssl-nginx.conf;
-    ssl_dhparam         /etc/letsencrypt/ssl-dhparams.pem;
+#     listen              443 ssl;
+#     ssl_certificate     /etc/letsencrypt/live/arenaxr.org/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/arenaxr.org/privkey.pem;
+#     include             /etc/letsencrypt/options-ssl-nginx.conf;
+#     ssl_dhparam         /etc/letsencrypt/ssl-dhparams.pem;
 
-    location ^~ /user/ {
-        add_header 'Access-Control-Allow-Origin' "\$http_origin";
-        add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
-        add_header 'Access-Control-Allow-Credentials' 'true';
-        add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
-        proxy_pass http://arena-account:8000;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_read_timeout 86400;
-    }
+#     location ^~ /user/ {
+#         add_header 'Access-Control-Allow-Origin' "\$http_origin";
+#         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
+#         add_header 'Access-Control-Allow-Credentials' 'true';
+#         add_header 'Access-Control-Allow-Headers' 'User-Agent,Keep-Alive,Content-Type';
+#         proxy_pass http://arena-account:8000;
+#         proxy_http_version 1.1;
+#         proxy_set_header Host $host;
+#         proxy_set_header Upgrade \$http_upgrade;
+#         proxy_set_header Connection "Upgrade";
+#         proxy_read_timeout 86400;
+#     }
 
-    location / {
-        return 301 https://$HOSTNAME\$request_uri;
-    }
-}
-EOF
-        # add server block to production and staging
-        cat $TMPFN >> ./conf/arena-web.conf
-        cat $TMPFN >> ./conf/arena-web-staging.conf
-        rm $TMPFN
-fi
+#     location / {
+#         return 301 https://$HOSTNAME\$request_uri;
+#     }
+# }
+# EOF
+#         # add server block to production and staging
+#         cat $TMPFN >> ./conf/arena-web.conf
+#         cat $TMPFN >> ./conf/arena-web-staging.conf
+#         rm $TMPFN
+# fi
 
 # add server block to redirect jitsi requests
 if [[ ! -z "$JITSI_HOSTNAME" ]]; then
