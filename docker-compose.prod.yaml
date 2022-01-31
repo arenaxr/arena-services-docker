@@ -10,12 +10,11 @@ version: '3'
 services:
 
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
-    image: "nginx" # creates container from nginx
+    image: conixcenter/arena-core${ARENA_CORE_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-core
     volumes:
       - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       - ./ARENA-core:/usr/share/nginx/html:ro # mount root html from ./ARENA-core
       - ./conf/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
-      #- arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
@@ -35,9 +34,11 @@ services:
     restart: unless-stopped
 
   arena-persist:
+    image: conixcenter/arena-persist # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-persist
     restart: unless-stopped
 
   arena-account:
+    image: conixcenter/arena-account # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-account
     volumes:
       - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py:ro
       - account-static-content:/usr/src/app/static # static content
@@ -48,6 +49,7 @@ services:
     restart: unless-stopped
 
   mqtt:
+    image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
     ports:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
@@ -74,12 +76,14 @@ services:
     restart: unless-stopped
 
   arts:
+    image: conixcenter/arts # pulls from https://hub.docker.com/repository/docker/conixcenter/arts
     #volumes:
       #- arts-static-content:/usr/src/app/public:ro # static arts visualization page
     env_file: secret.env
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   py-runtime:
+    image: conixcenter/arena-runtime-native # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-runtime-native
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   cadvisor:
@@ -124,5 +128,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  #arts-static-content:
   account-static-content:
