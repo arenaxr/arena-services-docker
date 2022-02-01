@@ -10,7 +10,7 @@ version: '3'
 services:
 
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
-    image: conixcenter/arena-core:${ARENA_CORE_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-core
+    image: conixcenter/arena-core:${ARENA_CORE:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-core
     volumes:
       - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       - ./ARENA-core:/usr/share/nginx/html:ro # mount root html from ./ARENA-core
@@ -34,11 +34,11 @@ services:
     restart: unless-stopped
 
   arena-persist:
-    image: conixcenter/arena-persist:${ARENA_PERSIST_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-persist
+    image: conixcenter/arena-persist:${ARENA_PERSIST:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-persist
     restart: unless-stopped
 
   arena-account:
-    image: conixcenter/arena-account:${ARENA_ACCOUNT_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-account
+    image: conixcenter/arena-account:${ARENA_ACCOUNT:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-account
     volumes:
       - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py:ro
       - account-static-content:/usr/src/app/static # static content
@@ -49,14 +49,14 @@ services:
     restart: unless-stopped
 
   mqtt:
-    image: conixcenter/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
+    image: conixcenter/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
     ports:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
     restart: unless-stopped
 
   mqtt-br1:
-    image: conixcenter/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
+    image: conixcenter/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
     volumes:
       - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
@@ -66,7 +66,7 @@ services:
     restart: unless-stopped
 
   mqtt-br2:
-    image: conixcenter/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
+    image: conixcenter/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
     volumes:
       - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
@@ -76,14 +76,14 @@ services:
     restart: unless-stopped
 
   arts:
-    image: conixcenter/arts:${ARTS_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arts
+    image: conixcenter/arts:${ARTS:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arts
     #volumes:
       #- arts-static-content:/usr/src/app/public:ro # static arts visualization page
     env_file: secret.env
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   py-runtime:
-    image: conixcenter/arena-runtime-native:${ARENA_RT_NATIVE_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-runtime-native
+    image: conixcenter/arena-runtime-native:${ARENA_RT_NATIVE:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-runtime-native
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   cadvisor:
