@@ -11,7 +11,6 @@
 version: '3'
 
 services:
-
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
     volumes:
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
@@ -60,7 +59,6 @@ services:
       - mqtt
 
   py-runtime:
-    build: "arena-runtime-simulated"
     volumes:
       - ./conf/arena-runtime-simulated.conf:/usr/src/app/config.json:ro
     depends_on:

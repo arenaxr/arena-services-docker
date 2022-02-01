@@ -21,7 +21,9 @@ then
   cp init.env .env
 fi
 
-docker pull conixcenter/arena-services-docker-init-utils
+# load versions and pull init utils container
+export $(grep -v '^#' version.env | xargs)
+docker pull conixcenter/arena-services-docker-init-utils:${ARENA_SERVICES_INIT_UTILS:-latest}
 
 # TMP: create ARENA-core/user/static
 [ ! -d "ARENA-core/user/static" ] && mkdir -p ARENA-core/user/static
