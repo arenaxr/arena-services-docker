@@ -76,6 +76,10 @@ services:
     build: "arena-runtime-simulated"
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
+  store:
+    # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
+    image: "filebrowser/filebrowser"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
+
   cadvisor:
     image: gcr.io/google-containers/cadvisor:latest
     ports:
