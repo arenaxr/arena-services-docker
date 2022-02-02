@@ -35,9 +35,11 @@ services:
     restart: unless-stopped
 
   arena-persist:
+    build: "arena-persist" # builds container from arena-persist Dockerfile
     restart: unless-stopped
 
   arena-account:
+    build: "arena-account" # builds container from arena-account Dockerfile
     volumes:
       - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py:ro
       - account-static-content:/usr/src/app/static # static content
@@ -48,6 +50,7 @@ services:
     restart: unless-stopped
 
   mqtt:
+    image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
     ports:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
@@ -64,14 +67,18 @@ services:
     restart: unless-stopped
 
   arts:
-    #volumes:
-      #- arts-static-content:/usr/src/app/public # static arts visualization page
+    build: "arts"
     env_file:
       - secret.env
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   py-runtime:
+    build: "arena-runtime-simulated"
     restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  store:
+    # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
+    image: "filebrowser/filebrowser"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
 
   cadvisor:
     image: gcr.io/google-containers/cadvisor:latest
