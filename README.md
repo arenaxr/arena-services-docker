@@ -204,6 +204,20 @@ After updating the submodules, to have the updates of built containers (persist,
 * **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
 * **init.sh:** Initialize config files. See [Init Config](#init-config) Section.
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**ARENA-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](#update-submodules)).
+* **update-versions.sh:** Update the versions indicated in ```VERSION``` by looking at the tags in the submodules.
+* **VERSION:** Release versions of the arena services stack used by the production deployment (```docker-compose.prod.yaml```).
+
+## Production release/deployment
+
+### Release
+
+To release an arena services stack version, first update submodules (with ```update-submodules.sh:```) and then update the versions in ```VERSION``` using the ```update-versions.sh``` script. This script asks for the new version of the arena services stack to be released and fetches the versions from the submodules. After running this script, you can use the github web interface to create that release.
+
+### Deployment
+
+For a production deployment, start the services stack using ```prod.sh```. This script starts the compose stack from ```docker-compose.prod.yaml```, which uses the versions described in the ```VERSION``` file (these are the release versions of the images started).
+
+After starting the stack, you can see versions deployed at ```http://<arena-instance>/conf/versions.html```
 
 ## Utility Scripts
 
