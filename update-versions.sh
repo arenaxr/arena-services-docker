@@ -2,12 +2,22 @@
 # usage: ./collect_versions.sh [prod | staging | dev]
 
 prod_versions () {  
-    echo -e "\nThis will update version.env."
+    echo -e "\nThis will update the file named VERSION."
     read -p "Continue? (y/N) " -r
     if [[ $REPLY =~ ^[Nn]$ ]]; then  
         exit 1
     fi
-    echo -e "\n\nCollecting production versions"
+
+    # get current docker services repo version and bump it
+    version=$(git describe --tags --abbrev=0 2>/dev/null)
+    version=${version:-v0.0.0}
+    echo -e "\n\nCurrent arena service stack version=$version"
+    nversion=v$(docker run --rm -it -v $PWD:/app -w /app treeder/bump --input $version)
+    read -p "Enter the new arena service release version [$nversion]: " version
+    ARENA_SERVICES_VERSION=${version:-$nversion}
+    sed -i "s/ARENA_SERVICES=.*/ARENA_SERVICES=$ARENA_SERVICES_VERSION/" ./VERSION 
+
+    echo -e "\n\nCollecting production versions...\n"
     submodules=$(git config --file .gitmodules --name-only --get-regexp path | cut -d. -f2)
     for sm in ${submodules}
     do
@@ -18,7 +28,7 @@ prod_versions () {
         envvar=${envvar//-/_}
         cd ..
         #echo $envvar=$version
-        sed -i "s/$envvar=.*/$envvar=$version/" ./version.env 
+        sed -i "s/$envvar=.*/$envvar=$version/" ./VERSION 
     done
 
     # fetch versions of repos that are not a submodule
@@ -30,37 +40,26 @@ prod_versions () {
             | tail --lines=1 \
             | cut --delimiter='/' --fields=3)
         #echo $envvar=$version
-        sed -i "s/$envvar=.*/$envvar=$version/" ./version.env 
+        sed -i "s/$envvar=.*/$envvar=$version/" ./VERSION 
     done
 
-    # confirm utils version
-    export $(grep '^ARENA_INIT_UTILS=' version.env | xargs)
-    echo "Current arena init utils version=$ARENA_INIT_UTILS" 
-    read -p "Enter the arena init utils version [$ARENA_INIT_UTILS]: " version
-    ARENA_INIT_UTILS_VERSION=${version:-$ARENA_INIT_UTILS}
-    sed -i "s/ARENA_INIT_UTILS=.*/ARENA_INIT_UTILS=$ARENA_INIT_UTILS_VERSION/" ./version.env 
+    # get utils version
+    export $(grep '^ARENA_INIT_UTILS=' init-utils/VERSION | xargs)
+    ARENA_INIT_UTILS_VERSION=${latest:-$ARENA_INIT_UTILS} # default to latest
+    sed -i "s/ARENA_INIT_UTILS=.*/ARENA_INIT_UTILS=$ARENA_INIT_UTILS_VERSION/" ./VERSION 
 
-    # get current docker services repo version and bump it
-    version=$(git describe --tags --abbrev=0 2>/dev/null)
-    version=${version:-v0.0.0}
-    echo "Current arena service stack version=$version"
-    nversion=$(docker run --rm -it -v $PWD:/app -w /app treeder/bump --input $version)
-    read -p "Enter the release version [$nversion]: " version
-    ARENA_SERVICES_VERSION=${version:-$nversion}
-    sed -i "s/ARENA_SERVICES=.*/ARENA_SERVICES=$ARENA_SERVICES_VERSION/" ./version.env 
+    echo -e "\n### Versions (in VERSION) updated to:"
+    docker run --rm -v ${PWD}/conf-templates:/conf-templates -v ${PWD}/conf/arena-web-conf:/conf --env-file VERSION conixcenter/arena-services-docker-init-utils sh -c 'envsubst < /conf-templates/versions.txt.tmpl'
 
-    echo -e "\n### Versions (in version.env) updated to:"
-    docker run --rm -v ${PWD}/conf-templates:/conf-templates -v ${PWD}/conf/arena-web-conf:/conf --env-file version.env conixcenter/arena-services-docker-init-utils sh -c 'envsubst < /conf-templates/versions.txt.tmpl'
-
-    echo -e "\n\n### Want to commit and push the updated version.env ?"
+    echo -e "\n\n### Want to commit and push the updated VERSION file ?"
     read -p "Continue? (y/N) " -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        git add versions.env
+        git add VERSION
         git commit -m "ci: updated stack versions"
         git push
     fi
 
-    echo -e -n "\n\nYou can manually push a new version of versions.env, and create a release on https://github.com/conix-center/arena-services-docker/releases"
+    echo -e -n "\n\nYou can manually push a new VERSION file, and create an arena services release $ARENA_SERVICES_VERSION from https://github.com/conix-center/arena-services-docker/releases\n\n"
 }
 
 dev_versions () {    
@@ -76,4 +75,4 @@ case $mode in
     staging | dev)
       dev_versions
       ;;
-  esac
+esac

@@ -18,4 +18,4 @@ then
     docker volume rm arena-services-docker_account-static-content
 fi
 
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file version.env $@
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION $@
