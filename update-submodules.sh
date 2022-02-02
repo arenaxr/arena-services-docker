@@ -1,8 +1,8 @@
 #!/bin/bash
 
-submodules=($(git config --file .gitmodules --get-regexp path | awk '{ print $2 }'))
+submodules=$(git config --file .gitmodules --get-regexp path | cut -d. -f2)
 
-for sm in "${submodules[@]}"
+for sm in ${submodules}
 do
 	echo $sm
     cd $sm
@@ -15,7 +15,7 @@ done
 echo -e "\n### Want to commit and push the update to the submodules ?"
 read -p "Continue? (y/N) " -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-	for s in "${submodules[@]}"
+	for s in ${submodules}
 	do
 		repo=`echo $s | cut -d':' -f1`
 	  git add $repo

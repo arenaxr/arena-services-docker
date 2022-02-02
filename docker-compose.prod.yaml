@@ -82,7 +82,7 @@ services:
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   py-runtime:
-    image: conixcenter/arena-runtime-native:${ARENA_RT_NATIVE:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-runtime-native
+    image: conixcenter/arena-runtime-native:${ARENA_RUNTIME_SIMULATED:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-runtime-native
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   store:
