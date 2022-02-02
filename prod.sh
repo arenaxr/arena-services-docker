@@ -9,7 +9,7 @@ cp ./conf/arena-web-conf/arena-defaults.js ./conf/arena-web-conf/defaults.js
 cp ./conf/arena-web-conf/arena-defaults.json ./conf/arena-web-conf/defaults.json
 
 # create html file describing stack versions (use container so we dont have to install envsubst on host)
-docker run --rm -v ${PWD}/conf-templates:/conf-templates -v ${PWD}/conf/arena-web-conf:/conf --env-file version.env conixcenter/arena-services-docker-init-utils sh -c 'envsubst < /conf-templates/versions.html.tmpl'  > ./conf/arena-web-conf/versions  
+docker run --rm -v ${PWD}/conf-templates:/conf-templates -v ${PWD}/conf/arena-web-conf:/conf --env-file VERSION conixcenter/arena-services-docker-init-utils sh -c 'envsubst < /conf-templates/versions.html.tmpl'  > ./conf/arena-web-conf/versions  
 
 # force static volumes to be created again on "up"
 if [[ "$*" == *up* ]]
