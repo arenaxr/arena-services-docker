@@ -24,31 +24,22 @@ prod_versions () {
         cd $sm
         #git fetch --tags
         version=$(git describe --tags --abbrev=0)
-        hash=$(git rev-list -n 1 $version)
         envvar=${sm^^}
         envvar=${envvar//-/_}
-        hashenvvar="${envvar}_HASH"
         cd ..
         sed -i "s/$envvar=.*/$envvar=$version/" ./VERSION 
-        sed -i "s/$hashenvvar=.*/$hashenvvar=$hash/" ./VERSION 
     done
 
     # fetch versions of repos that are not a submodule
     for i in ARENA_BROKER=https://github.com/conix-center/ARENA-broker.git ARENA_FILESTORE=https://github.com/filebrowser/filebrowser.git ; do 
         envvar=${i%\=*};
-        hashenvvar="${envvar}_HASH"
         repo=${i#*\=};
         version=$(git -c 'versionsort.suffix=-' \
             ls-remote --exit-code --refs --sort='version:refname' --tags $repo '*.*.*' \
             | tail --lines=1 \
             | cut --delimiter='/' --fields=3)
-        hash=$(git -c 'versionsort.suffix=-' \
-            ls-remote --exit-code --refs --sort='version:refname' --tags $repo '*.*.*' \
-            | tail --lines=1 \
-            | cut --fields=1)
         #echo $envvar=$version
         sed -i "s/$envvar=.*/$envvar=$version/" ./VERSION 
-        sed -i "s/$hashenvvar=.*/$hashenvvar=$hash/" ./VERSION  
     done
 
     # get utils version
