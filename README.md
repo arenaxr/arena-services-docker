@@ -254,7 +254,7 @@ The utility scripts pass the arguments to **docker-compose**. You can use them w
 
 ### Release
 
-To release an arena services stack version, update the versions in ```VERSION``` using the ```update-versions.sh``` script. This script asks for the new version of the arena services stack to be released and fetches the versions from the submodules. After running this script, you can use the github web interface to create that release.
+To release an arena services stack version, make sure all submodules are pointing the version you want to release (you can run ```update-submodules.sh``` to update to the latest) update the versions in ```VERSION``` using the ```update-versions.sh``` script. This script asks for the new version of the arena services stack to be released and fetches the versions from the submodules. After running this script, you can use the github web interface to create that release.
 
 ### Deployment
 
