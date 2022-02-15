@@ -19,3 +19,12 @@ then
 fi
 
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION $@
+
+# check if we have our private website files to write over
+echo "Clone private website image repo into a folder named ARENA-website if you want to override the default website."
+if [ -d "ARENA-website" ]
+then
+    [ ! "$(docker ps -a | grep arena-services-docker_arena-web_1)" ] && echo "Could not find container when trying to copy arenaxr website contents" && exit 0 # dont continue if container does not exist
+    docker cp ARENA-website/* arena-services-docker_arena-web_1:/usr/share/nginx/html/
+    docker exec -it arena-services-docker_arena-web_1 sh -c "cp -R /usr/share/nginx/html/ARENA-website/* /usr/share/nginx/html"
+fi
