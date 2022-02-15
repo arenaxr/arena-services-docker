@@ -22,7 +22,7 @@ then
 fi
 
 # load versions and pull init utils container
-export $(grep -v '^#' version.env | xargs)
+export $(grep -v '^#' VERSION | xargs)
 docker pull conixcenter/arena-services-docker-init-utils:${ARENA_INIT_UTILS:-latest}
 
 # TMP: create ARENA-core/user/static
@@ -48,7 +48,7 @@ docker run --rm \
     -v ${PWD}/ARENA-core/store:/srv-files \
     -v ${PWD}/data/arena-store:/arena-store/data:rw \
     -p $STORE_TMP_PORT:8080 \
-    filebrowser/filebrowser &
+    filebrowser/filebrowser${ARENA_FILESTORE:-latest} &
 
 # check if filestore is up
 timeout 10 bash -c 'until printf "" 2>>/dev/null >>/dev/tcp/$0/$1; do sleep 1; done' localhost $STORE_TMP_PORT
