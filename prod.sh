@@ -26,6 +26,6 @@ echo "Clone custom website repo into a folder named ARENA-website if you want to
 if [ -d "ARENA-website" ]
 then
     echo "Copying custom website..."
-    docker cp ARENA-website/* arena-services-docker_arena-web_1:/usr/share/nginx/html/
+    docker cp ARENA-website arena-services-docker_arena-web_1:/usr/share/nginx/html/
     docker exec -it arena-services-docker_arena-web_1 sh -c "cp -R /usr/share/nginx/html/ARENA-website/* /usr/share/nginx/html"
 fi
