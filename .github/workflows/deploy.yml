@@ -13,11 +13,15 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
+      - id: arenaservices
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: conix-center/arena-services-docker  
       - name: ssh deploy
         #if: endsWith( github.ref, 'deploy') # run for branches or tags ending with 'deploy'
         uses: appleboy/ssh-action@master
         env:
-          TARGET: ${{ secrets.ARENA_MAIN_DEPLOY_TARGET }}
+          TARGET: ${{ secrets.ARENAXR_DEPLOY_TARGET }}
         with:
           host: ${{ secrets.ARENA_MAIN_DEPLOY_HOST }}
           username: ${{ secrets.ARENA_MAIN_DEPLOY_USER }}
@@ -28,6 +32,6 @@ jobs:
              cd  $TARGET
              git fetch $BRANCH
              git reset --hard origin/$BRANCH
-             git checkout --force tags/${{ steps.previous_tag.outputs.tag }}
+             git checkout --force tags/${{ steps.arenaservices.outputs.release }}
              ./prod.sh down
              ./prod.sh up --force-recreate -d 
