@@ -2,6 +2,10 @@ name: ARENAXR SSH Release Deploy
 on:
   workflow_dispatch:
 
+release:
+    types:
+      - created
+
 env:
   BRANCH: master
   
@@ -27,7 +31,7 @@ jobs:
           script: |
              cd  $TARGET
              git fetch $BRANCH
-             git reset --hard origin/$BRANCH
+             git reset --hard $BRANCH
              git checkout --force tags/${{ steps.arenaservices.outputs.release }}
              ./prod.sh down
              ./prod.sh up --force-recreate -d 
