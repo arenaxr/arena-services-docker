@@ -1,11 +1,7 @@
 name: ARENAXR SSH Release Deploy
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'What is the release tag you want to deploy ?'
-        required: true
-        default: 'v1.0.1' 
+
 env:
   BRANCH: master
   
