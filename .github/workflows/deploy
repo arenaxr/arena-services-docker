@@ -1,0 +1,27 @@
+name: ARENAXR SSH Manual Deploy
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh deploy
+        #if: $GITHUB_SHA == github.event.inputs.confirm 
+        uses: appleboy/ssh-action@master
+        env:
+          TARGET: ${{ secrets.ARENAXR_DEPLOY_TARGET }}
+        with:
+          host: ${{ secrets.ARENA_MAIN_DEPLOY_HOST }}
+          username: ${{ secrets.ARENA_MAIN_DEPLOY_USER }}
+          key: ${{ secrets.ARENA_MAIN_DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          envs: TARGET
+          script: |
+             cd  $TARGET
+             git checkout master
+             git reset --hard HEAD
+             git pull
+             ./prod.sh down
+             ./prod.sh up --force-recreate -d 
