@@ -1,0 +1,33 @@
+name: ARENAXR SSH Release Deploy
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release tag to deploy'
+        required: true
+        default: 'v1.0.1' 
+env:
+  BRANCH: master
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ssh deploy
+        #if: endsWith( github.ref, 'deploy') # run for branches or tags ending with 'deploy'
+        uses: appleboy/ssh-action@master
+        env:
+          TARGET: ${{ secrets.ARENA_MAIN_DEPLOY_TARGET }}
+        with:
+          host: ${{ secrets.ARENA_MAIN_DEPLOY_HOST }}
+          username: ${{ secrets.ARENA_MAIN_DEPLOY_USER }}
+          key: ${{ secrets.ARENA_MAIN_DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          envs: TARGET
+          script: |
+             cd  $TARGET
+             git fetch $BRANCH
+             git reset --hard origin/$BRANCH
+             git checkout --force tags/${{ steps.previous_tag.outputs.tag }}
+             ./prod.sh down
+             ./prod.sh up --force-recreate -d 
