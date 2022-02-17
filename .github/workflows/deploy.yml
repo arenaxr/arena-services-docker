@@ -2,7 +2,7 @@ name: ARENAXR SSH Release Deploy
 on:
   workflow_dispatch:
 
-release:
+  release:
     types:
       - created
 
