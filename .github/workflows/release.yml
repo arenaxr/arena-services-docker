@@ -1,0 +1,35 @@
+name: ARENAXR SSH Release Deploy
+on:
+  release:
+    types:
+      - created
+
+env:
+  BRANCH: master
+  
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - id: arenaservices
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: conix-center/arena-services-docker  
+      - name: ssh deploy
+        #if: endsWith( github.ref, 'deploy') # run for branches or tags ending with 'deploy'
+        uses: appleboy/ssh-action@master
+        env:
+          TARGET: ${{ secrets.ARENAXR_DEPLOY_TARGET }}
+        with:
+          host: ${{ secrets.ARENA_MAIN_DEPLOY_HOST }}
+          username: ${{ secrets.ARENA_MAIN_DEPLOY_USER }}
+          key: ${{ secrets.ARENA_MAIN_DEPLOY_KEY }}
+          port: ${{ secrets.DEPLOY_PORT }}
+          envs: TARGET
+          script: |
+             cd  $TARGET
+             git fetch $BRANCH
+             git reset --hard $BRANCH
+             git checkout --force tags/${{ steps.arenaservices.outputs.release }}
+             ./prod.sh down
+             ./prod.sh up --force-recreate -d 
