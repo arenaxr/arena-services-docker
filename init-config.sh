@@ -123,6 +123,9 @@ for host in $(echo "$HOSTNAME $ADDITIONAL_HOSTNAMES"|tr ' ' '\n'); do
 done
 export HOSTNAMES_LIST=${HOSTNAMES_LIST::-1} # remove last comma
 
+# gen orchestrator secret key
+export ORCH_SECRET_KEY=$(openssl rand -base64 32)
+
 for t in $(find conf-templates/ -type f)
 do
   t="${t:15}" # remove "conf-templates/"

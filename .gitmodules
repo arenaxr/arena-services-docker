@@ -1,15 +1,17 @@
+
+   
 [submodule "ARENA-core"]
 	path = ARENA-core
 	url = https://github.com/conix-center/ARENA-core.git 
 [submodule "arena-persist"]
 	path = arena-persist
 	url = https://github.com/conix-center/arena-persist.git 
-[submodule "arts"]
-	path = arts
-	url = https://github.com/conix-center/arts.git 
 [submodule "arena-runtime-simulated"]
 	path = arena-runtime-simulated
 	url = https://github.com/conix-center/arena-runtime-simulated.git 
 [submodule "arena-account"]
 	path = arena-account
 	url = https://github.com/conix-center/arena-account.git 
+[submodule "orchestrator"]
+	path = orchestrator
+	url = https://github.com/SilverLineFramework/orchestrator.git
