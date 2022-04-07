@@ -78,7 +78,7 @@ services:
       - 8883:8883/tcp # mqtt-tls
 
   arts:
-    build: "arts/arts-main"
+    build: "orchestrator"
     volumes:
       - ./conf/arts-settings.py:/usr/src/app/arts_api/settings.py:ro
       #- arts-static-content:/usr/src/app/public:ro # static arts visualization page
