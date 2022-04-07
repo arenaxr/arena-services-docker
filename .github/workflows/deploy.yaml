@@ -25,3 +25,4 @@ jobs:
              git pull
              ./prod.sh down
              ./prod.sh up --force-recreate -d 
+             ./update-custom-website.sh
