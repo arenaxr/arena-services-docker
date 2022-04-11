@@ -24,5 +24,6 @@ jobs:
              git reset --hard HEAD
              git pull
              ./prod.sh down
-             ./prod.sh up --force-recreate -d 
+             ./prod.sh up --force-recreate -d
+             sleep 10
              ./update-custom-website.sh
