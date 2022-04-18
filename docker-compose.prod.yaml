@@ -75,11 +75,10 @@ services:
       - mqtt
     restart: unless-stopped
 
-  arts:
-    image: conixcenter/arts:${ARTS:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arts
-    #volumes:
-      #- arts-static-content:/usr/src/app/public:ro # static arts visualization page
-    env_file: secret.env
+  orchestrator:
+    image: conixcenter/orchestrator:${ARTS:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/orchestrator
+    env_file:
+      - secret.env
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   py-runtime:

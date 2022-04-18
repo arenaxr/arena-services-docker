@@ -19,7 +19,6 @@ services:
       - mqtt
       - arena-persist
       - store
-      - arts
       - arena-account
 
   mongodb:
@@ -51,18 +50,19 @@ services:
       - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certs volume (see conf/mosquitto.conf to see how the files are used)
 
-  arts:
+  orchestrator:
     volumes:
-      - ./conf/arts-settings.py:/usr/src/app/arts_api/settings.py:ro
+      - ./conf/orchestrator/key.json:/usr/src/app/arts-main/key.json:ro
+      - ./conf/orchestrator/credentials.json:/usr/src/app/arts-main/credentials.json:ro
+      - ./conf/orchestrator/mqtt.json:/usr/src/app/arts-main/mqtt.json:ro
+      - ./conf/orchestrator/server.json:/usr/src/app/arts-main/server.json:ro
     command: ["./wait-for-it.sh", "mqtt:1883", "--", "python", "manage.py", "runserver", "0.0.0.0:8000"]
-    depends_on:
-      - mqtt
 
   py-runtime:
     volumes:
-      - ./conf/arena-runtime-simulated.conf:/usr/src/app/config.json:ro
+      - ./conf/arena-runtime-native.conf:/usr/src/app/config.json:ro
     depends_on:
-      - arts
+      - orchestrator
 
   store:
     volumes:
