@@ -40,7 +40,7 @@ fi
 
 echo "Starting temp filestore instance..."
 # create arena store config file (TODO: this assumes arena-store-config.json template has no variables; do substitutions if needed)
-[ ! -f "${PWD}/conf/arena-store-config.json" ] cp ${PWD}/conf-templates/arena-store-config.json ${PWD}/conf/arena-store-config.json
+[ ! -f "${PWD}/conf/arena-store-config.json" ] && cp ${PWD}/conf-templates/arena-store-config.json ${PWD}/conf/arena-store-config.json
 export STORE_TMP_PORT=8111
 # bring up a temp instance of filebrowser (used in init config)
 docker run --rm \

@@ -89,9 +89,9 @@ services:
       - mqtt
 
   py-runtime:
-    build: "arena-runtime-simulated"
+    build: "arena-runtime-native"
     volumes:
-      - ./conf/arena-runtime-simulated.conf:/usr/src/app/config.json:ro
+      - ./conf/arena-runtime-native.conf:/usr/src/app/config.json:ro
     depends_on:
       - arts
 
