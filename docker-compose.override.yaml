@@ -12,7 +12,7 @@ services:
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
     image: "nginx" # creates container from nginx
     volumes:
-      - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web-dev.conf:ro # mount nginx config
+      - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       - ./ARENA-core:/usr/share/nginx/html:rw # mount root html from ./ARENA-core
       - ./conf/arena-web-conf:/usr/share/nginx/html/conf:ro # arena client code conf
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)

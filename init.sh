@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cleanup_and_exit () {    
+cleanup_and_exit () {
     echo -e "\n\e[1m### Stopping here. Doing Cleanup...\e[0m\n"
     # stop temp filebrowser container before exiting
     docker stop storetmp
@@ -29,7 +29,7 @@ docker pull conixcenter/arena-services-docker-init-utils:${ARENA_INIT_UTILS:-lat
 [ ! -d "ARENA-core/user/static" ] && mkdir -p ARENA-core/user/static
 
 # build arena-core js
-./build-arena-core.sh 
+./build-arena-core.sh
 
 START_COMPOSE_FILESTORE=""
 # stop filestore if up
@@ -40,7 +40,7 @@ fi
 
 echo "Starting temp filestore instance..."
 # create arena store config file (TODO: this assumes arena-store-config.json template has no variables; do substitutions if needed)
-[ ! -f "${PWD}/conf/arena-store-config.json" ] && cp ${PWD}/conf-templates/arena-store-config.json ${PWD}/conf/arena-store-config.json
+[ ! -f "${PWD}/conf/arena-store-config.json" ] && cp ${PWD}/conf-templates/arena-store-config.json.tmpl ${PWD}/conf/arena-store-config.json
 export STORE_TMP_PORT=8111
 # bring up a temp instance of filebrowser (used in init config)
 docker run --rm \
@@ -64,7 +64,7 @@ fi
 touch secret.env &>/dev/null
 echo -e "\n\e[1m### Init config files (create secrets.env, ./conf/* files, and ./data/* folders)\e[0m\n"
 docker run --add-host host.docker.internal:host-gateway -it --env-file .env --env-file secret.env -e OWNER=`id -u`:`id -g` -e STORE_TMP_PORT=$STORE_TMP_PORT --rm -v $PWD:/work -w /work conixcenter/arena-services-docker-init-utils /work/init-config.sh
-    
+
 if [ $? -ne 0 ]
 then
     echo -e "\n\e[1m### Init config failed.\e[0m\n"
