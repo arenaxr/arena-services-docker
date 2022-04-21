@@ -76,7 +76,7 @@ services:
     restart: unless-stopped
 
   orchestrator:
-    image: conixcenter/orchestrator:${ARTS:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/orchestrator
+    image: conixcenter/orchestrator:${ORCHESTRATOR:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/orchestrator
     env_file:
       - secret.env
     restart: unless-stopped # service will respawn unless we tell docker to stop it
