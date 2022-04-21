@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo -e "\n\e[1m### Building ARENA core js\e[0m\n"
-read -p "Build js (production instances shoould skip this step) ? (y/N) " -r
+read -p "Build js (production instances should skip this step) ? (y/N) " -r
 
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     CPWD=$PWD
