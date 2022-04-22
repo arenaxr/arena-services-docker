@@ -15,6 +15,19 @@ Source repositories (such as ARENA-core, arena-account, arena-persist) are submo
 
 Nginx and mosquitto are configured with TLS/SSL using certificates created by certbot (running as a service in a container), which will periodically attempt to renew the certificates. On the first execution, the configuration files must be initialized by running **init.sh**.
 
+## Hardware
+ARENA has some minimum hardware requirements to run:
+- CPU: 4 cores (more will allow you to scale more users)
+- RAM: 8 GB (more will allow you to scale more users)
+- Disk: No minimum (more will give your users more room to store models)
+- Ports: For MQTT and [Jitsi](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart/#setup-and-configure-your-firewall)
+- 80/tcp (web)
+- 443/tcp (web)
+- 3000/tcp (jitsi)
+- 8883/tcp (mqtt)
+- 9700/tcp (jitsi)
+- 10000/udp (jitsi)
+
 ## Quick Setup
 
 1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/). Our scripts are written for a bash shell. See [Dependencies](#dependenciesassumptions) section for details.
