@@ -21,12 +21,12 @@ ARENA has some minimum hardware requirements to run:
 - RAM: 8 GB (more will allow you to scale more users)
 - Disk: No minimum (more will give your users more room to store models)
 - Ports: For MQTT and [Jitsi](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-quickstart/#setup-and-configure-your-firewall)
-- 80/tcp (web)
-- 443/tcp (web)
-- 3000/tcp (jitsi)
-- 8883/tcp (mqtt)
-- 9700/tcp (jitsi)
-- 10000/udp (jitsi)
+  - 80/tcp (web)
+  - 443/tcp (web)
+  - 3000/tcp (jitsi)
+  - 8883/tcp (mqtt)
+  - 9700/tcp (jitsi)
+  - 10000/udp (jitsi)
 
 ## Quick Setup
 
