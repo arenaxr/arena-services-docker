@@ -66,7 +66,7 @@ STORE_ADMIN_USERNAME=admin
 
 * ```ARENA_DOCKER_REPO_FOLDER``` is the full path to the location of this repository e.g. ```/home/user/arena-services-docker```.
 
-* ```GAUTH_CLIENTID``` is the Google Web application Credential Client Id. See setup at [Assumptions > OAuth](readme.md/#assumptions-1).
+* ```GAUTH_CLIENTID``` is the Google Web application Credential Client Id. See setup at [Assumptions > OAuth](README.md/#assumptions).
 * ```GAUTH_CLIENTSECRET``` is the Google Web application Credential Client Secret.
 * ```GAUTH_INSTALLED_CLIENTID``` is the Google Desktop Credential Client Id.
 * ```GAUTH_INSTALLED_CLIENTSECRET``` is the Google Desktop Credential Client Secret.
@@ -120,7 +120,7 @@ The script will attempt to create certificates using [letsencrypt](https://letse
 * **init.sh, prod.sh, dev.sh, staging.sh:** assume a bash shell
 * **GNU core utils:** You may need to install GNU core utils to ensure some bash commands we use (`timeout`, ...) are available, **particularly on MacOS**.
 * **backup user:**  The ```backup``` container tries to change to the owner of the files backed up to a user indicated in `.env`. This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up by this container.
-* **OAuth:** You will need to set up [Google Web OAuth for your domain](https://developers.google.com/identity/protocols/oauth2/web-server) for the ARENA web client as well as [Google Limited-Input OAuth](https://developers.google.com/identity/protocols/oauth2/limited-input-device) for the ARENA Python client. Detailed instructions are available at our [arena-account repo](https://github.com/conix-center/arena-account).
+* **OAuth:** You will need to set up [Google Web OAuth for your domain](https://developers.google.com/identity/protocols/oauth2/web-server) for the ARENA web client as well as [Google Desktop OAuth](https://developers.google.com/identity/protocols/oauth2/native-app) for the ARENA Python and Unity clients. Detailed instructions are available at our [arena-account repo](https://github.com/conix-center/arena-account).
 
 ## Init Config
 
