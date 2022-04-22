@@ -67,7 +67,17 @@ STORE_ADMIN_USERNAME=admin
  ./init.sh
 ```
 
-* On the first execution, answer **Y**es to all questions of the script. The script will attempt to create certificates using [letsencrypt](https://letsencrypt.org/). Self-signed certificates will be created instead if letsencrypt's certbot fails.
+* On the first execution, answer the questions as follows:
+ - _Build js (production instances should skip this step) ? (y/N)_: **N**o (if you are running `./prod.sh` you dont need to build the js).
+ - _Create secret.env ? (y/N)_: **Y**es
+ - _Create RSA key pair ? (y/N)_: **Y**es
+ - _Create Service Tokens ? (y/N)_: **Y**es
+ - _Create a public share on filebrowser ? (y/N)_: **Y**es
+ - _Continue and create config files (backups will be created in conf/)? (y/N)_: **Y**es
+ - _Add server block to redirect requests to Jitsi ? (y/N)_: most setups will want to wanswer **N**o. Answer **Y**es if you are setting up a jitsi server on the same machine.  
+
+The script will attempt to create certificates using [letsencrypt](https://letsencrypt.org/). Self-signed certificates will be created instead if letsencrypt's certbot fails.
+
 > You might need to execute ```sudo ./init.sh``` if [your user does not have permissions to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
 
 5. If you see no errors; you are good to start all services:
