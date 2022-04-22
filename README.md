@@ -66,6 +66,11 @@ STORE_ADMIN_USERNAME=admin
 
 * ```ARENA_DOCKER_REPO_FOLDER``` is the full path to the location of this repository e.g. ```/home/user/arena-services-docker```.
 
+* ```GAUTH_CLIENTID``` is the Google Web application Credential Client Id. See setup at [Assumptions > OAuth](readme.md/#assumptions-1).
+* ```GAUTH_CLIENTSECRET``` is the Google Web application Credential Client Secret.
+* ```GAUTH_INSTALLED_CLIENTID``` is the Google Desktop Credential Client Id.
+* ```GAUTH_INSTALLED_CLIENTSECRET``` is the Google Desktop Credential Client Secret.
+
 * ```DJANGO_SUPERUSER_NAME``` and ```DJANGO_SUPERUSER_EMAIL``` are the account admin user and email (usually can be kept as `admin` and `admin@example.com`).
 
 * ```STORE_ADMIN_USERNAME``` the filestore admin user (usually can be kept as `admin`).
