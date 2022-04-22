@@ -9,8 +9,6 @@ do
   [ ! -d "$d" ] && mkdir $d && chown $OWNER $d
 done
 
-[ ! -d conf ] && mkdir conf && chown $OWNER conf
-
 touch secret.env
 
 echo -e "\n### Creating secret.env (with secret keys, admin password). This will replace old secret.env (if exists; backup will be in secret.env.bak)."

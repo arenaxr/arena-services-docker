@@ -21,6 +21,9 @@ then
   cp init.env .env
 fi
 
+# create conf/
+[ ! -d conf ] && mkdir conf
+
 # load versions and pull init utils container
 export $(grep -v '^#' VERSION | xargs)
 docker pull conixcenter/arena-services-docker-init-utils:${ARENA_INIT_UTILS:-latest}
