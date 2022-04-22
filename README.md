@@ -58,7 +58,7 @@ STORE_ADMIN_USERNAME=admin
 ```
 * ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup; see [Init Config](#init-config).
 
-* ```JITSI_HOSTNAME``` is the fully qualified domain name (FQDN) of the jitsi server you will use (you a [public/managed jitsi instance](https://jitsi.github.io/handbook/docs/community/community-instances/) or [setup your own](https://jitsi.github.io/handbook/docs/devops-guide/)).
+* ```JITSI_HOSTNAME``` is the fully qualified domain name (FQDN) of the jitsi server you will use (you can use a [public/managed jitsi instance](https://jitsi.github.io/handbook/docs/community/community-instances/) or [setup your own](https://jitsi.github.io/handbook/docs/devops-guide/)).
 
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 
