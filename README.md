@@ -45,21 +45,21 @@ STORE_ADMIN_USERNAME=admin
 ```
 * ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup; see [Init Config](#init-config).
 
-* ```JITSI_HOSTNAME``` is the fully qualified domain name (FQDN) of the jitsi server you will use.
+* ```JITSI_HOSTNAME``` is the fully qualified domain name (FQDN) of the jitsi server you will use (you a [public/managed jitsi instance](https://jitsi.github.io/handbook/docs/community/community-instances/) or [setup your own](https://jitsi.github.io/handbook/docs/devops-guide/)).
 
 * ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
 
 * ```BACKUP_USER``` is the ```userid:groupid``` of the *host machine user* that needs to access files backed up by the backup container (must be numberic ids of a host machine user).
 
-* ```ARENA_DOCKER_REPO_FOLDER``` is the full path to the the location of this repository e.g. ```/home/user/arena-services-docker```.
+* ```ARENA_DOCKER_REPO_FOLDER``` is the full path to the location of this repository e.g. ```/home/user/arena-services-docker```.
 
-* ```DJANGO_SUPERUSER_NAME``` and ```DJANGO_SUPERUSER_EMAIL``` are the account admin user and email.
+* ```DJANGO_SUPERUSER_NAME``` and ```DJANGO_SUPERUSER_EMAIL``` are the account admin user and email (usually can be kept as `admin` and `admin@example.com`).
 
-* ```STORE_ADMIN_USERNAME``` the filestore admin user (usually should be kept as `admin`).
+* ```STORE_ADMIN_USERNAME``` the filestore admin user (usually can be kept as `admin`).
 
 > IMPORTANT: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
 
-> If you are setting up a jitsi server in the same machine, see [Init Config](#init-config) for details.
+> If you are setting up a jitsi server on the same machine, see [Init Config](#init-config) for details.
 
 4. Run init script:
 
@@ -76,7 +76,7 @@ STORE_ADMIN_USERNAME=admin
  ./prod.sh up
 ```
 
-> You might need to execute ```sudo``` (e.g. ```sudo ./prod.sh up```) if your user does not have permission to access the docker service.
+> You might need to execute using ```sudo``` (e.g. ```sudo ./prod.sh up```) if your user does not have permission to access the docker service.
 > For more details, see [Init Config](#init-config) Section below.
 > We also have configurations for development and staging. See the [utility scripts Section](#utility-scripts)
 
@@ -90,6 +90,7 @@ STORE_ADMIN_USERNAME=admin
 ### Assumptions:
 
 * **init.sh, prod.sh, dev.sh, staging.sh:** assume a bash shell
+* **GNU core utils:** You may need to install GNU core utils to ensure some bash commands we use (`timeout`, ...) are available, **particularly on MacOS**.
 * **backup user:**  The ```backup``` container tries to change to the owner of the files backed up to a user indicated in `.env`. This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up by this container.
 * **OAuth:** You will need to set up [Google Web OAuth for your domain](https://developers.google.com/identity/protocols/oauth2/web-server) for the ARENA web client as well as [Google Limited-Input OAuth](https://developers.google.com/identity/protocols/oauth2/limited-input-device) for the ARENA Python client. Detailed instructions are available at our [arena-account repo](https://github.com/conix-center/arena-account).
 
@@ -97,11 +98,11 @@ STORE_ADMIN_USERNAME=admin
 
 Before starting services, we need to create the configuration files for the services with the right domains and create certificates (using letsencrypt/openssl).
 
-NOTE: On MacOS, you may need to install GNU core utils so ensure some bash commands we use (`timeout`, ...) are available:
-```bash
-brew install coreutils
-export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-```
+> NOTE: On MacOS, you will need to install GNU core utils
+> ```bash
+> brew install coreutils
+> export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+> ```
 
 1. Modify configuration:
 
