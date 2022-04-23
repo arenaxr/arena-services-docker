@@ -127,7 +127,8 @@ services:
     image: docker
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:rw
-    command: [ "/bin/sh", "-c", "while true; do sleep 12h; docker restart py-runtime; done" ]
+      - ./:/arena-docker:ro
+    command: [ "/bin/sh", "-c", "cd /arena-docker; while true; do sleep 24h; docker restart arena-services-docker_py-runtime_1 arena-services-docker_orchestrator_1; done" ]
     restart: unless-stopped
 
 volumes:
