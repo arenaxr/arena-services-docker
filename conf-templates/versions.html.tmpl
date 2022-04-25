@@ -1,19 +1,30 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <title>ARENA Versions</title>
+
+    <!-- Navbar Header -->
+    <link rel='stylesheet' href='/static/arenaxr-bootstrap/arenaxr-bootstrap.css'>
+    <script src="/static/vendor/jquery-2.1.1.min.js"></script>
+    <script src="/static/arenaxr-bootstrap/bootstrap.min.js"></script>
+    <script src="/navbar.js" type="text/javascript"></script>
+</head>
 <body>
+    <div id="header"></div>
+    <div id="container">
+        <h1>ARENA Versions</h1>
 
-<h1>ARENA Versions</h1>
-
-<table>
-<tr><td><b>Services stack</b></td><td>:<a href="https://github.com/conix-center/arena-services-docker/releases/tag/${ARENA_SERVICES}">${ARENA_SERVICES}</a></td></tr>
-<tr><td><b>Core</b></td><td>:<a href="https://github.com/conix-center/ARENA-core/releases/tag/${ARENA_CORE}">${ARENA_CORE}</a></td></tr>
-<tr><td><b>Persist</b></td><td>:<a href="https://github.com/conix-center/arena-persist/releases/tag/${ARENA_PERSIST}">${ARENA_PERSIST}</a></td></tr>
-<tr><td><b>Account</b></td><td>:<a href="https://github.com/conix-center/arena-account/releases/tag/${ARENA_ACCOUNT}">${ARENA_ACCOUNT}</a></td></tr>
-<tr><td><b>Broker</b></td><td>:<a href="https://github.com/conix-center/arena-broker/releases/tag/${ARENA_BROKER}">${ARENA_BROKER}</a></td></tr>
-<tr><td><b>Filestore</b></td><td>:<a href="https://github.com/filebrowser/filebrowser/releases/tag/${ARENA_FILESTORE}">${ARENA_FILESTORE}</a></td></tr>
-<tr><td><b>Orchestrator</b></td><td>:<a href="https://github.com/conix-center/arts/releases/tag/${ORCHESTRATOR}">${ORCHESTRATOR}</a></td></tr>
-<tr><td><b>Runtime Native</b></td><td>:<a href="https://github.com/conix-center/arena-runtime-native/releases/tag/${ARENA_RUNTIME_NATIVE}">${ARENA_RUNTIME_NATIVE}</a></td></tr>
-<tr><td><b>Init Utils</b></td><td>:<a href="https://hub.docker.com/r/conixcenter/arena-services-docker-init-utils/tags">${ARENA_INIT_UTILS}</a></td></tr>
-</table>
+        <table>
+        <tr><td><b>Services stack</b></td><td>:<a href="https://github.com/conix-center/arena-services-docker/releases/tag/${ARENA_SERVICES}">${ARENA_SERVICES}</a></td></tr>
+        <tr><td><b>Core</b></td><td>:<a href="https://github.com/conix-center/ARENA-core/releases/tag/${ARENA_CORE}">${ARENA_CORE}</a></td></tr>
+        <tr><td><b>Persist</b></td><td>:<a href="https://github.com/conix-center/arena-persist/releases/tag/${ARENA_PERSIST}">${ARENA_PERSIST}</a></td></tr>
+        <tr><td><b>Account</b></td><td>:<a href="https://github.com/conix-center/arena-account/releases/tag/${ARENA_ACCOUNT}">${ARENA_ACCOUNT}</a></td></tr>
+        <tr><td><b>Broker</b></td><td>:<a href="https://github.com/conix-center/arena-broker/releases/tag/${ARENA_BROKER}">${ARENA_BROKER}</a></td></tr>
+        <tr><td><b>Filestore</b></td><td>:<a href="https://github.com/filebrowser/filebrowser/releases/tag/${ARENA_FILESTORE}">${ARENA_FILESTORE}</a></td></tr>
+        <tr><td><b>Orchestrator</b></td><td>:<a href="https://github.com/conix-center/arts/releases/tag/${ORCHESTRATOR}">${ORCHESTRATOR}</a></td></tr>
+        <tr><td><b>Runtime Native</b></td><td>:<a href="https://github.com/conix-center/arena-runtime-native/releases/tag/${ARENA_RUNTIME_NATIVE}">${ARENA_RUNTIME_NATIVE}</a></td></tr>
+        <tr><td><b>Init Utils</b></td><td>:<a href="https://hub.docker.com/r/conixcenter/arena-services-docker-init-utils/tags">${ARENA_INIT_UTILS}</a></td></tr>
+        </table>
+    </div>
 </body>
 </html>
