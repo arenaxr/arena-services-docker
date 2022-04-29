@@ -81,7 +81,7 @@ server {
     }
 
     location ^~ /arts-api/ {
-        proxy_pass http://arts:8000;
+        proxy_pass http://orchestrator:8000;
         proxy_http_version 1.1;
         proxy_set_header Upgrade ${ESC}http_upgrade;
         proxy_set_header Connection "Upgrade";
