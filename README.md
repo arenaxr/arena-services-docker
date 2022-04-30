@@ -35,7 +35,7 @@ ARENA has some minimum hardware requirements to run:
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules):
 
 ```bash
-git clone git@github.com:conix-center/arena-services-docker.git --recurse-submodules
+git clone https://github.com/conix-center/arena-services-docker.git --recurse-submodules
 ```
 
 3. Modify configuration:
