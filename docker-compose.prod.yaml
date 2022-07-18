@@ -10,7 +10,7 @@ version: '3'
 services:
 
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
-    image: conixcenter/arena-web-core:${ARENA_CORE:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
+    image: arenaxrorg/arena-web-core:${ARENA_CORE:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
     volumes:
       - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       - ./store:/usr/share/nginx/html/store:ro # mount store files
@@ -34,11 +34,11 @@ services:
     restart: unless-stopped
 
   arena-persist:
-    image: conixcenter/arena-persist:${ARENA_PERSIST:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-persist
+    image: arenaxrorg/arena-persist:${ARENA_PERSIST:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-persist
     restart: unless-stopped
 
   arena-account:
-    image: conixcenter/arena-account:${ARENA_ACCOUNT:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-account
+    image: arenaxrorg/arena-account:${ARENA_ACCOUNT:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-account
     volumes:
       - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py:ro
       - account-static-content:/usr/src/app/static # static content
@@ -49,14 +49,14 @@ services:
     restart: unless-stopped
 
   mqtt:
-    image: conixcenter/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
+    image: arenaxrorg/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
     ports:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
     restart: unless-stopped
 
   mqtt-br1:
-    image: conixcenter/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
+    image: arenaxrorg/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
     volumes:
       - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
@@ -66,7 +66,7 @@ services:
     restart: unless-stopped
 
   mqtt-br2:
-    image: conixcenter/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
+    image: arenaxrorg/arena-broker:${ARENA_BROKER:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
     volumes:
       - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
