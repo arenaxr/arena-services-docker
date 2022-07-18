@@ -3,11 +3,11 @@
 
 [ ! "$(docker ps -a | grep arena-services-docker_arena-web.*)" ] && exit 0 # dont continue if container does not exist
 
-echo "Clone custom website repo into a folder named ARENA-website if you want to override the default website."
-if [ -d "ARENA-website" ]
+echo "Clone custom website repo into a folder named custom-website if you want to override the default website."
+if [ -d "custom-website" ]
 then
     echo "Updating custom website..."
-    docker cp ARENA-website arena-services-docker_arena-web_1:/usr/share/nginx/html/
-    docker exec arena-services-docker_arena-web_1 sh -c "cp -R /usr/share/nginx/html/ARENA-website/* /usr/share/nginx/html"
+    docker cp custom-website arena-services-docker_arena-web_1:/usr/share/nginx/html/
+    docker exec arena-services-docker_arena-web_1 sh -c "cp -R /usr/share/nginx/html/custom-website/* /usr/share/nginx/html"
 fi
 

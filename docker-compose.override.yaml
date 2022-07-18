@@ -13,8 +13,9 @@ services:
     image: "nginx" # creates container from nginx
     volumes:
       - ./conf/arena-web-dev.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
-      - ./ARENA-core:/usr/share/nginx/html:rw # mount root html from ./ARENA-core
+      - ./arena-web-core:/usr/share/nginx/html:rw # mount root html from ./arena-web-core
       - ./conf/arena-web-conf:/usr/share/nginx/html/conf:ro # arena client code conf
+      - ./store:/usr/share/nginx/html/store:ro # mount store files
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       #- arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
@@ -96,7 +97,7 @@ services:
     volumes:
       - ./conf/arena-store-config.json:/.filebrowser.json:ro
       - ./store-branding:/arena-store/frontend/arena-branding:ro
-      - ./ARENA-core/store:/srv-files:rw
+      - ./store:/srv-files:rw
       - ./data/arena-store:/arena-store/data:rw
 
 volumes:

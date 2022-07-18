@@ -10,10 +10,10 @@ version: '3'
 services:
 
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
-    image: conixcenter/arena-core:${ARENA_CORE:-latest} # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-core
+    image: conixcenter/arena-web-core:${ARENA_CORE:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
     volumes:
       - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
-      - ./ARENA-core/store:/usr/share/nginx/html/store:rw # mount store files      
+      - ./store:/usr/share/nginx/html/store:ro # mount store files
       - ./conf/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
     ports:

@@ -68,6 +68,6 @@ services:
     volumes:
       - ./conf/arena-store-config.json:/.filebrowser.json:ro
       - ./store-branding:/arena-store/frontend/arena-branding:ro
-      - ./ARENA-core/store:/srv-files:rw
+      - ./store:/srv-files:rw
       - ./data/arena-store:/arena-store/data:rw
     restart: unless-stopped # service will respawn unless we tell docker to stop it

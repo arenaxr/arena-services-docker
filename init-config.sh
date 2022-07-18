@@ -9,6 +9,8 @@ do
   [ ! -d "$d" ] && mkdir $d && chown $OWNER $d
 done
 
+[ ! -d "conf/arena-web-conf" ] && mkdir conf/arena-web-conf && chown $OWNER conf/arena-web-conf
+
 touch secret.env
 
 echo -e "\n### Creating secret.env (with secret keys, admin password). This will replace old secret.env (if exists; backup will be in secret.env.bak)."
@@ -78,7 +80,7 @@ else
     echo -e "\n### Generating filestore public share and inline js hash."
     read -p "Create a public share on filebrowser ? (y/N) " -r
     if [[ $REPLY =~ ^[Yy]$ ]]; then
-        [ ! -d "ARENA-core/store/public" ] && mkdir ARENA-core/store/public
+        [ ! -d "store/public" ] && mkdir store/public
         fsauth_data='{"username": "'"$STORE_ADMIN_USERNAME"'", "password": "'"$STORE_ADMIN_PASSWORD"'"}'
         fsauth_token=$(curl -X POST -d "$fsauth_data" -H "Content-Type: application/json" "http://host.docker.internal:$STORE_TMP_PORT/api/login")
 

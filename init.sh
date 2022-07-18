@@ -28,8 +28,8 @@ fi
 export $(grep -v '^#' VERSION | xargs)
 docker pull conixcenter/arena-services-docker-init-utils:${ARENA_INIT_UTILS:-latest}
 
-# TMP: create ARENA-core/user/static
-[ ! -d "ARENA-core/user/static" ] && mkdir -p ARENA-core/user/static
+# TMP: create arena-web-core/user/static
+[ ! -d "arena-web-core/user/static" ] && mkdir -p arena-web-core/user/static
 
 # build arena-core js
 ./build-arena-core.sh
@@ -50,7 +50,7 @@ docker run --rm \
     --name storetmp \
     -v ${PWD}/conf/arena-store-config.json:/.filebrowser.json \
     -v ${PWD}/store-branding:/arena-store/frontend/arena-branding \
-    -v ${PWD}/ARENA-core/store:/srv-files \
+    -v ${PWD}/store:/srv-files \
     -v ${PWD}/data/arena-store:/arena-store/data:rw \
     -p $STORE_TMP_PORT:8080 \
     filebrowser/filebrowser:${ARENA_FILESTORE:-latest} &

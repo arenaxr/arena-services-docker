@@ -11,7 +11,7 @@ Creates several containers with ARENA services:
 * File Store
 * Certbot
 
-Source repositories (such as ARENA-core, arena-account, arena-persist) are submodules of this repo. Containers are created from these files. The nginx container serves ARENA-core.
+Source repositories (such as arena-web-core, arena-account, arena-persist) are submodules of this repo. Containers are created from these files. The nginx container serves arena-web-core.
 
 Nginx and mosquitto are configured with TLS/SSL using certificates created by certbot (running as a service in a container), which will periodically attempt to renew the certificates. On the first execution, the configuration files must be initialized by running **init.sh**.
 
@@ -193,7 +193,7 @@ The init script will generate configuration files (from the templates in [conf-t
 
 ## Update Submodules
 
-To update the repositories added as submodules (**ARENA-core** and **arena-persist**), run:
+To update the repositories added as submodules (**arena-web-core** and **arena-persist**), run:
 
 ```bash
 ./update-submodules.sh
@@ -212,7 +212,7 @@ After updating the submodules, to have the updates of built containers (persist,
 
 ## Files/Folders Description
 
-* **ARENA-core:** Contents of the ARENA-core repository (submodule).
+* **arena-web-core:** Contents of the arena-web-core repository (submodule).
 * **arena-persist:**  Contents of the arena-persist repository (submodule).
 * **arena-runtime-simulated:**  Contents of the arena-runtime-simulated repository (submodule).
 * **arena-account:** Contents of the arena-account repository (submodule).
@@ -232,7 +232,7 @@ After updating the submodules, to have the updates of built containers (persist,
 * **docker-compose.staging.yaml:** Compose file that describes adds a dev folder on the web server. Relies on the base config in ```docker-compose.yaml``` to create the final staging config.
 * **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
 * **init.sh:** Initialize config files. See [Init Config](#init-config) Section.
-* **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**ARENA-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](#update-submodules)).
+* **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**arena-web-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](#update-submodules)).
 * **update-versions.sh:** Update the versions indicated in ```VERSION``` by looking at the tags in the submodules.
 * **VERSION:** Release versions of the arena services stack used by the production deployment (```docker-compose.prod.yaml```).
 
