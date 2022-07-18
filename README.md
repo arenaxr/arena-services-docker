@@ -35,7 +35,7 @@ ARENA has some minimum hardware requirements to run:
 2. Clone this repo (with ```--recurse-submodules``` to make sure you get the contents of the repositories added as submodules):
 
 ```bash
-git clone https://github.com/conix-center/arena-services-docker.git --recurse-submodules
+git clone https://github.com/arenaxr/arena-services-docker.git --recurse-submodules
 ```
 
 3. Modify configuration:
@@ -120,7 +120,7 @@ The script will attempt to create certificates using [letsencrypt](https://letse
 * **init.sh, prod.sh, dev.sh, staging.sh:** assume a bash shell
 * **GNU core utils:** You may need to install GNU core utils to ensure some bash commands we use (`timeout`, ...) are available, **particularly on MacOS**.
 * **backup user:**  The ```backup``` container tries to change to the owner of the files backed up to a user indicated in `.env`. This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up by this container.
-* **OAuth:** You will need to set up [Google Web OAuth for your domain](https://developers.google.com/identity/protocols/oauth2/web-server) for the ARENA web client as well as [Google Desktop OAuth](https://developers.google.com/identity/protocols/oauth2/native-app) for the ARENA Python and Unity clients. Detailed instructions are available at our [arena-account repo](https://github.com/conix-center/arena-account).
+* **OAuth:** You will need to set up [Google Web OAuth for your domain](https://developers.google.com/identity/protocols/oauth2/web-server) for the ARENA web client as well as [Google Desktop OAuth](https://developers.google.com/identity/protocols/oauth2/native-app) for the ARENA Python and Unity clients. Detailed instructions are available at our [arena-account repo](https://github.com/arenaxr/arena-account).
 
 ## Init Config
 
