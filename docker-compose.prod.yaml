@@ -10,7 +10,7 @@ version: '3'
 services:
 
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
-    image: arenaxrorg/arena-core:${ARENA_CORE:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
+    image: arenaxrorg/arena-web-core:${ARENA_CORE:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
     volumes:
       - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       #- ./store:/usr/share/nginx/html/store:ro # mount store files
