@@ -1,5 +1,8 @@
 #!/bin/bash
-source .env
+#!/bin/bash
+DIR="$(dirname "${BASH_SOURCE[0]}")"
+ARENA_DOCKER_REPO_FOLDER="$(realpath "${DIR}")"
+source $ARENA_DOCKER_REPO_FOLDER/.env
 BACKUP_PATH=$(realpath -s $ARENA_DOCKER_REPO_FOLDER)/data/backup/$HOSTNAME 
 DATA_PATH=$(realpath -s $ARENA_DOCKER_REPO_FOLDER)/data 
 [ ! -d "$BACKUP_PATH" ] && mkdir $BACKUP_PATH
