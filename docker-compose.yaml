@@ -52,17 +52,16 @@ services:
 
   orchestrator:
     volumes:
-      - ./conf/orchestrator/key.json:/usr/src/app/arts-main/key.json:ro
-      - ./conf/orchestrator/credentials.json:/usr/src/app/arts-main/credentials.json:ro
-      - ./conf/orchestrator/mqtt.json:/usr/src/app/arts-main/mqtt.json:ro
-      - ./conf/orchestrator/server.json:/usr/src/app/arts-main/server.json:ro
+      - ./conf/orchestrator/config.json:/usr/src/app/config.json:ro
+      - ./conf/orchestrator/key.json:/usr/src/app/key.json:ro
+      - ./conf/orchestrator/mqtt_pwd.txt:/usr/src/app/mqtt_pwd.txt:ro
     command: ["./wait-for-it.sh", "mqtt:1883", "--", "python", "manage.py", "runserver", "0.0.0.0:8000"]
 
   py-runtime:
     volumes:
       - ./conf/arena-runtime-native.conf:/usr/src/app/config.json:ro
-    depends_on:
-      - orchestrator
+    #depends_on:
+    # - orchestrator
 
   store:
     volumes:
