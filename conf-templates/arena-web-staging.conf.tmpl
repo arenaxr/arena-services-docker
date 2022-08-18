@@ -68,8 +68,8 @@ server {
         proxy_read_timeout 86400;
     }
 
-    location ^~ /arts-api/ {
-        proxy_pass http://orchestrator:8000;
+    location ^~ /orchestrator/ {
+        proxy_pass http://orchestrator:8000/;
         proxy_http_version 1.1;
         proxy_set_header Upgrade ${ESC}http_upgrade;
         proxy_set_header Connection "Upgrade";
