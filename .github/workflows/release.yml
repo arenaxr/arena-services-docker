@@ -33,3 +33,5 @@ jobs:
              git checkout --force tags/${{ steps.arenaservices.outputs.release }}
              ./prod.sh down
              ./prod.sh up --force-recreate -d 
+             sleep 10
+             ./update-custom-website.sh
