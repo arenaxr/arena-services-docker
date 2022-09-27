@@ -68,22 +68,6 @@ server {
         proxy_read_timeout 86400;
     }
 
-    location ^~ /orchestrator/ {
-        proxy_pass http://orchestrator:8000/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade ${ESC}http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_read_timeout 86400;
-    }
-
-    location ^~ /pythonrt/ {
-        proxy_pass http://py-runtime:5000/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade ${ESC}http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_read_timeout 86400;
-    }
-
     location ^~ /storemng/ {
         add_header 'Access-Control-Allow-Origin' "${ESC}http_origin";
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
