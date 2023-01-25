@@ -98,6 +98,15 @@ server {
         root /usr/share/nginx/html;
         autoindex on;
     }
+    
+    location ^~ /programs/ {
+         proxy_pass http://${HOSTNAME}:8001/;
+         proxy_http_version 1.1;
+         proxy_set_header Upgrade $http_upgrade;
+         proxy_set_header Connection "Upgrade";
+         proxy_read_timeout 86400;
+    }
+
 
 # Output single-line, modified for readability
 set ${ESC}CSP "";
