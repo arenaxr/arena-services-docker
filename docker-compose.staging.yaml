@@ -67,16 +67,6 @@ services:
       - mqtt
     restart: unless-stopped
 
-  orchestrator:
-    build: "orchestrator"
-    env_file:
-      - secret.env
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
-
-  py-runtime:
-    build: "runtime-native"
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
-
   store:
     # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
     image: "filebrowser/filebrowser:${ARENA_FILESTORE:-latest}"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser

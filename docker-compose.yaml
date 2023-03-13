@@ -50,19 +50,6 @@ services:
       - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certs volume (see conf/mosquitto.conf to see how the files are used)
 
-  orchestrator:
-    volumes:
-      - ./conf/orchestrator/config.json:/usr/src/app/config.json:ro
-      - ./conf/orchestrator/key.json:/usr/src/app/key.json:ro
-      - ./conf/orchestrator/mqtt_pwd.txt:/usr/src/app/mqtt_pwd.txt:ro
-    command: ["./wait-for-it.sh", "mqtt:1883", "--", "python", "manage.py", "runserver", "0.0.0.0:8000"]
-
-  py-runtime:
-    volumes:
-      - ./conf/arena-runtime-native.conf:/usr/src/app/config.json:ro
-    #depends_on:
-    # - orchestrator
-
   store:
     volumes:
       - ./conf/arena-store-config.json:/.filebrowser.json:ro

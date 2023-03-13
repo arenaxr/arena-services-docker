@@ -6,8 +6,6 @@ for sm in ${submodules}
 do
 	echo $sm
     cd $sm
-    branch=$(git branch --show-current) 
-    git checkout $branch
     git pull
     cd ..
 done

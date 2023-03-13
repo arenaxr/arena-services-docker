@@ -5,6 +5,23 @@ server {
     server_tokens off;
     client_max_body_size 1000M;
 
+    # Compression
+    gzip on;
+    gzip_vary on;
+    gzip_disable "msie6";
+    gzip_types
+      application/javascript
+      application/json
+      application/wasm
+      font/eot
+      font/otf
+      font/ttf
+      image/svg+xml
+      text/css
+      text/markdown
+      text/plain
+      text/xml;
+
     listen              443 ssl;
     ssl_certificate     /etc/letsencrypt/live/${HOSTNAME}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/${HOSTNAME}/privkey.pem;
@@ -68,22 +85,6 @@ server {
         proxy_read_timeout 86400;
     }
 
-    location ^~ /orchestrator/ {
-        proxy_pass http://orchestrator:8000/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade ${ESC}http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_read_timeout 86400;
-    }
-
-    location ^~ /pythonrt/ {
-        proxy_pass http://py-runtime:5000/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade ${ESC}http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_read_timeout 86400;
-    }
-
     location ^~ /storemng/ {
         add_header 'Access-Control-Allow-Origin' "${ESC}http_origin";
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
@@ -105,6 +106,15 @@ server {
         root /usr/share/nginx/html;
         autoindex off;
     }
+
+    location ^~ /programs/ {
+         proxy_pass http://${HOSTNAME}:8001/;
+         proxy_http_version 1.1;
+         proxy_set_header Upgrade ${ESC}http_upgrade;
+         proxy_set_header Connection "Upgrade";
+         proxy_read_timeout 86400;
+    }
+
 
 # Output single-line, modified for readability
 set ${ESC}CSP "";

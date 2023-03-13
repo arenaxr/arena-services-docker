@@ -75,16 +75,6 @@ services:
       - mqtt
     restart: unless-stopped
 
-  orchestrator:
-    image: slframework/orchestrator:${ORCHESTRATOR:-latest} # pulls from https://hub.docker.com/repository/docker/slframework/orchestrator
-    env_file:
-      - secret.env
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
-
-  py-runtime:
-    image: slframework/runtime-native:${ARENA_RUNTIME_NATIVE:-latest} # pulls from https://hub.docker.com/repository/docker/slframework/runtime-native
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
-
   store:
     # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
     image: "filebrowser/filebrowser:${ARENA_FILESTORE:-latest}"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
