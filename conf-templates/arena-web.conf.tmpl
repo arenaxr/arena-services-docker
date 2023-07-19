@@ -131,7 +131,7 @@ server {
 set ${ESC}CSP "";
 set ${ESC}CSP "${ESC}{CSP}        default-src 'none';";
 set ${ESC}CSP "${ESC}{CSP}        script-src 'self' 'unsafe-eval' https://${HOSTNAME} https://arenaxr.org 'sha256-yfJaugPeh7oO5kkG2N8w7ascfBzM+6zN9encOau5C2Q=' https://cdn.jsdelivr.net https://unpkg.com https://www.youtube-nocookie.com/ 'sha256-${FS_LAUNCH_JS_HASH}';";
-set ${ESC}CSP "${ESC}{CSP}        connect-src 'self' data: blob: wss://${HOSTNAME} wss://*.andrew.cmu.edu wss://*.conix.io wss://jitsi0.andrew.cmu.edu:8443 https://jitsi1.andrew.cmu.edu https://jitsi0.andrew.cmu.edu:8443 https://jitsi1.andrew.cmu.edu https://${HOSTNAME} https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io;";
+set ${ESC}CSP "${ESC}{CSP}        connect-src 'self' data: blob: wss://${HOSTNAME} wss://*.andrew.cmu.edu wss://*.conix.io wss://*.andrew.cmu.edu:8443 https://*.andrew.cmu.edu https://*.andrew.cmu.edu:8443 https://${HOSTNAME} https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io;";
 set ${ESC}CSP "${ESC}{CSP}        img-src 'self' data: blob: https://*.conix.io https://dl.dropboxusercontent.com https://cdn.aframe.io https://aframe.io;";
 set ${ESC}CSP "${ESC}{CSP}        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://maxcdn.bootstrapcdn.com https://use.fontawesome.com/releases/v5.15.2/css/all.css;";
 set ${ESC}CSP "${ESC}{CSP}        base-uri 'self';";
