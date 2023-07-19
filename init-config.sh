@@ -1,5 +1,7 @@
 #!/bin/bash
 
+if [ "$(id -u)" -ne 0 ]; then echo "Not running as root. Please run init.sh instead." >&2; exit 1; fi
+
 echo -e "\n### Creating data folders\n"
 data_folders=( "data/arena-store" "data/grafana"  "data/mongodb"  "data/prometheus" "data/account" "data/keys")
 [ ! -d "data" ] && mkdir data
