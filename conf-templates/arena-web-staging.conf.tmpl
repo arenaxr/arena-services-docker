@@ -100,6 +100,8 @@ server {
     location ^~ /store/ {
         root /usr/share/nginx/html;
         autoindex on;
+        expires 1d;
+        add_header Cache-Control "public";
     }
 
     location ^~ /conf/ {
@@ -130,7 +132,6 @@ set ${ESC}CSP "${ESC}{CSP}        media-src 'self' https://*.conix.io https://dl
 set ${ESC}CSP "${ESC}{CSP}        worker-src 'self' blob:;";
 set ${ESC}CSP "${ESC}{CSP}        child-src 'self';";
 set ${ESC}CSP "${ESC}{CSP}        frame-src 'self' https://www.youtube-nocookie.com;";
-set ${ESC}CSP "${ESC}{CSP}        prefetch-src 'self';";
 set ${ESC}CSP "${ESC}{CSP}        manifest-src 'self' blob:;";
 
     location ~* / {
