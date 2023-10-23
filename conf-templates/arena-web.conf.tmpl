@@ -182,6 +182,18 @@ set ${ESC}CSP "${ESC}{CSP}        manifest-src 'self' blob:;";
 }
 
 server {
+    server_name *.${HOSTNAME};
+
+    listen              443 ssl;
+    ssl_certificate     /etc/letsencrypt/live/${HOSTNAME}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${HOSTNAME}/privkey.pem;
+    include             /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam         /etc/letsencrypt/ssl-dhparams.pem;
+
+    return 301 https://${HOSTNAME}${ESC}request_uri;
+}
+
+server {
     listen 80;
     server_name  ${HOSTNAME};
     server_tokens off;
