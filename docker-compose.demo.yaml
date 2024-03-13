@@ -1,19 +1,20 @@
-# this is the demo docker compose; setup a stack for demonstration, based on the production config
+# this is the demo docker compose; setup a simpler stack for demonstration, based on the production config
 #
 # run demo:
 #    docker-compose -f docker-compose.yaml -f docker-compose.demo.yaml up -d
 #
+# NOTE: if -f is not given, 'docker-compose up' will use docker-compose.override.yaml (https://docs.docker.com/compose/extends/)
 
 version: '3'
 
 services:
 
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
-    image: arenaxrorg/arena-web-core:${ARENA_WEB_CORE_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
+    image: arenaxrorg/arena-web-core:${ARENA_CORE:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
     volumes:
-      - ./conf/demo/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
+      - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       - ./store:/usr/share/nginx/html/store:ro # mount store files
-      - ./conf/demo/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
+      - ./conf/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
@@ -22,17 +23,16 @@ services:
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   mongodb:
-    image: mongo:${MONGO_VERSION:-latest} # pull from https://hub.docker.com/_/mongo/    
     restart: unless-stopped
 
   arena-persist:
-    image: arenaxrorg/arena-persist:${ARENA_PERSIST_VERSION:-v1.0.0} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-persist
+    image: arenaxrorg/arena-persist:${ARENA_PERSIST:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-persist
     restart: unless-stopped
 
   arena-account:
-    image: arenaxrorg/arena-account:${ARENA_ACCOUNT_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-account
+    image: arenaxrorg/arena-account:${ARENA_ACCOUNT:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-account
     volumes:
-      - ./conf/account-settings.py:/usr/src/app/arena_account/settings.py:ro
+      - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py:ro
       - account-static-content:/usr/src/app/static # static content
       - ./data/account:/usr/src/app/db # account db
     env_file:
@@ -41,7 +41,7 @@ services:
     restart: unless-stopped
 
   mqtt:
-    image: slframework/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/slframework/arena-broker
+    image: slframework/arena-broker # pulls from https://hub.docker.com/repository/docker/slframework/arena-broker
     ports:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
