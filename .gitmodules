@@ -9,9 +9,3 @@
 [submodule "arena-account"]
 	path = arena-account
 	url = https://github.com/arenaxr/arena-account 
-[submodule "orchestrator"]
-	path = orchestrator
-	url = https://github.com/SilverLineFramework/orchestrator.git
-[submodule "runtime-native"]
-	path = runtime-native
-	url = https://github.com/SilverLineFramework/runtime-native.git
