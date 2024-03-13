@@ -115,6 +115,10 @@ The script will attempt to create certificates using [letsencrypt](https://letse
 * **docker:** https://docs.docker.com/get-docker/
 * **docker-compose:** https://docs.docker.com/compose/install/
 
+> **WARNING**: If you use the **dev.sh** script below, it requres you to build the web source manually, so you will need also: 
+> * **nodejs:** https://nodejs.org
+> * **parcel:** https://www.npmjs.com/package/parcel
+
 ### Assumptions:
 
 * **init.sh, prod.sh, dev.sh, staging.sh:** assume a bash shell
@@ -169,7 +173,15 @@ The init script will generate configuration files (from the templates in [conf-t
 
 > You might need to execute ```sudo  ./init.sh``` if [your user does not have permissions to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
 
-> IMPORTANT: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
+> **IMPORTANT**: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
+
+> **WARNING**: If you use the **dev.sh** script below, it requres you to build the web source manually, so you will need to: 
+> ```
+> cd arena-web-core
+> npm update
+> npm run build
+> cd ..
+> ```
 
 3. Start all services:
 
