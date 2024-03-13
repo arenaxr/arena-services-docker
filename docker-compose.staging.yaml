@@ -1,4 +1,4 @@
-# this is the staging docker compose; add dev folders in arena web
+# this is the staging docker compose; add dev folders in arena web; used for remote development
 #
 # run staging:
 #    docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml up -d
