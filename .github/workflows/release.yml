@@ -19,16 +19,16 @@ jobs:
         #if: endsWith( github.ref, 'deploy') # run for branches or tags ending with 'deploy'
         uses: appleboy/ssh-action@master
         env:
-          TARGET: ${{ secrets.ARENAXR_DEPLOY_TARGET }}
+          DEPLOY_TARGET: ${{ secrets.ARENAXR_DEPLOY_TARGET }}
         with:
           host: ${{ secrets.ARENA_MAIN_DEPLOY_HOST }}
           username: ${{ secrets.ARENA_MAIN_DEPLOY_USER }}
           key: ${{ secrets.ARENA_MAIN_DEPLOY_KEY }}
           port: ${{ secrets.DEPLOY_PORT }}
-          envs: TARGET
+          envs: DEPLOY_TARGET
           script_stop: true
           script: |
-             cd  $TARGET
+             cd  $DEPLOY_TARGET
              git fetch $BRANCH
              git reset --hard $BRANCH
              git checkout --force tags/${{ steps.arenaservices.outputs.release }}
