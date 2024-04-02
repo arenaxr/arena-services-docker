@@ -11,7 +11,7 @@ BFOLDER=$BACKUP_PATH/mongodb
 # backup mongodb using mongodump
 sudo /usr/bin/docker exec -it -e HOSTNAME=$HOSTNAME arena-services-docker_mongodb_1 sh -c 'exec mongodump --db arena_persist --collection arenaobjects --out /backup/$HOSTNAME/mongodb'
 # backup other services by copying files
-DATA_FOLDERS=( "arena-store" "grafana" "prometheus" "account" )
+DATA_FOLDERS=( "arena-store" "grafana" "account" )
 for d in "${DATA_FOLDERS[@]}"
 do
   BFOLDER=$BACKUP_PATH/$d
