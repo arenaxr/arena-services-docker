@@ -7,9 +7,9 @@ DOCKER_USER=arenaxrorg
 # stop on first error
 set -e 
 
-export $(grep '^ARENA_INIT_UTILS=' ./VERSION | xargs)
-echo "Current arena init utils version=$ARENA_INIT_UTILS" 
-nversion=$(docker run --rm -it -v $PWD:/app -w /app treeder/bump --input $ARENA_INIT_UTILS)
+export $(grep '^ARENA_INIT_UTILS_VERSION=' ./VERSION | xargs)
+echo "Current arena init utils version=$ARENA_INIT_UTILS_VERSION" 
+nversion=v$(docker run --rm -it -v $PWD:/app -w /app treeder/bump --input $ARENA_INIT_UTILS_VERSION)
 read -p "Enter the arena init utils version [$nversion]: " version
 ARENA_INIT_UTILS_VERSION=${version:-$nversion}
 
