@@ -1,0 +1,92 @@
+# Config file for mosquitto
+#
+# See mosquitto.conf(5) for more information.
+#
+
+# =================================================================
+# General configuration
+# =================================================================
+
+# When run as root, drop privileges to this user and its primary
+# group.
+# Leave blank to stay as root, but this is not recommended.
+# If run as a non-root user, this setting has no effect.
+# Note that on Windows this has no effect and so mosquitto should
+# be started by the user you wish it to run as.
+user mosquitto
+
+# =================================================================
+# Default listener
+# =================================================================
+
+port 1883
+protocol mqtt
+
+# =================================================================
+# Extra listeners
+# =================================================================
+listener 9001
+protocol websockets
+
+listener 8083
+protocol websockets
+certfile /etc/letsencrypt/live/${HOSTNAME}/cert.pem
+cafile /etc/letsencrypt/live/${HOSTNAME}/chain.pem
+keyfile /etc/letsencrypt/live/${HOSTNAME}/privkey.pem
+
+listener 8883
+protocol mqtt
+certfile /etc/letsencrypt/live/${HOSTNAME}/cert.pem
+cafile /etc/letsencrypt/live/${HOSTNAME}/chain.pem
+keyfile /etc/letsencrypt/live/${HOSTNAME}/privkey.pem
+
+# =================================================================
+# Logging
+# =================================================================
+
+#log_dest stdout
+#log_dest file /mosquitto/log/mosquitto.log
+#log_type all
+#websockets_log_level 255
+#connection_messages true
+#log_timestamp true
+
+# =================================================================
+# Security
+# =================================================================
+
+allow_anonymous false
+
+# -----------------------------------------------------------------
+# Default authentication and topic access control
+# -----------------------------------------------------------------
+
+# Control access to the broker using a password file. This file can be
+# generated using the mosquitto_passwd utility.
+#password_file /mosquitto/conf/passwd
+
+# -----------------------------------------------------------------
+# Connect to main mosquitto
+# -----------------------------------------------------------------
+connection mqttbr
+address mqtt
+topic # both
+remote_username mqttbr
+remote_password ${SERVICE_MQTTBR_JWT}
+
+# -----------------------------------------------------------------
+# No Persist
+# -----------------------------------------------------------------
+
+persistence false
+
+# -----------------------------------------------------------------
+# mosquitto-jwt-auth plugin
+# -----------------------------------------------------------------
+
+auth_plugin /usr/lib/libmosquitto_jwt_auth.so
+auth_opt_jwt_alg RS256
+auth_opt_jwt_sec_file /pubsubkey.der
+auth_opt_jwt_validate_exp true
+auth_opt_jwt_validate_sub_match_username true
+
