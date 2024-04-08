@@ -70,3 +70,41 @@ services:
       - ./data/arena-store:/arena-store/data:rw
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
+  cadvisor:
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  arena-host-stats:
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  prometheus:
+    user: "root"
+    volumes:
+      - ./conf/prometheus-staging.yml:/etc/prometheus/prometheus.yml:ro
+      - ./data/prometheus/:/prometheus/
+    command: [ "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--storage.tsdb.retention.time=30d" ]
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  grafana:
+    user: "root"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana:rw
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_NAME=CONIX
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  restarter:
+    image: docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:rw
+      - ./:/arena-docker:ro
+    command: [ "/bin/sh", "-c", "cd /arena-docker; while true; do sleep 24h; docker restart arena-services-docker_py-runtime_1 arena-services-docker_orchestrator_1; done" ]
+    restart: unless-stopped
+

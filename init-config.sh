@@ -180,8 +180,7 @@ do
   chown $OWNER $f
 done
 
-# convert js config to json
-for t in $(find ./conf -name "*.js" -type f)
+for t in $(find conf/*js -type f)
 do
     f="${t%.*}" # remove trailing ".js"
     node /utils/jsDefaultsToJson.js "$PWD/$t" > $f.json
@@ -243,4 +242,6 @@ done
 #         cat $TMPFN >> ./conf/arena-web-staging.conf
 #         rm $TMPFN
 # fi
+
+echo -e "\n### If you are going to setup a Jitsi server on this machine, run init-jitsi.sh next."
 

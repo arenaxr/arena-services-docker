@@ -72,38 +72,15 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:${CADVISOR_VERSION:-latest}
-    ports:
-      - 8080:8080
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   arena-host-stats:
     image: prom/node-exporter:${PROM_EXPORTER_VERSION:-latest}
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   prometheus:
     image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
-    user: "root"
-    volumes:
-      - ./conf/prod/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - ./data/prometheus/:/prometheus/
-    command: [ "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--storage.tsdb.retention.time=30d" ]
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   grafana:
-    image: grafana/grafana:${GRAPHANA_VERSION:-latest}
-    user: "root"
-    ports:
-      - 3000:3000
-    volumes:
-      - ./data/grafana:/var/lib/grafana:rw
-    environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_NAME=CONIX
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
+    image: grafana/grafana${GRAPHANA_VERSION:-latest}
+
 volumes:
   account-static-content:
