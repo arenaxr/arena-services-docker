@@ -4,9 +4,9 @@
 # make sure arena-web-core/conf folder exists
 [ ! -d "arena-web-core/conf" ] && mkdir arena-web-core/conf
 
-# copy arena client defaults
-cp ./conf/arena-web-conf/arena-defaults-dev.js ./conf/arena-web-conf/defaults.js
-cp ./conf/arena-web-conf/arena-defaults-dev.json ./conf/arena-web-conf/defaults.json
+# copy arena client config files
+cp ./conf/staging/arena-web-conf-files/defaults.js ./conf/arena-web-conf-files/defaults.js
+cp ./conf/staging/arena-web-conf-files/defaults.json ./conf/arena-web-conf-files/defaults.json
 
 # force static volumes to be created again on "up"
 if [[ "$*" == *up* ]]

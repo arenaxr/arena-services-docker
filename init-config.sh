@@ -144,7 +144,7 @@ do
   chown $OWNER conf/$f
 done
 
-for t in $(find conf/arena-web-conf/*js -type f)
+for t in $(find conf/*js -type f)
 do
     f="${t%.*}" # remove trailing ".js"
     node /utils/jsDefaultsToJson.js "$PWD/$t" > $f.json
@@ -192,29 +192,5 @@ done
 #         rm $TMPFN
 # fi
 
-# add server block to redirect jitsi requests
-if [[ ! -z "$JITSI_HOSTNAME" ]]; then
-    echo -e "\n### If you are going to setup a Jitsi server on this machine, you will configure nginx to redirect http requests to a Jitsi virtual host (JITSI_HOSTNAME is an alias to the IP of the machine)."
-    read -p "Add server block to redirect requests to Jitsi ? (y/N) " -r
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        TMPFN=/tmp/nginx_tmpcfg
-        JITSI_HOSTNAME_NOPORT=$(echo $JITSI_HOSTNAME | cut -f1 -d":")
-        cat > $TMPFN <<  EOF
+echo -e "\n### If you are going to setup a Jitsi server on this machine, run init-jitsi.sh next."
 
-server {
-    server_name         $JITSI_HOSTNAME_NOPORT;
-    listen              80;
-    location /.well-known/acme-challenge/ {
-        proxy_pass http://$JITSI_HOSTNAME_NOPORT:8000;
-    }
-    location / {
-        return 301 https://$JITSI_HOSTNAME\$request_uri;
-    }
-}
-EOF
-        # add server block to production and staging
-        cat $TMPFN >> ./conf/arena-web.conf
-        cat $TMPFN >> ./conf/arena-web-staging.conf
-        rm $TMPFN
-    fi
-fi

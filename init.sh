@@ -19,6 +19,8 @@ cleanup_and_exit () {
 if [ ! -f .env ]
 then
   cp init.env .env
+else 
+  echo "Previous .env found. Loading config from .env (instead of init.env)."    
 fi
 
 # create conf/
@@ -26,7 +28,7 @@ fi
 
 # load versions and pull init utils container
 export $(grep -v '^#' VERSION | xargs)
-docker pull conixcenter/arena-services-docker-init-utils:${ARENA_INIT_UTILS:-latest}
+docker pull arenaxrorg/arena-services-docker-init-utils:${ARENA_INIT_UTILS:-latest}
 
 # TMP: create arena-web-core/user/static
 [ ! -d "arena-web-core/user/static" ] && mkdir -p arena-web-core/user/static

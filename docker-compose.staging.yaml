@@ -3,7 +3,6 @@
 # run staging:
 #    docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml up -d
 #
-# NOTE: if -f is not given, 'docker-compose up' will use docker-compose.override.yaml (https://docs.docker.com/compose/extends/)
 version: '3'
 
 services:
@@ -11,12 +10,11 @@ services:
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
     image: "nginx" # creates container from nginx
     volumes:
-      - ./conf/arena-web-staging.conf:/etc/nginx/conf.d/arena-web-staging.conf:ro # mount nginx config
+      - ./conf/staging/arena-web.conf:/etc/nginx/conf.d/arena-web-staging.conf:ro # mount nginx config
       - ./arena-web-core:/usr/share/nginx/html:rw # mount root html from ./arena-web-core
-      - ./conf/arena-web-conf:/usr/share/nginx/html/conf:ro # arena client code conf
+      - ./conf/arena-web-conf-files:/usr/share/nginx/html/conf:ro # arena client code conf
       - ./store:/usr/share/nginx/html/store:ro # mount store
       - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
-      #- arts-static-content:/usr/share/nginx/html/arts:ro # serve arts static files
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
       - ../dev:/usr/share/nginx/html/dev:ro # mount dev folder
     ports:
@@ -34,6 +32,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'" # check for certificate updates every 12h
 
   mongodb:
+    image: mongo:latest # pull from https://hub.docker.com/_/mongo/
     restart: unless-stopped
 
   arena-persist:
@@ -42,20 +41,10 @@ services:
 
   arena-account:
     build: "arena-account" # builds container from arena-account Dockerfile
-    volumes:
-      - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py:ro
-      - account-static-content:/usr/src/app/static # static content
-      - ./data/account:/usr/src/app/db # account db
-    env_file:
-      - .env
-      - secret.env
     restart: unless-stopped
 
   mqtt:
     image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
-    ports:
-      - 8083:8083/tcp # mqtt-wss
-      - 8883:8883/tcp # mqtt-tls
     restart: unless-stopped
 
   mqtt-br1:
@@ -70,52 +59,21 @@ services:
 
   store:
     # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
-    image: "filebrowser/filebrowser:${ARENA_FILESTORE:-latest}"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
+    image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
     ports:
       - 8080:8080
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   arena-host-stats:
     image: prom/node-exporter:latest
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   prometheus:
     image: prom/prometheus:latest
-    user: "root"
-    volumes:
-      - ./conf/prometheus-staging.yml:/etc/prometheus/prometheus.yml:ro
-      - ./data/prometheus/:/prometheus/
-    command: [ "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--storage.tsdb.retention.time=30d" ]
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   grafana:
     image: grafana/grafana:latest
-    user: "root"
-    ports:
-      - 3000:3000
-    volumes:
-      - ./data/grafana:/var/lib/grafana:rw
-    environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_NAME=CONIX
-    restart: unless-stopped # service will respawn unless we tell docker to stop it
-
-  restarter:
-    image: docker
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:rw
-      - ./:/arena-docker:ro
-    command: [ "/bin/sh", "-c", "cd /arena-docker; while true; do sleep 24h; docker restart arena-services-docker_py-runtime_1 arena-services-docker_orchestrator_1; done" ]
-    restart: unless-stopped
 
 volumes:
-  #arts-static-content:
   account-static-content:
