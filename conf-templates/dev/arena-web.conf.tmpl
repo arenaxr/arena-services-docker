@@ -1,7 +1,7 @@
 # we produce the final config file by passing this file through envsubst (will substitute env variables like ${HOSTNAME}, ...)
 # IMPORTANT: to avoid substitution on nginx variables, use '${ESC}' on the their '$' signs
 server {
-    server_name         ${HOSTNAME};
+    server_name         ${HOSTNAME} ${ADDITIONAL_HOSTNAMES};
     server_tokens off;
     client_max_body_size 1000M;
 
@@ -45,18 +45,6 @@ server {
         proxy_set_header X-Forwarded-For    ${ESC}proxy_add_x_forwarded_for;
     }
 
-    location ^~ /mqtt1/ {
-        proxy_pass http://mqtt-br1:9001;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade ${ESC}http_upgrade;
-        proxy_set_header Connection "Upgrade";
-        proxy_read_timeout 86400;
-        proxy_set_header Host               ${ESC}host;
-        proxy_set_header X-Real-IP          ${ESC}remote_addr;
-        proxy_set_header X-Forwarded-Proto  ${ESC}scheme;
-        proxy_set_header X-Forwarded-For    ${ESC}proxy_add_x_forwarded_for;
-    }
-
     location ^~ /persist/ {
         add_header 'Access-Control-Allow-Origin' "${ESC}http_origin";
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS, DELETE, PUT';
@@ -69,7 +57,7 @@ server {
     }
 
     location ^~ /user/static/ {
-        root /usr/share/nginx/html/;
+        alias /usr/share/nginx/account-static/;
     }
 
     location ^~ /user/ {
@@ -97,16 +85,20 @@ server {
         proxy_read_timeout 86400;
     }
 
-    location ^~ /store/ {
-        root /usr/share/nginx/html;
-        autoindex on;
-        expires 1d;
-        add_header Cache-Control "public";
+    location ^~ /store/public/(.*)$ {
+        rewrite ^ /storemng/api/public/dl/${FS_SHARE_HASH}/$1?$args permanent;
     }
 
     location ^~ /conf/ {
         root /usr/share/nginx/html;
         autoindex off;
+    }
+
+    location ^~ /store/ {
+        root /usr/share/nginx/html;
+        autoindex on;
+        expires 1d;
+        add_header Cache-Control "public";
     }
 
     location ^~ /programs/ {
@@ -147,22 +139,6 @@ set ${ESC}CSP "${ESC}{CSP}        manifest-src 'self' blob:;";
 
         add_header Content-Security-Policy ${ESC}CSP;
 
-        # Staging /dev/username folders
-        location ~* ^/dev {
-            autoindex on;
-            # Cover actual files in subdirectories of /dev/username/namespace
-            location ~* ^(/dev/[\w.-]+)(/[\w.-]+)(/[\w.-]+)(/.+) {
-                try_files ${ESC}uri ${ESC}uri/ ${ESC}1${ESC}3${ESC}4 ${ESC}1${ESC}3${ESC}4/ ${ESC}1${ESC}4 ${ESC}1${ESC}4/ ${ESC}1/index.html;
-            }
-            # Cover /dev/username/namespace/scenename and files in same path of /dev/username/namespace
-            location ~* ^(/dev/[\w.-]+)(/[\w.-]+)(/[\w.-]+) {
-                try_files ${ESC}uri ${ESC}uri/ ${ESC}1${ESC}3 ${ESC}3/ ${ESC}1/index.html;
-            }
-            # Catchall for rest of /dev/username
-            location ~* ^/dev/([\w.-]+)/ {
-                try_files ${ESC}uri ${ESC}uri/ /index.html;
-            }
-        }
         # Cover actual files in subdirectories of /namespace (e.g. /namespace/vendor/env.js)
         location ~* ^/([\w.-]+)/([\w.-]+)/(.+) {
             try_files ${ESC}uri ${ESC}uri/ /${ESC}2/${ESC}3 /${ESC}2/${ESC}3/ ${ESC}3 ${ESC}3/ /index.html;
@@ -180,7 +156,9 @@ set ${ESC}CSP "${ESC}{CSP}        manifest-src 'self' blob:;";
             expires -1;
             add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
         }
+
     }
+
 }
 
 server {
