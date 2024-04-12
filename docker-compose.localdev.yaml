@@ -11,9 +11,9 @@ services:
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
     image: "nginx" # creates container from nginx
     volumes:
-      - ./conf/dev/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
+      - ./conf/localdev/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       - ./arena-web-core:/usr/share/nginx/html:rw # mount root html from ./arena-web-core
-      - ./conf/dev/arena-web-conf:/usr/share/nginx/html/conf:ro # arena client code conf
+      - ./conf/localdev/arena-web-conf:/usr/share/nginx/html/conf:ro # arena client code conf
       - ./store:/usr/share/nginx/html/store:ro # mount store files
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
       - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
@@ -49,7 +49,7 @@ services:
   arena-account:
     build: "arena-account" # builds container from arena-account Dockerfile
     volumes:
-      - ./conf/arena-account-settings.py:/usr/src/app/arena_account/settings.py:ro
+      - ./conf/account-settings.py:/usr/src/app/arena_account/settings.py:ro
       - account-static-content:/usr/src/app/static # static content
       - ./data/keys/jwt.priv.pem:/home/node/app/pubsubkey.pem:ro # pubsub key available to service
       - ./data/account:/usr/src/app/db # account db
@@ -82,5 +82,4 @@ services:
       - ./data/arena-store:/arena-store/data:rw
 
 volumes:
-  #arts-static-content:
   account-static-content:

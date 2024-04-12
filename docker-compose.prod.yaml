@@ -12,9 +12,9 @@ services:
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
     image: arenaxrorg/arena-web-core:${ARENA_WEB_CORE_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
     volumes:
-      - ./conf/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
+      - ./conf/prod/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
       - ./store:/usr/share/nginx/html/store:ro # mount store files
-      - ./conf/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
+      - ./conf/prod/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
     ports:
       - "80:80" # map port 80 on the host to port 80 on the container
@@ -49,7 +49,7 @@ services:
   mqtt-br1:
     image: arenaxrorg/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
     volumes:
-      - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
+      - ./conf/prod/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certs volume (see conf/mosquitto.conf to see how the files are used)
     depends_on:
@@ -59,7 +59,7 @@ services:
   mqtt-br2:
     image: arenaxrorg/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
     volumes:
-      - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
+      - ./conf/prod/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
       - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
       - ./data/certbot/conf:/etc/letsencrypt:ro # mount certs volume (see conf/mosquitto.conf to see how the files are used)
     depends_on:
@@ -72,15 +72,38 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:${CADVISOR_VERSION:-latest}
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   arena-host-stats:
     image: prom/node-exporter:${PROM_EXPORTER_VERSION:-latest}
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   prometheus:
     image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
+    user: "root"
+    volumes:
+      - ./conf/prod/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./data/prometheus/:/prometheus/
+    command: [ "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--storage.tsdb.retention.time=30d" ]
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   grafana:
-    image: grafana/grafana${GRAPHANA_VERSION:-latest}
-
+    image: grafana/grafana:${GRAPHANA_VERSION:-latest}
+    user: "root"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana:rw
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_NAME=CONIX
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 volumes:
   account-static-content:

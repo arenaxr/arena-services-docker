@@ -30,7 +30,7 @@ prod_versions () {
     done
 
     # fetch versions of repos that are not a submodule
-    for i in ARENA_BROKER=https://github.com/conix-center/ARENA-broker.git ARENA_FILESTORE=https://github.com/filebrowser/filebrowser.git ; do 
+    for i in ARENA_BROKER=https://github.com/SilverLineFramework/mosquitto-broker ARENA_FILESTORE=https://github.com/filebrowser/filebrowser.git ; do 
         envvar=${i%\=*}_VERSION;
         repo=${i#*\=};
         version=$(git -c 'versionsort.suffix=-' \
