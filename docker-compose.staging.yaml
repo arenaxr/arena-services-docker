@@ -12,9 +12,9 @@ services:
     volumes:
       - ./conf/staging/arena-web.conf:/etc/nginx/conf.d/arena-web-staging.conf:ro # mount nginx config
       - ./arena-web-core:/usr/share/nginx/html:rw # mount root html from ./arena-web-core
-      - ./conf/arena-web-conf-files:/usr/share/nginx/html/conf:ro # arena client code conf
+      - ./conf/staging/arena-web-conf:/usr/share/nginx/html/conf:ro # arena web client code conf
       - ./store:/usr/share/nginx/html/store:ro # mount store
-      - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/nginx-conf.d/arena-web.conf)
+      - ./data/certbot/www:/var/www/certbot:ro # mount certbot files (used in conf/staging/arena-web.conf)
       - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
       - ../dev:/usr/share/nginx/html/dev:ro # mount dev folder
     ports:
@@ -47,16 +47,6 @@ services:
     image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
     restart: unless-stopped
 
-  mqtt-br1:
-    image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
-    volumes:
-      - ./conf/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
-      - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
-      - ./data/certbot/conf:/etc/letsencrypt:ro # mount certs volume (see conf/mosquitto.conf to see how the files are used)
-    depends_on:
-      - mqtt
-    restart: unless-stopped
-
   store:
     # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
     image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
@@ -65,15 +55,37 @@ services:
     image: gcr.io/cadvisor/cadvisor:latest
     ports:
       - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   arena-host-stats:
-    image: prom/node-exporter:latest
+    image: prom/node-exporter:latest    
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:latest    
+    user: "root"
+    volumes:
+      - ./conf/staging/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./data/prometheus/:/prometheus/
+    command: [ "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--storage.tsdb.retention.time=30d" ]
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   grafana:
     image: grafana/grafana:latest
+    user: "root"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana:rw
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_NAME=CONIX
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
 
 volumes:
   account-static-content:

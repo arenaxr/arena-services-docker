@@ -55,9 +55,15 @@ done
 # create .env from init.env on first execution
 if [ ! -f .env ]
 then
-  cp init.env .env
+    if [ -f init.env ]; then
+        grep -v -e '^#\|^$' init.env > .env
+    else
+        echoerr "No init.env file found! This is needed for a correct init. Running from arena-services-docker repository root ?"
+        exit 1
+    fi
 else 
-  echo "Previous .env found. Loading config from .env (instead of init.env)."    
+  echocolor ${WARNING} "NOTE: A .env file was found (init.sh was executed before?). Loading config from .env instead of init.env."
+  echo "You can use cleanup.sh to clear a previous init.sh."
 fi
 
 # create conf/
@@ -68,7 +74,7 @@ fi
 
 # load versions and pull init utils container
 export $(grep -v '^#' VERSION | xargs)
-docker pull arenaxrorg/arena-services-docker-init-utils:${ARENA_INIT_UTILS:-latest}
+docker pull arenaxrorg/arena-services-docker-init-utils:${ARENA_INIT_UTILS_VERSION}
 
 # TMP: create arena-web-core/user/static
 [ ! -d "arena-web-core/user/static" ] && mkdir -p arena-web-core/user/static
