@@ -1,7 +1,7 @@
 # this file is automatically updated by update-versions.sh  
 ARENA_SERVICES=v1.0.3
 ARENA_CORE=v1.26.3
-ARENA_PERSIST=v1.0.3
+ARENA_PERSIST=v1.0.4
 ARENA_ACCOUNT=v1.2.0
 ARENA_BROKER=v1.6.10
 ARENA_FILESTORE=v2.20.1
