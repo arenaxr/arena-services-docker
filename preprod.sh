@@ -16,6 +16,6 @@ then
     docker volume rm arena-services-docker_account-static-content
 fi
 
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION pull
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod pull
 
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION $@
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod $@
