@@ -15,4 +15,4 @@ jobs:
         env:
           key: master
           branches: demo master
-          files: docker-compose.yaml docker-compose.demo.yaml
+          files: docker-compose.yaml docker-compose.demo.yaml conf-templates/*
