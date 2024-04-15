@@ -28,6 +28,9 @@ function timeout() { perl -e 'alarm shift; exec @ARGV' "$@"; }
 # output error messages
 echoerr() { printf "${ERROR}ERROR: %s${NORMAL}\n" "$*" >&2; }
 
+# output error message and exit
+exiterr() { printf "${ERROR}ERROR: %s${NORMAL}\n" "$*" >&2; exit 1; }
+
 # output colored messages
 echocolor() { 
     color=$1
@@ -37,5 +40,5 @@ echocolor() {
 
 # check flag and read user input
 readprompt() {
-    [ ! "$ALWAYS_YES" == "true" ] && read -p $1 -r || REPLY="y"
+    [ ! "$ALWAYS_YES" == "true" ] && echo "" && read -p "$1" -r || REPLY="y"
 }
