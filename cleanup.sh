@@ -1,5 +1,5 @@
 #!/bin/bash
-# cleanup previous config created with init.sh
+# cleanup previous config created with init.sh; run with sudo
 
 [ -d conf ] && ( rm -fr conf_bak; mv conf conf_bak && echo "Backup conf in conf_bak" ) || echo "No conf folder found"
 [ -d data ] && ( rm -fr data_bak; mv data data_bak && echo "Backup data in data_bak") || echo "No conf folder found"

@@ -14,5 +14,5 @@ jobs:
         uses: planetoftheweb/copy-to-branches@v1.2
         env:
           key: master
-          branches: prod demo
+          branches: prod
           files: README.md conf docker-compose.yaml docker-compose.prod.yaml
