@@ -50,7 +50,7 @@ case "$email" in
   *) email_arg="--email $email" ;;
 esac
 
-certbot certonly --standalone -w /var/www/certbot \
+certbot certonly --webroot -w /var/www/certbot \
     $staging_arg \
     $email_arg \
     $domain_args \
