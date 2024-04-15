@@ -1,0 +1,26 @@
+{
+	"mqtt_server": {
+		"host": "${HOSTNAME}",
+	 	"port": 8883,
+        "ssl": true,
+		"username": "py_runtime",
+    	"password": "${SERVICE_PY_RUNTIME_JWT}"		
+	},
+	"runtime": {
+		"name": "py-runtime",
+        "runtime_type": "python-native",
+		"reg_attempts": 0,
+		"reg_timeout_seconds": 5,
+		"max_nmodules": 100,
+		"apis": ["python:python3"],
+		"py_launcher_path": "runtimemngr/py_run.sh",
+		"wasm_launcher_path": "runtimemngr/wasm_run.sh",
+        "pipe_stdin_stdout": true
+	},
+	"topics": [
+		{ "topic": "${ARENA_REALM}/proc/reg", "type": "reg"},
+		{ "topic": "${ARENA_REALM}/proc/control", "type": "ctl"},
+		{ "topic": "${ARENA_REALM}/proc/debug", "type": "dbg"}
+	],
+	"store_url": "https://${HOSTNAME}/store"
+}

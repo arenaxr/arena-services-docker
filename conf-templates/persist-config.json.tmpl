@@ -1,0 +1,13 @@
+{
+    "mqtt": {
+        "uri": "tcp://mqtt",
+        "topic_realm": "${ARENA_REALM}",
+        "statusTopic": "service_status"
+    },
+    "mongodb": {
+        "uri": "mongodb://mongodb/arena_persist"
+    },
+    "jwt_public_keyfile": "/home/node/app/pubsubkey.pub",
+    "jwt_service_user": "arena_persist",
+    "jwt_service_token": "${SERVICE_ARENA_PERSIST_JWT}"
+}
