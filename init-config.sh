@@ -2,7 +2,7 @@
 # init arena config; creates root secrets and derives tokens for services; 
 # creates config files from templates conf-templates -> conf
 #
-# NOTE: usually, this script should not be called directly; it is instead called from init.sh
+# NOTE: this script is called from init.sh; do not execute directly
 #
 # uses variables in .env and the following:
 #   ALWAYS_YES="true" indicates that we answer yes to all questions: create new secrets, tokens, regenerate config files
@@ -11,6 +11,10 @@
 source init-utils/bash-common-utils.sh 
 
 if [ "$(id -u)" -ne 0 ]; then echo "Not running as root. Please run init.sh instead." >&2; exit 1; fi
+
+JWT_KEY_FILE_PRIV=./data/keys/jwt.priv.pem 
+JWT_KEY_FILE_PUBLIC=./data/keys/jwt.public.pem
+JWT_KEY_FILE_PUBLIC_DER=./data/keys/jwt.public.der
 
 if [ -z "$CONFIG_FILES_ONLY" ]; then 
 
@@ -29,7 +33,7 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
 
     echocolor ${HIGHLIGHT} "### Creating secrets (in secret.env). This will replace old secret.env (if exists; backup will be in secret.env.bak)."
     readprompt "Create secret.env ? (y/N) "
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
       SECRET_KEY=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c40)
       SECRET_KEY_BASE64=$(echo $SECRET_KEY | base64)
       cp secret.env secret.env.bak
@@ -37,35 +41,34 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
       echo "SECRET_KEY_BASE64=$SECRET_KEY_BASE64" >> secret.env
       echo "DJANGO_SUPERUSER_PASSWORD=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c15)" >> secret.env
       echo "STORE_ADMIN_PASSWORD=$(LC_ALL=C tr -dc '[:alnum:]' < /dev/urandom | head -c15)" >> secret.env
-      [ -f secret.env ] && [[ $(wc -l <secret.env) -ge 4 ]] && echo "Done creating secrets." || echoerr "File secret.env not found or too few lines in secrets.env."
+      [ -f secret.env ] && [ $(wc -l <secret.env) -ge 4 ] && echo "Done creating secrets." || exiterr "File secret.env not found or too few lines in secrets.env."
     fi
 
     echocolor ${HIGHLIGHT} "### Creating RSA key pair for JWT (conf/keys/jwt.priv.pem). This will replace old keys (if exist; backup will be in data/keys/jwt.priv.pem.bak)."
     readprompt "Create RSA key pair ? (y/N) "
-    if [[ $REPLY =~ ^[Yy]$ ]]; then 
-      [ -f ./data/keys/jwt.priv.pem ] && cp ./data/keys/jwt.priv.pem data/keys/jwt.priv.pem.bak
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then 
+      [ -f $JWT_KEY_FILE_PRIV ] && cp $JWT_KEY_FILE_PRIV $JWT_KEY_FILE_PRIV.bak
       rm ./data/keys/*
-      openssl genrsa -out ./data/keys/jwt.priv.pem 4096 && \
-      openssl rsa -in ./data/keys/jwt.priv.pem -pubout -outform PEM -out ./data/keys/jwt.public.pem && \
-      openssl rsa -in ./data/keys/jwt.priv.pem -RSAPublicKey_out -outform DER -out ./data/keys/jwt.public.der # mqtt auth plugin requires RSAPublicKey format
-      if [[ ! $? -eq 0 ]]; then 
-        echoerr "Failure creating keys."
-        exit 1
-      fi
+      openssl genrsa -out $JWT_KEY_FILE_PRIV 4096 && \
+      openssl rsa -in $JWT_KEY_FILE_PRIV -pubout -outform PEM -out $JWT_KEY_FILE_PUBLIC && \
+      openssl rsa -in $JWT_KEY_FILE_PRIV -RSAPublicKey_out -outform DER -out $JWT_KEY_FILE_PUBLIC_DER # mqtt auth plugin requires RSAPublicKey format
+      [ ! $? -eq 0 ] && exiterr "Failure creating keys."
     fi
 
+    [ ! -f $JWT_KEY_FILE_PRIV ] && exiterr "RSA key pair needs to exist to proceed."
+
     # reset ownership of public keys
-    [ -f ./data/keys/jwt.public.pem ] && chown $OWNER ./data/keys/jwt.public.pem
-    [ -f ./data/keys/jwt.public.der ] && chown $OWNER ./data/keys/jwt.public.der
+    [ -f $JWT_KEY_FILE_PUBLIC ] && chown $OWNER $JWT_KEY_FILE_PUBLIC
+    [ -f $JWT_KEY_FILE_PUBLIC_DER ] && chown $OWNER $JWT_KEY_FILE_PUBLIC_DER
 
     rm ./conf/arena-web-conf/*.pem 2>/dev/null
     # copy public key to /conf/sha256(hostname).pem to be used for Atlassian Service Authentication Protocol (ASAP)
     HOSTSHA256=$(echo -n $HOSTNAME | shasum -a 256)
-    cat ./data/keys/jwt.public.pem > ./conf/arena-web-conf/${HOSTSHA256%???}.pem
+    cat $JWT_KEY_FILE_PUBLIC > ./conf/arena-web-conf/${HOSTSHA256%???}.pem
 
     echocolor ${HIGHLIGHT} "### Creating Service Tokens. This will replace service tokens in secret.env (if exists; backup will be in secret.env.bak)."
     readprompt "Create Service Tokens ? (y/N) "
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
       grep -v '^SERVICE_' secret.env > secret.tmp # remove all service tokens
       cp secret.env secret.env.bak
       cp secret.tmp secret.env
@@ -73,12 +76,12 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
       for s in "${services[@]}"
       do
         tn="SERVICE_${s^^}_JWT"
-        echo "$tn=$(python /utils/genjwt.py -i $HOSTNAME -k ./data/keys/jwt.priv.pem $s)" >> secret.env
+        echo "$tn=$(python /utils/genjwt.py -i $HOSTNAME -k $JWT_KEY_FILE_PRIV $s)" >> secret.env
       done
       # generate a token for cli tools (for developers) and announce it in slack
-      cli_token_json=$(python /utils/genjwt.py -i $HOSTNAME -k ./data/keys/jwt.priv.pem -j cli)
+      cli_token_json=$(python /utils/genjwt.py -i $HOSTNAME -k $JWT_KEY_FILE_PRIV -j cli)
       echo $cli_token_json > ./data/keys/cli_token.json
-      if [[ ! -z "$SLACK_DEV_CHANNEL_WEBHOOK" ]]; then
+      if [ ! -z "$SLACK_DEV_CHANNEL_WEBHOOK" ]; then
         username=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['username'])")
         cli_token=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
         alias_name="${HOSTNAME%%.*}"
@@ -87,15 +90,21 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
       fi
 
       # NOTE: check for errors by looking at number of lines in secret.env
-      if [[ $(wc -l <secret.env) -ge 8 ]]; then 
+      if [ $(wc -l <secret.env) -ge 5 ]; then 
         echo -e "Service tokens created.\n"
       else
-        echoerr "Too few lines in secret.env."; 
-        exit 1
+        exiterr "Too few lines in secret.env."; 
       fi
     fi
 
 fi # CONFIG_FILES_ONLY
+
+# check inputs to generate conf/ files exist (if replied 'N' above, configuration should exist from previous runs)
+[ ! -f secret.env ] && exiterr "File secret.env not found. This is required to generate config."
+[ ! -f $JWT_KEY_FILE_PRIV ] && exiterr "File $JWT_KEY_FILE_PRIV not found. This is required to generate config."
+[ ! -f $JWT_KEY_FILE_PUBLIC ] && exiterr "File $JWT_KEY_FILE_PUBLIC not found. This is required to generate config."
+[ ! -f $JWT_KEY_FILE_PUBLIC_DER ] && exiterr "File $JWT_KEY_FILE_PUBLIC_DER not found. This is required to generate config."
+[ ! $(wc -l <secret.env) -ge 5 ] && exiterr "File secret.env has too few lines. This is required to generate config."
 
 # load secrets
 export $(grep -v '^#' secret.env | xargs)
@@ -108,7 +117,7 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
     else
         echocolor ${HIGHLIGHT} "### Generating filestore public share and inline js hash."
         readprompt "Create a public share on filebrowser ? (y/N) "
-        if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [[ "$REPLY" =~ ^[Yy]$ ]]; then
             [ ! -d "store/public" ] && mkdir store/public
             fsauth_data='{"username": "'"$STORE_ADMIN_USERNAME"'", "password": "'"$STORE_ADMIN_PASSWORD"'"}'
             fsauth_token=$(curl -X POST -d "$fsauth_data" -H "Content-Type: application/json" "http://host.docker.internal:$STORE_TMP_PORT/api/login")
@@ -158,12 +167,12 @@ do
   f="${t/.tmpl/}" # remove .tmpl extension
   d="$(dirname $t)" # get folder 
   # skip mac os files and .md files
-  if [[ "$e" == "md" ]] || [[ "$e" == "DS_Store" ]]; then continue; fi
+  if [ "$e" == "md" ] || [ "$e" == "DS_Store" ]; then continue; fi
   echo -e "\t $fn -> $f"
   mkdir -p $d && chown $OWNER $d # create destinatinon folder if needed
   cp $f $f.bak >/dev/null 2>&1
   # do substitution on tmpl files; copy other files
-  if [[ "$e" == "tmpl" ]]; then
+  if [ "$e" == "tmpl" ]; then
     envsubst < $fn > $f
   else
     cp $fn $f
@@ -192,11 +201,11 @@ do
   fi 
 done
 
-[ -d conf ] && [[ $(ls conf/* | wc -l) -ge 20 ]] && echo "Config files created.\n" || echoerr "Folder conf/ not found or too few config files found."
+[ -d conf ] && [ $(ls conf/* | wc -l) -ge 20 ] && echo "Config files created.\n" || exiterr "Folder conf/ not found or too few config files found."
 
 # TODO: Re-enable additions hostnames - They are not allowing certbot to renew certificates
 # add server block to redirect additional hostnames
-# if [[ ! -z "$ADDITIONAL_HOSTNAMES" ]]; then
+# if [ ! -z "$ADDITIONAL_HOSTNAMES" ]; then
 #         TMPFN=/tmp/nginx_tmpcfg
 #         cat > $TMPFN <<  EOF
 
