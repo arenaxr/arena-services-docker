@@ -1,4 +1,4 @@
-name: Create demo branch
+name: Update demo branch
 on:
   workflow_dispatch:
   push:
@@ -16,3 +16,4 @@ jobs:
           key: master
           branches: demo master
           files: docker-compose.yaml docker-compose.demo.yaml conf-templates/*
+          exclude: conf-templates/localdev conf-templates/prod conf-templates/staging
