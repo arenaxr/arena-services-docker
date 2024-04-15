@@ -77,10 +77,11 @@ create_certs() {
             -p 80:80 \
             nginx &
 
+        # run cert creation script in container
         docker run -it --rm \
             --env-file .env --env-file secret.env -e OWNER=`id -u`:`id -g` -e ALWAYS_YES=$ALWAYS_YES -e STAGING=$STAGING_LE -e SELF_SIGNED=$SELF_SIGNED \
             -v $PWD:/work -v $PWD/data/certbot/conf:/etc/letsencrypt -v $PWD/data/certbot/www:/var/www/certbot \
-            -w /work -p 80:80 \
+            -w /work \
             arenaxrorg/arena-services-docker-init-utils:$ARENA_INIT_UTILS_VERSION \
             /work/init-certs.sh
 
