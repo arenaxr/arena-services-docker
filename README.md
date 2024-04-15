@@ -32,12 +32,12 @@ ARENA has some minimum hardware requirements to run:
 
 1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/). Our scripts are written for a bash shell. See [Dependencies](#dependenciesassumptions) section for details.
 
-2. Clone this repo (submodules are **not need** for this quick demo):
+2. Clone this repo's **demo** branch
 
 ```bash
-git clone https://github.com/arenaxr/arena-services-docker.git
+git clone -b demo --single-branch https://github.com/arenaxr/arena-services-docker.git
 ```
-> If you plan to use other configurations later, clone with submodules:
+> If you plan to use other configurations later, remove the `--single-branch`:
 > ```bash
 > git clone --recurse-submodules https://github.com/arenaxr/arena-services-docker.git
 > ```
@@ -80,8 +80,10 @@ If you see no errors, you should be able to point your browser to `https://local
 
 Before starting services, we need to create the configuration files for the services with the right domains and create certificates (using letsencrypt/openssl).
 
-First, make sure you have the repo's submodules:
+First, make sure you have an up to date the master branch with submodules:
 ```bash
+git checkout master
+git pull
 git submodule update --init --recursive
 ```
 
