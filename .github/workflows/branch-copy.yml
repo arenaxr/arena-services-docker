@@ -1,6 +1,8 @@
 name: Create prod and demo branches from main/master
 on:
   workflow_dispatch:
+  push:
+
 jobs:
   copy-to-branches:
     runs-on: ubuntu-latest
