@@ -60,11 +60,11 @@ else
 fi
 email=$EMAIL # Adding a valid address is strongly recommended
 staging_arg=""
-if [ ! "$STAGING" == "true" ]; then
+if [ "$STAGING" == "true" ]; then
   staging_arg="--staging"
 fi
 
-echocolor {BOLD} "Requesting Let's Encrypt certificate for $domains ..."
+echocolor ${BOLD} "Requesting Let's Encrypt certificate for $domains ..."
 # Join $domains to -d args
 domain_args=""
 for domain in ${domains}; do
@@ -77,7 +77,7 @@ case "$email" in
   *) email_arg="--email $email" ;;
 esac
 
-certbot certonly --standalone -w /var/www/certbot \
+certbot certonly --webroot -w /var/www/certbot \
     $staging_arg \
     $email_arg \
     $domain_args \
@@ -86,7 +86,7 @@ certbot certonly --standalone -w /var/www/certbot \
 
 if [ $? -ne 0 ]
 then
-  echoerr "\n\n### !!! Could not create certificate. Certbot failed (see errors above) !!! ###\n"
+  echoerr "### !!! Could not create certificate. Certbot failed (see errors above) !!! ###"
   gen_self_signed_and_exit
 fi
 echo "\n"

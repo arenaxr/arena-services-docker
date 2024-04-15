@@ -100,11 +100,11 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
 fi # CONFIG_FILES_ONLY
 
 # check inputs to generate conf/ files exist (if replied 'N' above, configuration should exist from previous runs)
-[ ! -f secret.env ] && exiterr "File secret.env not found. This is required to generate config."
-[ ! -f $JWT_KEY_FILE_PRIV ] && exiterr "File $JWT_KEY_FILE_PRIV not found. This is required to generate config."
-[ ! -f $JWT_KEY_FILE_PUBLIC ] && exiterr "File $JWT_KEY_FILE_PUBLIC not found. This is required to generate config."
-[ ! -f $JWT_KEY_FILE_PUBLIC_DER ] && exiterr "File $JWT_KEY_FILE_PUBLIC_DER not found. This is required to generate config."
-[ ! $(wc -l <secret.env) -ge 5 ] && exiterr "File secret.env has too few lines. This is required to generate config."
+[ ! -f secret.env ] && exiterr "File secret.env not found. This is required to generate config. Did you run init.sh ? Must create secrets successfuly."
+[ ! -f $JWT_KEY_FILE_PRIV ] && exiterr "File $JWT_KEY_FILE_PRIV not found. This is required to generate config. Did you run init.sh ? Must generate RSA keys successfuly."
+[ ! -f $JWT_KEY_FILE_PUBLIC ] && exiterr "File $JWT_KEY_FILE_PUBLIC not found. This is required to generate config. Did you run init.sh ? Must generate RSA keys successfuly."
+[ ! -f $JWT_KEY_FILE_PUBLIC_DER ] && exiterr "File $JWT_KEY_FILE_PUBLIC_DER not found. This is required to generate config. Did you run init.sh ? Must generate RSA keys successfuly."
+[ ! $(wc -l <secret.env) -ge 5 ] && exiterr "File secret.env has too few lines. This is required to generate config. Did you run init.sh? Must generate service keys successfuly."
 
 # load secrets
 export $(grep -v '^#' secret.env | xargs)
