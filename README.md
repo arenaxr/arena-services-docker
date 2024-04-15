@@ -40,7 +40,5 @@ git clone -b demo --single-branch https://github.com/arenaxr/arena-services-dock
  ./demo.sh
 ```
 > You might need to execute using ```sudo``` (e.g. ```sudo ./demo.sh up```) if your user does not have permission to access the docker service.
-> For more details, see [Init Config](#init-config) Section below.
-> We also have configurations for production, development and staging. See the [utility scripts Section](#utility-scripts)
 
-If you see no errors, you should be able to point your browser to `https://localhost`. You will have get past the security warnings due to a self-signed certificate, **and use anonymous login** (using OAuth requires additional setup; see [Init Config](#init-config) Section below).
+If you see no errors, you should be able to point your browser to `https://localhost`. You will have get past the security warnings due to a self-signed certificate, **and use anonymous login** (using OAuth requires additional setup; see the main/master branch).
