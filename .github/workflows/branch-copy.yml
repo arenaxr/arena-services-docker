@@ -1,4 +1,4 @@
-name: Create prod and demo branches from main/master
+name: Create demo branch
 on:
   workflow_dispatch:
   push:
@@ -11,8 +11,8 @@ jobs:
         with:
           fetch-depth: 0
       - name: Copy To Branches Action
-        uses: planetoftheweb/copy-to-branches@v1.2
+        uses: planetoftheweb/copy-to-branches@v1.3
         env:
           key: master
-          branches: demo
+          branches: demo master
           files: docker-compose.yaml docker-compose.demo.yaml
