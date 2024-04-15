@@ -69,11 +69,11 @@ create_certs() {
         echocolor ${HIGHLIGHT} "### Create/renew certificates"
 
         # bring up a temp instance of nginx
-        docker run --rm \
+        docker run -it --rm \
             --name nginxtmp \
             -v ${PWD}/data/certbot/conf:/etc/letsencrypt:rw \
             -v ${PWD}/data/certbot/www:/var/www/certbot:rw \
-            -v ${PWD}/conf/letsencrypt-web.conf:/etc/nginx/conf.d/letsencrypt-web.conf:ro \
+            -v ${PWD}/conf/letsencrypt-web.conf:/etc/nginx/conf.d/default.conf:ro \
             -p 80:80 \
             nginx &
 
@@ -95,19 +95,18 @@ create_certs() {
 
 cleanup_and_exit () {
     if [[ $1 == 0 ]]; then
-        echo 
-        echocolor ${BOLD} "Init Done. If you are going to setup a Jitsi server on this machine, run jitsi-add.sh next."
-        echo        
+        echo "" && echocolor ${BOLD} "Init Done. If you are going to setup a Jitsi server on this machine, run jitsi-add.sh next." && echo ""       
     else
-        echo 
-        echoerr "Stopping here."
+        echo "" && echoerr "Stopping here."
     fi
     if [ ! -z "$CONFIG_FILES_ONLY" ]; then
         exit $1
     fi 
     echocolor ${HIGHLIGHT} "### Cleanup..."
     # stop temp filebrowser container before exiting
-    docker stop storetmp
+    [[ $(docker ps | grep storetmp) ]] && docker stop storetmp
+    # stop temp nginx container before exiting
+    [[ $(docker ps | grep nginxtmp) ]] && docker stop nginxtmp
     # sync filestore password
     export $(grep '^STORE_ADMIN_PASSWORD' secret.env | xargs)
     [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it \
@@ -167,15 +166,15 @@ while true; do
             ;;
         -c|--configonly)
             init_config
-            exit $?
+            cleanup_and_exit $?
             ;;
         -l|--certsonly)
             create_certs
-            exit $?
+            cleanup_and_exit $?
             ;;
         -b|--buildjsonly)
             build_arena_js
-            exit $?
+            cleanup_and_exit $?
             ;;
         --)
             shift

@@ -33,6 +33,8 @@ if [ "$(id -u)" -ne 0 ]; then echoerr "Not running as root. Please run from init
 
 RSA_KEY_SIZE=4096
 
+echo ""
+echo ""
 if [ -d "/etc/letsencrypt/live" ]; then
   readprompt "Existing data found. Continue and replace existing certificate files (beware of letsencrypt retry limits, if using it)? (y/N) "
   if [ "$REPLY" != "Y" ] && [ "$REPLY" != "y" ]; then
