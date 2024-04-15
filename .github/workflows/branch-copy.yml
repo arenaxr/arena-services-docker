@@ -1,0 +1,16 @@
+name: Create prod and demo branches from main/master
+on:
+  workflow_dispatch:
+jobs:
+  copy-to-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Copy To Branches Action
+        uses: planetoftheweb/copy-to-branches@v1.2
+        env:
+          key: master
+          branches: prod demo
+          files: README.md conf docker-compose.yaml docker-compose.prod.yaml
