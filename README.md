@@ -143,15 +143,16 @@ The minimal set of edits you will have to perform is:
 
 The first time you run the script, you will want to answer **Y**es to execute all optional sections: create secrets, root keys, service tokens, config files, and certificates. The `-y` argument automatically answers 'yes' to all questions.
 
-> `init.sh` supports the following arguments: 
->   -y indicates that we answer 'yes' to all questions
->   -t passes the 'staging' flag to letsencrypt to avoid request limits
->   -s forces the creation of a self-signed certificate 
->   -n skip certificate creation 
->   -c create config files ONLY (skip everything else) 
->   -r create certificates ONLY (skip everything else) 
->   -b build arena-web-core js ONLY (skip everything else) 
->   -h print help
+> #### `init.sh` Arguments 
+>`init.sh` supports the following arguments: 
+>* -y indicates that we answer 'yes' to all questions
+>* -t passes the 'staging' flag to letsencrypt to avoid request limits
+>* -s forces the creation of a self-signed certificate 
+>* -n skip certificate creation 
+>* -c create config files ONLY (skip everything else) 
+>* -r create certificates ONLY (skip everything else) 
+>* -b build arena-web-core js ONLY (skip everything else) 
+>* -h print help
 
 The init script will generate configuration files (from the templates in [conf-templates](conf-templates)) for the services using the hostname and email configured in [init.env](init.env), and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
 
