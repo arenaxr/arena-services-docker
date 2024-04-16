@@ -42,8 +42,9 @@ git clone -b demo --single-branch https://github.com/arenaxr/arena-services-dock
 > git clone --recurse-submodules https://github.com/arenaxr/arena-services-docker.git
 > ```
 >
-> You can alwasy get the repo's submodules later:
+> You can always get the repo's branches and submodules later:
 > ```bash
+> git fetch --all
 > git submodule update --init --recursive
 > ```
 
@@ -140,11 +141,17 @@ The minimal set of edits you will have to perform is:
  ./init.sh -y
 ```
 
-The first time you run the script, you will want to answer **Y**es to all questions, and that is what the `--y` argument does.
+The first time you run the script, you will want to answer **Y**es to execute all optional sections: create secrets, root keys, service tokens, config files, and certificates. The `-y` argument automatically answers 'yes' to all questions.
 
 > `init.sh` supports the following arguments: 
->   [-y|--yes]: answer yes to all questions (create new secrets, new tokens, and config files).
->   [-c|--nocerts]: do not create certificates. This is useful if you have a running setup to which you want to 
+>   -y indicates that we answer 'yes' to all questions
+>   -t passes the 'staging' flag to letsencrypt to avoid request limits
+>   -s forces the creation of a self-signed certificate 
+>   -n skip certificate creation 
+>   -c create config files ONLY (skip everything else) 
+>   -r create certificates ONLY (skip everything else) 
+>   -b build arena-web-core js ONLY (skip everything else) 
+>   -h print help
 
 The init script will generate configuration files (from the templates in [conf-templates](conf-templates)) for the services using the hostname and email configured in [init.env](init.env), and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
 
