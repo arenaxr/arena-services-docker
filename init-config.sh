@@ -201,7 +201,7 @@ do
   fi 
 done
 
-[ -d conf ] && [ $(ls conf/* | wc -l) -ge 20 ] && echo "Config files created.\n" || exiterr "Folder conf/ not found or too few config files found."
+[ -d conf ] && [ $(ls conf/* | wc -l) -ge 20 ] && echo -e "\nConfig files created.\n" || exiterr "Folder conf/ not found or too few config files found."
 
 # TODO: Re-enable additions hostnames - They are not allowing certbot to renew certificates
 # add server block to redirect additional hostnames

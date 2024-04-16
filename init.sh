@@ -1,16 +1,50 @@
 #!/bin/bash
-# execute init-config.sh and init-letsencrypt.sh inside container with all utils needed
-# usage ./init.sh [-y|--yes] [-c|--config_only] [-n|--nocerts] [-l|--certsonly] [-b|--buildjsonly]
-# where -y or --yes indicates that we answer yes to all questions
-# where -c or --configonly indicates that we skip everything expect config files creation from templates
-# where -n or --nocerts indicates that we skip certificate creation
-# where -l or --certsonly indicates that we skip everything expect certificate creation
-# where -b or --buildjsonly indicates that we skip everything expect arena-web-core js build
-# where -t or --stagingle passes the 'staging' flag to lets encryot to avoid request limits
-# where -s or --selfsigned requests the creation of a self-signed certificate
+# execute init-config.sh and init-certs.sh inside container with all utils needed
+# usage: ./init.sh [-yntsclbh] (see below)
 
 # load utils
 source init-utils/bash-common-utils.sh 
+
+usage () {
+printf "\nInit ARENA stack config \n \
+\n \
+./init.sh [-yntsclb], \n \
+\n \
+where: \n \
+ -y indicates that we answer yes to all questions \n \
+ -t passes the 'staging' flag to letsencrypt to avoid request limits \n \
+ -s forces the creation of a self-signed certificate \n \
+ -n skip certificate creation \n \
+ -c create config files ONLY (skip everything else) \n \
+ -r create certificates ONLY (skip everything else) \n \
+ -b build arena-web-core js ONLY (skip everything else) \n \
+ -h print help \n\n"
+}
+
+cleanup_and_exit () {
+    if [[ $1 == 0 ]]; then
+        echo "" && echocolor ${BOLD} "Init Done. If you are going to setup a Jitsi server on this machine, run jitsi-add.sh next." && echo ""       
+    else
+        echo "" && echoerr "Stopping here."
+    fi
+    if [ ! -z "$CONFIG_FILES_ONLY" ]; then
+        exit $1
+    fi 
+    echocolor ${HIGHLIGHT} "### Cleanup..."
+    # stop temp filebrowser container before exiting
+    [[ $(docker ps | grep storetmp) ]] && docker stop storetmp
+    # stop temp nginx container before exiting
+    [[ $(docker ps | grep nginxtmp) ]] && docker stop nginxtmp
+    # sync filestore password
+    export $(grep '^STORE_ADMIN_PASSWORD' secret.env | xargs)
+    [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it \
+            -v ${PWD}/init-utils/store-config-for-init.json:/.filebrowser.json \
+            -v ${PWD}/data/arena-store:/arena-store/data:rw \
+            filebrowser/filebrowser users update admin -p $STORE_ADMIN_PASSWORD
+    # start compose filebrowser, if we stopped it
+    [[ ! -z "${START_COMPOSE_FILESTORE}" ]] && docker-compose up -d store
+    exit $1
+}
 
 build_arena_js() {
     # build arena-core js
@@ -50,7 +84,6 @@ setup_filestore() {
 
 init_config() {
     touch secret.env &>/dev/null
-    echocolor ${HIGHLIGHT} "### Init config files (create secrets.env, ./conf/* files, and ./data/* folders)"
     docker run --add-host host.docker.internal:host-gateway -it --rm \
         --env-file .env --env-file secret.env --env-file VERSION -e OWNER=`id -u`:`id -g` -e STORE_TMP_PORT=$STORE_TMP_PORT -e ALWAYS_YES=$ALWAYS_YES -e CONFIG_FILES_ONLY=$CONFIG_FILES_ONLY \
         -v $PWD:/work -w /work \
@@ -93,30 +126,43 @@ create_certs() {
     fi # NOCERTS
 }
 
-cleanup_and_exit () {
-    if [[ $1 == 0 ]]; then
-        echo "" && echocolor ${BOLD} "Init Done. If you are going to setup a Jitsi server on this machine, run jitsi-add.sh next." && echo ""       
-    else
-        echo "" && echoerr "Stopping here."
-    fi
-    if [ ! -z "$CONFIG_FILES_ONLY" ]; then
-        exit $1
-    fi 
-    echocolor ${HIGHLIGHT} "### Cleanup..."
-    # stop temp filebrowser container before exiting
-    [[ $(docker ps | grep storetmp) ]] && docker stop storetmp
-    # stop temp nginx container before exiting
-    [[ $(docker ps | grep nginxtmp) ]] && docker stop nginxtmp
-    # sync filestore password
-    export $(grep '^STORE_ADMIN_PASSWORD' secret.env | xargs)
-    [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it \
-            -v ${PWD}/init-utils/store-config-for-init.json:/.filebrowser.json \
-            -v ${PWD}/data/arena-store:/arena-store/data:rw \
-            filebrowser/filebrowser users update admin -p $STORE_ADMIN_PASSWORD
-    # start compose filebrowser, if we stopped it
-    [[ ! -z "${START_COMPOSE_FILESTORE}" ]] && docker-compose up -d store
-    exit $1
-}
+# handle args
+args=`getopt yntscrbh $*`
+[[ ! $? == 0 ]] && usage
+eval set -- "$args"
+
+# parse options
+while true; do
+    case "$1" in
+        -y)
+            ALWAYS_YES="true"
+            shift
+            ;;
+        -n)
+            NO_CERTS="true"
+            shift
+            ;;
+        -t)
+            STAGING_LE="true"
+            shift
+            ;;
+        -s)
+            SELF_SIGNED="true"
+            shift
+            ;;
+        -h)
+            usage
+            exit
+            ;;
+        --)
+            shift
+            break
+            ;;
+        * ) break ;;            
+    esac
+done
+
+echocolor ${HIGHLIGHT} "### Setting up folders and dependencies ..."
 
 # create .env from init.env on first execution
 if [ ! -f .env ]
@@ -129,7 +175,7 @@ then
     fi
 else 
   echocolor ${WARNING} "NOTE: A .env file was found (init.sh was executed before?). Loading config from .env instead of init.env."
-  echo "You can use cleanup.sh to clear a previous init.sh."
+  echo -e "You can use cleanup.sh to clear a previous init.sh.\n"
 fi
 
 # create conf/
@@ -145,34 +191,19 @@ docker pull arenaxrorg/arena-services-docker-init-utils:${ARENA_INIT_UTILS_VERSI
 # TMP: create arena-web-core/user/static
 [ ! -d "arena-web-core/user/static" ] && mkdir -p arena-web-core/user/static
 
-# parse args
+# handle remaining options; execute something and exit
 while true; do
     case "$1" in
-        -y|--yes)
-            ALWAYS_YES="true"
-            shift
-            ;;
-        -n|--nocerts)
-            NO_CERTS="true"
-            shift
-            ;;
-        -t|--stagingle)
-            STAGING_LE="true"
-            shift
-            ;;
-        -s|--selfsigned)
-            SELF_SIGNED="true"
-            shift
-            ;;
-        -c|--configonly)
+        -c)
+            CONFIG_FILES_ONLY="true"
             init_config
             cleanup_and_exit $?
             ;;
-        -l|--certsonly)
+        -r)
             create_certs
             cleanup_and_exit $?
             ;;
-        -b|--buildjsonly)
+        -b)
             build_arena_js
             cleanup_and_exit $?
             ;;
