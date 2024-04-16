@@ -2,26 +2,20 @@
 # builds container with packages needed for init scripts and pushes it to dockerhub.
 # version is saved into file VERSION
 # usage: ./build-push-container.sh
-DOCKER_USER=conixcenter
+DOCKER_USER=arenaxrorg
 
 # stop on first error
 set -e 
 
-export $(grep '^ARENA_INIT_UTILS=' ./VERSION | xargs)
-echo "Current arena init utils version=$ARENA_INIT_UTILS" 
-nversion=$(docker run --rm -it -v $PWD:/app -w /app treeder/bump --input $ARENA_INIT_UTILS)
+export $(grep '^ARENA_INIT_UTILS_VERSION=' ./VERSION | xargs)
+echo "Current arena init utils version=$ARENA_INIT_UTILS_VERSION" 
+nversion=v$(docker run --rm -it -v $PWD:/app -w /app treeder/bump --input $ARENA_INIT_UTILS_VERSION)
 read -p "Enter the arena init utils version [$nversion]: " version
 ARENA_INIT_UTILS_VERSION=${version:-$nversion}
 
-docker build . -t $DOCKER_USER/arena-services-docker-init-utils
-docker tag $DOCKER_USER/arena-services-docker-init-utils:latest $DOCKER_USER/arena-services-docker-init-utils:$ARENA_INIT_UTILS_VERSION 
+echo "Enter dockerhub credentials for '$DOCKER_USER'"
+docker login --username $DOCKER_USER
 
-echo -e "\n### Push the container to dockerhub (needs dockerhub credentials for user '$DOCKER_USER'."
-read -p "Continue? (y/N) " -r
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-    echo "Enter dockerhub credentials for '$DOCKER_USER'"
-    docker login --username $DOCKER_USER
-    docker push $DOCKER_USER/arena-services-docker-init-utils
-    docker push $DOCKER_USER/arena-services-docker-init-utils:$ARENA_INIT_UTILS_VERSION
-    sed -i "s/ARENA_INIT_UTILS=.*/ARENA_INIT_UTILS=$ARENA_INIT_UTILS_VERSION/" ./VERSION
-fi
+docker buildx rm arena-services-docker-init-utils-builder || true
+docker buildx create --name arena-services-docker-init-utils-builder --use --bootstrap
+docker buildx build . --attest type=sbom --push --platform linux/amd64,linux/arm64 -t $DOCKER_USER/arena-services-docker-init-utils:latest -t $DOCKER_USER/arena-services-docker-init-utils:$ARENA_INIT_UTILS_VERSION 

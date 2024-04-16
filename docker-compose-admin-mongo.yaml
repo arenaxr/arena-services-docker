@@ -1,3 +1,5 @@
+# extend compose stack with mongo-express (gui admin tool for mongo), for test/development purposes
+#
 version: '3'
 
 services:

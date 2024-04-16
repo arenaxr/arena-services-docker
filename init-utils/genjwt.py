@@ -20,7 +20,7 @@ def generate_token(username, kid, days, keypath, jsonOut):
     with open(keypath, 'r') as keyfile:
         key = keyfile.read()
     token = jwt.encode(claim, key, algorithm='RS256', headers={"kid": kid})
-    outStr = token.decode()
+    outStr = str(token)
     if jsonOut:
         jsonOutObj = {
             "username": username,

@@ -13,7 +13,7 @@ if [ ! -d "conf" ] || [ ! -f .env ]; then
 fi 
 
 # make sure arena-web-core/conf folder exists
-if [ ! -d "arena-web-core/conf" ]; then && mkdir arena-web-core/conf
+[ ! -d "arena-web-core/conf" ] && mkdir arena-web-core/conf
 
 # get utils version
 export $(grep '^ARENA_INIT_UTILS_VERSION=' init-utils/VERSION | xargs)
@@ -27,7 +27,7 @@ then
     docker volume rm arena-services-docker_account-static-content
 fi
 
-# pull versions in VERSION
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION pull
+# pull versions in VERSION.preprod
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod pull
 
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION $@
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod $@

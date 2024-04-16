@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: ./staging.sh [docker-compose SUBCOMMAND: up, down, ...]
+# usage: ./dev.sh [docker-compose SUBCOMMAND: up, down, ...]
 
 if [ $# -eq 0 ]; then
     >&2 echo "No arguments provided. Usage:"
@@ -12,10 +12,11 @@ if [ ! -d "conf" ] || [ ! -f .env ]; then
     exit 1
 fi 
 
+
 # force static volumes to be created again on "up"
 if [[ "$*" == *up* ]]
 then
     docker volume rm arena-services-docker_account-static-content
 fi
 
-docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION $@
+docker-compose -f docker-compose.localdev.yaml $@ # = docker-compose $@
