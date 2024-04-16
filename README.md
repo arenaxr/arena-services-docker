@@ -51,7 +51,7 @@ git clone -b demo --single-branch https://github.com/arenaxr/arena-services-dock
 3. Startup the demo services:
 
 ```bash
- ./demo.sh
+ ./demo.sh up
 ```
 > You might need to execute using ```sudo``` (e.g. ```sudo ./demo.sh up```) if your user does not have permission to access the docker service.
 > For more details, see [Init Config](#init-config) Section below.
