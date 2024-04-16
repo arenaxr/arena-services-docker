@@ -6,6 +6,7 @@
 #
 # uses variables in .env and the following:
 #   ALWAYS_YES="true" indicates that we answer yes to all questions: create new secrets, tokens, regenerate config files
+#   CONFIG_FILES_ONLY="true" skip everything except config files creation 
 
 # load utils
 source init-utils/bash-common-utils.sh 
