@@ -37,16 +37,6 @@ ARENA has some minimum hardware requirements to run:
 ```bash
 git clone -b demo --single-branch https://github.com/arenaxr/arena-services-docker.git
 ```
-> If you plan to use other configurations later, remove the `--single-branch`:
-> ```bash
-> git clone --recurse-submodules https://github.com/arenaxr/arena-services-docker.git
-> ```
->
-> You can always get the repo's branches and submodules later:
-> ```bash
-> git fetch --all
-> git submodule update --init --recursive
-> ```
 
 3. Startup the demo services:
 
@@ -83,6 +73,7 @@ Before starting services, we need to create the configuration files for the serv
 
 First, make sure you have an up to date the master branch with submodules:
 ```bash
+git fetch --all
 git checkout master
 git pull
 git submodule update --init --recursive
