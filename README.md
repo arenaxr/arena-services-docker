@@ -150,9 +150,12 @@ The first time you run the script, you will want to answer **Y**es to execute al
 >* -s forces the creation of a self-signed certificate 
 >* -n skip certificate creation 
 >* -c create config files ONLY (skip everything else) 
->* -r create certificates ONLY (skip everything else) 
+>* -i create certificates ONLY (skip everything else; requires stack to be DOWN)
+>* -r renew certificates ONLY (skip everything else; requires stack to be UP)
 >* -b build arena-web-core js ONLY (skip everything else) 
 >* -h print help
+>
+> When you create new secrets, root keys, service tokens, certificates, you have to recreate config files and restart the stack so that changes take effect.
 
 The init script will generate configuration files (from the templates in [conf-templates](conf-templates)) for the services using the hostname and email configured in [init.env](init.env), and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
 

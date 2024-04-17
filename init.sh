@@ -16,9 +16,12 @@ where: \n \
  -s forces the creation of a self-signed certificate \n \
  -n skip certificate creation \n \
  -c create config files ONLY (skip everything else) \n \
- -r create certificates ONLY (skip everything else) \n \
+ -i create certificates ONLY (skip everything else; requires stack to be DOWN) \n \
+ -r renew certificates ONLY (skip everything else; requires stack to be UP) \n \
  -b build arena-web-core js ONLY (skip everything else) \n \
- -h print help \n\n"
+ -h print help \n \
+ \n \
+ NOTE: new secrets, root keys, service tokens, certificates requires recreating config files and restarting the stack to take effect.\n\n"
 }
 
 cleanup_and_exit () {
@@ -32,9 +35,9 @@ cleanup_and_exit () {
     fi 
     echocolor ${HIGHLIGHT} "### Cleanup..."
     # stop temp filebrowser container before exiting
-    [[ $(docker ps | grep storetmp) ]] && docker stop storetmp
+    [[ ! -z "$(docker ps | grep storetmp)" ]] && docker stop storetmp
     # stop temp nginx container before exiting
-    [[ $(docker ps | grep nginxtmp) ]] && docker stop nginxtmp
+    [[ ! -z "$(docker ps | grep nginxtmp)" ]] && docker stop nginxtmp
     # sync filestore password
     export $(grep '^STORE_ADMIN_PASSWORD' secret.env | xargs)
     [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it \
@@ -97,9 +100,9 @@ init_config() {
     fi
 }
 
-create_certs() {
+create_cert() {
     if [ -z "$NOCERTS" ]; then 
-        echocolor ${HIGHLIGHT} "### Create/renew certificates"
+        echocolor ${HIGHLIGHT} "### Create certificate"
 
         # bring up a temp instance of nginx
         docker run -it --rm \
@@ -124,6 +127,17 @@ create_certs() {
             cleanup_and_exit 1
         fi
     fi # NOCERTS
+}
+
+renew_cert() {
+    # check if cerbot is up
+    echocolor ${HIGHLIGHT} "### Renew certificate"
+    if [ -z "$(docker ps | grep "arena-services-docker_certbot")" ]; then
+        echoerr "Certificate renew requires the ARENA stack to be up with certbot container running."
+    else
+        CERTBOT_CONTAINERID=$(docker ps | grep "arena-services-docker_certbot" | cut -d ' ' -f1)
+        docker exec $CERTBOT_CONTAINERID certbot renew
+    fi
 }
 
 # handle args
@@ -199,8 +213,12 @@ while true; do
             init_config
             cleanup_and_exit $?
             ;;
+        -i)
+            create_cert
+            cleanup_and_exit $?
+            ;;
         -r)
-            create_certs
+            renew_cert
             cleanup_and_exit $?
             ;;
         -b)
@@ -219,6 +237,6 @@ done
 build_arena_js
 setup_filestore
 init_config
-create_certs
+create_cert
 cleanup_and_exit 0
 
