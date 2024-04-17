@@ -30,7 +30,7 @@ ARENA has some minimum hardware requirements to run:
 
 ## Demo Setup (Recommended for a quick spin)
 
-1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/). Our scripts are written for a bash shell. See [Dependencies](#dependenciesassumptions) section for details.
+1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/). Our scripts are written for a bash shell. See [Dependencies](#dependenciesassumptions) Section for details.
 
 2. Clone this repo's **demo** branch
 
@@ -43,7 +43,7 @@ git clone -b demo --single-branch https://github.com/arenaxr/arena-services-dock
 ```bash
  ./demo.sh up
 ```
-> You might need to execute using ```sudo``` (e.g. ```sudo ./demo.sh up```) if your user does not have permission to access the docker service.
+> If your user does not have permission to access the docker service, you might need to execute using ```sudo``` (e.g., ```sudo ./demo.sh up```).
 > For more details, see [Init Config](#init-config) Section below.
 > We also have configurations for production, development and staging. See the [utility scripts Section](#utility-scripts)
 
@@ -56,7 +56,7 @@ If you see no errors, you should be able to point your browser to `https://local
 * **docker:** https://docs.docker.com/get-docker/
 * **docker-compose:** https://docs.docker.com/compose/install/
 
-> **WARNING**: If you use the **dev.sh** script below, it requres you to build the web source manually, so you will need also: 
+> **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need also: 
 > * **nodejs:** https://nodejs.org
 > * **parcel:** https://www.npmjs.com/package/parcel
 
@@ -71,7 +71,7 @@ If you see no errors, you should be able to point your browser to `https://local
 
 Before starting services, we need to create the configuration files for the services with the right domains and create certificates (using letsencrypt/openssl).
 
-First, make sure you have an up to date the master branch with submodules:
+First, make sure you have an up-to-date master branch with submodules:
 ```bash
 git fetch --all
 git checkout master
@@ -87,11 +87,11 @@ git submodule update --init --recursive
 
 The 'init.env' file has the following configuration that should be updated to reflect your setup:
 
-* ```HOSTNAME``` is the fully qualified domain name (FQDN) of your host. If you don't have a FQDN, you can do a local setup;
+* ```HOSTNAME``` is your host's fully qualified domain name (FQDN). If you don't have a FQDN, you can do a local setup;
 
 * ```JITSI_HOSTNAME``` is the fully qualified domain name (FQDN) of the jitsi server you will use (you can use a public/managed jitsi instance or [setup your own](https://jitsi.github.io/handbook/docs/devops-guide/)).
 
-* ```EMAIL``` is the email used to get the certificates with [letsencrypt](https://letsencrypt.org/).
+* ```EMAIL``` is the email to get the certificates with [letsencrypt](https://letsencrypt.org/).
 
 * ```BACKUP_USER``` is the ```userid:groupid``` of the *host machine user* that needs to access files backed up by the backup container (must be numberic ids of a host machine user).
 
@@ -121,7 +121,7 @@ The minimal set of edits you will have to perform is:
 > ```bash
 > HOSTNAME=localhost
 > ```
-> This will result in creating a self-signed certificate to be used with the services. This (`HOSTNAME`) is the name you will enter in your browser: `https://localhost`
+> This will create a self-signed certificate to be used with the services. This (`HOSTNAME`) is the name you will enter in your browser: `https://localhost`
 >
 > * **Make sure the above name resolves in your system (by adding it to [the `hosts` file](https://en.wikipedia.org/wiki/Hosts_(file))**.
 > * Note: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
@@ -137,7 +137,7 @@ The first time you run the script, you will want to answer **Y**es to execute al
 > #### `init.sh` Arguments 
 >`init.sh` supports the following arguments: 
 >* -y indicates that we answer 'yes' to all questions
->* -t passes the 'staging' flag to letsencrypt to avoid request limits
+>* -t passes the 'staging' flag to lets encrypt to avoid request limits
 >* -s forces the creation of a self-signed certificate 
 >* -n skip certificate creation 
 >* -c create config files ONLY (skip everything else) 
@@ -146,11 +146,11 @@ The first time you run the script, you will want to answer **Y**es to execute al
 >* -b build arena-web-core js ONLY (skip everything else) 
 >* -h print help
 >
-> When you create new secrets, root keys, service tokens, certificates, you have to recreate config files and restart the stack so that changes take effect.
+> When you create new secrets, root keys, service tokens, and certificates, you must recreate config files and restart the stack so that the changes take effect.
 
-The init script will generate configuration files (from the templates in [conf-templates](conf-templates)) for the services using the hostname and email configured in [init.env](init.env), and attempt to create certificates using letsencrypt. **If letsencrypt fails, it will create a self-signed certificate that can be used for testing purposes**.
+The init script will generate configuration files (from the templates in [conf-templates](conf-templates)) for the services using the hostname and email configured in [init.env](init.env) and attempt to create certificates using lets-encrypt. **If lets-encrypt fails, it will make a self-signed certificate that can be used for testing purposes**.
 
-> You might need to execute ```sudo  ./init.sh -y``` if [your user does not have permissions to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
+> You might need to execute ```sudo  ./init.sh -y``` if [your user does not have permission to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
 
 > **IMPORTANT**: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
 
@@ -187,7 +187,7 @@ The init script will generate configuration files (from the templates in [conf-t
  ./dev.sh up -d
 ```
 
-> You might need to execute the above commands with ```sudo``` (e.g. ```sudo ./prod.sh up```) if [your user does not have permissions to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
+> You might need to execute the above commands with ```sudo``` (e.g. ```sudo ./prod.sh up```) if [your user does not have permission to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
 > See [utility scripts](#utility-scripts) for details.
 
 ## Update Submodules
@@ -206,7 +206,7 @@ After updating the submodules, to have the updates of built containers (persist,
 ```
 
 * Use ```demo.sh```, ```prod.sh```, ```staging.sh``` or ```dev.sh``` depending on which configuration you want to use.
-> You might need to execute the above commands with ```sudo``` if [your user does not have permissions to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
+> You might need to execute the above commands with ```sudo``` if [your user does not have permission to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
 > See [utility scripts](#utility-scripts) for the description of these commands.
 
 ## Files/Folders Description
@@ -230,7 +230,7 @@ After updating the submodules, to have the updates of built containers (persist,
 * **init-utils:** Files to create a container with all dependencies of the init scripts.
 * **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
 * **init.sh:** Initialize config files. See [Init Config](#init-config) Section.
-* **jitsi-add.sh:** Add jitsi configuration, if you are setting up a jistsi server on the same machine.
+* **jitsi-add.sh:** Add jitsi configuration if you are setting up a jistsi server on the same machine.
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**arena-web-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](#update-submodules)).
 * **update-versions.sh:** Update the versions indicated in ```VERSION``` by looking at the tags in the submodules.
 * **VERSION:** Release versions of the arena services stack used by the production deployment (```docker-compose.prod.yaml```).
@@ -249,7 +249,7 @@ Call the script by passing any ```docker-compose``` subcommands (such as ```up``
 * ```./dev.sh up```
 * ...
 
-> *You might need to execute the scripts with ```sudo``` if [your user does not have permissions to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/)*.
+> *You might need to execute the scripts with ```sudo``` if [your user does not have permission to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/)*.
 
 ### Script Arguments Quick Reference
 
@@ -283,7 +283,7 @@ The utility scripts pass the arguments to **docker-compose**. You can use them w
 
 ### Release
 
-To release an arena services stack version, make sure all submodules are pointing the version you want to release (you can run ```update-submodules.sh``` to update to the latest) update the versions in ```VERSION``` using the ```update-versions.sh``` script. This script asks for the new version of the arena services stack to be released and fetches the versions from the submodules. After running this script, you can use the github web interface to create that release. **Note that releases on this repo will be automatically deployed.**
+To release an arena services stack version, make sure all submodules are pointing to the version you want to release (you can run ```update-submodules.sh``` to update to the latest) and update the versions in ```VERSION``` using the ```update-versions.sh``` script. This script asks for the new version of the arena services stack to be released and fetches the versions from the submodules. After running this script, you can create that release using the github web interface. **Note that releases on this repo will be automatically deployed.**
 
 ### Deployment
 
