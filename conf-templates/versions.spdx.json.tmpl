@@ -1,0 +1,176 @@
+{
+   "SPDXID":"SPDXRef-DOCUMENT",
+   "creationInfo":{
+      "created":"$CREATE_DATE",
+      "creators":[
+         "Organization: Wiselab, CMU"
+      ]
+   },
+   "dataLicense":"CC0-1.0",
+   "name":"ARENA",
+   "spdxVersion":"SPDX-2.2",
+   "documentNamespace":"https://github.com/arenaxr",
+  "documentDescribes": [
+    "SPDXRef-ARENA-SERVICES",
+    "SPDXRef-ARENA-WEB-CORE",
+    "SPDXRef-ARENA-PERSIST"
+  ],   
+   "packages":[
+      {
+         "SPDXID":"SPDXRef-ARENA-SERVICES",
+         "copyrightText":"Copyright Carnegie Mellon University",
+         "description":"Arena Services Stack",
+         "downloadLocation":"https://github.com/arenaxr/arena-services-docker/releases/tag/${ARENA_SERVICES_VERSION}",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/arenaxr",
+         "licenseDeclared":"BSD-3-Clause",
+         "licenseConcluded": "NOASSERTION",
+         "name":"ARENA Services",
+         "versionInfo":"${ARENA_SERVICES_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-ARENA-WEB-CORE",
+         "copyrightText":"Copyright Carnegie Mellon University",
+         "description":"Arena Web Core Client",
+         "downloadLocation":"https://github.com/arenaxr/arena-web-core/releases/tag/${ARENA_WEB_CORE_VERSION}",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/arenaxr",
+         "licenseDeclared":"BSD-3-Clause",
+         "licenseConcluded": "NOASSERTION",  
+         "name":"ARENA Web Core",
+         "versionInfo":"${ARENA_WEB_CORE_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-ARENA-PERSIST",
+         "copyrightText":"Copyright Carnegie Mellon University",
+         "description":"Arena Persist",
+         "downloadLocation":"https://github.com/arenaxr/arena-persist/releases/tag/${ARENA_PERSIST_VERSION}",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/arenaxr",
+         "licenseDeclared":"BSD-3-Clause",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"ARENA Persist",
+         "versionInfo":"${ARENA_PERSIST_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-ARENA-ACCOUNT",
+         "copyrightText":"Copyright Carnegie Mellon University",
+         "description":"Arena Account",
+         "downloadLocation":"https://github.com/arenaxr/arena-account/releases/tag/${ARENA_ACCOUNT_VERSION}",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/arenaxr",
+         "licenseDeclared":"BSD-3-Clause",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"ARENA Account",
+         "versionInfo":"${ARENA_ACCOUNT_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-ARENA-BROKER",
+         "copyrightText":"NOASSERTION",
+         "description":"Arena Broker",
+         "downloadLocation":"https://github.com/SilverLineFramework/mosquitto-broker/releases/tag/${ARENA_BROKER_VERSION}",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/SilverLineFramework/mosquitto-broker",
+         "licenseDeclared":"EPL-1.0",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"ARENA Broker",
+         "versionInfo":"${ARENA_BROKER_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-ARENA-FILESTORE",
+         "copyrightText":"NOASSERTION",
+         "description":"ARENA File Store",
+         "downloadLocation":"https://github.com/filebrowser/filebrowser/releases/tag/${ARENA_FILESTORE_VERSION}",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/filebrowser/",
+         "licenseDeclared":"Apache-2.0",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"Filebrowser",
+         "versionInfo":"${ARENA_FILESTORE_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-ARENA-INIT-UTILS",
+         "copyrightText":"NOASSERTION",
+         "description":"Tools used to init/setup ARENA stack",
+         "downloadLocation":"https://hub.docker.com/r/arenaxrorg/arena-services-docker-init-utils/tags",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/arenaxr/arena-services-docker/tree/master/init-utils",
+         "licenseDeclared":"BSD-3-Clause",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"ARENA Init Utils",
+         "versionInfo":"${ARENA_INIT_UTILS_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-CERTBOT",
+         "copyrightText":"NOASSERTION",
+         "description":"Official build of EFF's Certbot tool for obtaining TLS/SSL certificates from Let's Encrypt.",
+         "downloadLocation":"https://hub.docker.com/r/certbot/certbot/tags",
+         "filesAnalyzed":false,
+         "homepage":"https://eff-certbot.readthedocs.io/en/latest/install.html#running-with-docker",
+         "licenseDeclared":"Apache-2.0",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"Certbot",
+         "versionInfo":"${CERTBOT_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-MONGO",
+         "copyrightText":"NOASSERTION",
+         "description":"MongoDB document databases provide high availability and easy scalability.",
+         "downloadLocation":"https://hub.docker.com/_/mongo/tags",
+         "filesAnalyzed":false,
+         "homepage":"https://www.mongodb.com/",
+         "licenseDeclared":"SSPL-1.0",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"MongoDB",
+         "versionInfo":"${MONGO_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-CADVISOR",
+         "copyrightText":"NOASSERTION",
+         "description":"CAdvisor. Analyzes resource usage and performance characteristics of running containers.",
+         "downloadLocation":"https://console.cloud.google.com/gcr/images/cadvisor/GLOBAL/cadvisor",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/google/cadvisor",
+         "licenseDeclared":"Apache-2.0",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"CAdvisor",
+         "versionInfo":"${CADVISOR_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-PROM-EXPORTER",
+         "copyrightText":"NOASSERTION",
+         "description":"Prometheus exporter for hardware and OS metrics exposed by *NIX kernels, written in Go with pluggable metric collectors.",
+         "downloadLocation":"https://hub.docker.com/r/prom/node-exporter/tags",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/prometheus/node_exporter",
+         "licenseDeclared":"Apache-2.0",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"Node Exporter",
+         "versionInfo":"${PROM_EXPORTER_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-PROMETHEUS",
+         "copyrightText":"NOASSERTION",
+         "description":"Prometheus monitoring system and time series database.",
+         "downloadLocation":"https://hub.docker.com/r/prom/prometheus/tags",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/prometheus/prometheus",
+         "licenseDeclared":"Apache-2.0",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"Prometheus",
+         "versionInfo":"${PROMETHEUS_VERSION}"
+      },
+      {
+         "SPDXID":"SPDXRef-GRAPHANA",
+         "copyrightText":"NOASSERTION",
+         "description":"Open and composable observability and data visualization platform.",
+         "downloadLocation":"https://hub.docker.com/r/grafana/grafana/tags",
+         "filesAnalyzed":false,
+         "homepage":"https://github.com/grafana/grafana",
+         "licenseDeclared":"AGPL-3.0-only",
+         "licenseConcluded": "NOASSERTION",         
+         "name":"Graphana",
+         "versionInfo":"${GRAPHANA_VERSION}"
+      }
+   ]
+}

@@ -1,0 +1,109 @@
+# this is the production docker compose; adds production config to the base docker-compose.yaml
+#
+# run production:
+#    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+#
+# NOTE: Image versions (defined in file VERSION) should be loaded into environment
+
+version: '3'
+
+services:
+
+  arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
+    image: arenaxrorg/arena-web-core:${ARENA_WEB_CORE_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxr/arena-web-core
+    volumes:
+      - ./conf/prod/arena-web.conf:/etc/nginx/conf.d/arena-web.conf:ro # mount nginx config
+      - ./store:/usr/share/nginx/html/store:ro # mount store files
+      - ./conf/prod/arena-web-conf:/usr/share/nginx/html/conf # arena client code conf
+      - account-static-content:/usr/share/nginx/html/user/static:ro # serve account static files
+    ports:
+      - "80:80" # map port 80 on the host to port 80 on the container
+      - "443:443"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'" # reload certificates every 6h
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  certbot:
+    image: certbot/certbot:${CERTBOT_VERSION:-latest}
+    restart: unless-stopped
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt:rw # mount certbot files; certificate files will be here
+      - ./data/certbot/www:/var/www/certbot:rw # mount certbot files;
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'" # check for certificate updates every 12h
+
+  mongodb:
+    image: mongo:${MONGO_VERSION:-latest} # pull from https://hub.docker.com/_/mongo/    
+    restart: unless-stopped
+
+  arena-persist:
+    image: arenaxrorg/arena-persist:${ARENA_PERSIST_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-persist
+    restart: unless-stopped
+
+  arena-account:
+    image: arenaxrorg/arena-account:${ARENA_ACCOUNT_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-account
+    restart: unless-stopped
+
+  mqtt:
+    image: arenaxrorg/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
+    restart: unless-stopped
+
+  mqtt-br1:
+    image: arenaxrorg/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
+    volumes:
+      - ./conf/prod/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
+      - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
+      - ./data/certbot/conf:/etc/letsencrypt:ro # mount certs volume (see conf/mosquitto.conf to see how the files are used)
+    depends_on:
+      - mqtt
+    restart: unless-stopped
+
+  mqtt-br2:
+    image: arenaxrorg/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
+    volumes:
+      - ./conf/prod/mosquitto-br-conn.conf:/mosquitto/config/mosquitto.conf:ro # mount local config file to /mosquitto/config/mosquitto.conf in the container
+      - ./data/keys/jwt.public.der:/pubsubkey.der:ro # pubsub key available to service
+      - ./data/certbot/conf:/etc/letsencrypt:ro # mount certs volume (see conf/mosquitto.conf to see how the files are used)
+    depends_on:
+      - mqtt
+    restart: unless-stopped
+
+  store:
+    # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
+    image: filebrowser/filebrowser:${ARENA_FILESTORE_VERSION:-latest}  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:${CADVISOR_VERSION:-latest}
+    ports:
+      - 8080:8080
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  arena-host-stats:
+    image: prom/node-exporter:${PROM_EXPORTER_VERSION:-latest}
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  prometheus:
+    image: prom/prometheus:${PROMETHEUS_VERSION:-latest}
+    user: "root"
+    volumes:
+      - ./conf/prod/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./data/prometheus/:/prometheus/
+    command: [ "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--storage.tsdb.retention.time=30d" ]
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  grafana:
+    image: grafana/grafana:${GRAPHANA_VERSION:-latest}
+    user: "root"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana:rw
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_NAME=CONIX
+    restart: unless-stopped # service will respawn unless we tell docker to stop it
+volumes:
+  account-static-content:
