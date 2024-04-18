@@ -29,3 +29,5 @@ fi
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION pull
 
 docker-compose -f docker-compose.yaml -f docker-compose.demo.yaml --env-file VERSION $@
+
+./update-custom-website.sh
