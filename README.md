@@ -93,7 +93,7 @@ The 'init.env' file has the following configuration that should be updated to re
 
 * ```EMAIL``` is the email to get the certificates with [letsencrypt](https://letsencrypt.org/).
 
-* ```BACKUP_USER``` is the ```userid:groupid``` of the *host machine user* that needs to access files backed up by the backup container (must be numberic ids of a host machine user).
+* ```BACKUP_USER``` is the ```userid:groupid``` of the *host machine user* that needs to access files backed up by the backup container.
 
 * ```ARENA_DOCKER_REPO_FOLDER``` is the full path to the location of this repository e.g. ```/home/user/arena-services-docker```.
 
