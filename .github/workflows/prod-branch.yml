@@ -1,0 +1,19 @@
+name: Update prod branch
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  copy-to-branches:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Copy To Branches Action
+        uses: planetoftheweb/copy-to-branches@v1.3
+        env:
+          key: master
+          branches: prod master
+          files: prod.sh prepro.sh VERSION VERSION.preprod docker-compose.yaml docker-compose.prod.yaml conf-templates/*
+          exclude: conf-templates/localdev conf-templates/demo conf-templates/staging
