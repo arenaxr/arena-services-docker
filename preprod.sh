@@ -31,3 +31,5 @@ fi
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod pull
 
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod $@
+
+./update-custom-website.sh

@@ -19,3 +19,5 @@ then
 fi
 
 docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION $@
+
+./update-custom-website.sh
