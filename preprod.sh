@@ -18,8 +18,11 @@ fi
 # get utils version
 export $(grep '^ARENA_INIT_UTILS_VERSION=' init-utils/VERSION | xargs)
 
-# create html file describing stack versions (use container so we dont have to install envsubst on host)
-docker run --rm -v ${PWD}/conf-templates:/conf-templates -v ${PWD}/conf/arena-web-conf:/conf --env-file VERSION arenaxrorg/arena-services-docker-init-utils:$ARENA_INIT_UTILS_VERSION sh -c 'envsubst < /conf-templates/versions.html.tmpl > ./conf/demo/arena-web-conf/versions.html'  > ./conf/arena-web-conf/versions.html  
+# create files describing stack versions (use container so we dont have to install envsubst on host)
+docker run --rm \
+    -v ${PWD}/conf-templates:/conf-templates -v ${PWD}/conf/prod/arena-web-conf:/arena-web-conf \
+    --env-file VERSION.preprod arenaxrorg/arena-services-docker-init-utils:$ARENA_INIT_UTILS_VERSION sh \
+    -c 'envsubst < /conf-templates/versions.html.tmpl > /arena-web-conf/versions.html; envsubst < /conf-templates/versions.spdx.json.tmpl > /arena-web-conf/versions.spdx.json'  
 
 # force static volumes to be created again on "up"
 if [[ "$*" == *up* ]]
