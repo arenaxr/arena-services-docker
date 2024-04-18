@@ -15,5 +15,5 @@ jobs:
         env:
           key: master
           branches: prod master
-          files: *.sh *.env VERSION* docker-compose.yaml docker-compose.prod.yaml conf-templates/*
+          files: backup.sh build-arena-core.sh  cleanup.sh gen-root-token.sh init-certs.sh init-config.sh init.env init.sh update-custom-website.sh prod.sh prepro.sh VERSION VERSION.preprod docker-compose.yaml docker-compose.prod.yaml conf-templates/*
           exclude: conf-templates/localdev conf-templates/demo conf-templates/staging
