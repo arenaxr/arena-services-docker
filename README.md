@@ -1,4 +1,4 @@
-# ARENA Prod Setup
+# ARENA Production Setup
 
 Creates several containers with ARENA services, from pre-build images at versions from VERSION:
 
@@ -27,7 +27,6 @@ ARENA has some minimum hardware requirements to run:
 ## Quick Start
 
 1. We need [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/). Our scripts are written for a bash shell. See [Dependencies](#dependenciesassumptions) section for details.
-
 
 ```bash
 git clone -b prod --single-branch https://github.com/arenaxr/arena-services-docker.git
