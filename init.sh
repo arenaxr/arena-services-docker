@@ -30,14 +30,11 @@ cleanup_and_exit () {
     else
         echo "" && echoerr "Stopping here."
     fi
-    if [ ! -z "$CONFIG_FILES_ONLY" ]; then
-        exit $1
-    fi 
     echocolor ${HIGHLIGHT} "### Cleanup..."
     # stop temp filebrowser container before exiting
-    [[ ! -z "$(docker ps | grep storetmp)" ]] && docker stop storetmp
+    [[ $(docker ps | grep storetmp) ]] && docker stop storetmp || true
     # stop temp nginx container before exiting
-    [[ ! -z "$(docker ps | grep nginxtmp)" ]] && docker stop nginxtmp
+    [[ $(docker ps | grep nginxtmp) ]] && docker stop nginxtmp || true
     # sync filestore password
     export $(grep '^STORE_ADMIN_PASSWORD' secret.env | xargs)
     [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it \
@@ -45,7 +42,7 @@ cleanup_and_exit () {
             -v ${PWD}/data/arena-store:/arena-store/data:rw \
             filebrowser/filebrowser users update admin -p $STORE_ADMIN_PASSWORD
     # start compose filebrowser, if we stopped it
-    [[ ! -z "${START_COMPOSE_FILESTORE}" ]] && docker-compose up -d store
+    [[ ! -z "${START_COMPOSE_FILESTORE}" ]] && $DOCKER_COMPOSE up -d store
     exit $1
 }
 
@@ -59,7 +56,7 @@ setup_filestore() {
     START_COMPOSE_FILESTORE=""
     # stop filestore if up
     if docker ps | grep -q "arena-services-docker_store_1"; then
-        docker-compose stop store
+        $DOCKER_COMPOSE stop store
         export START_COMPOSE_FILESTORE="YES"
     fi
 
@@ -178,6 +175,16 @@ done
 
 echocolor ${HIGHLIGHT} "### Setting up folders and dependencies ..."
 
+# some systems might not support older docker-compose ?
+[[ $(docker-compose --help) ]] && DOCKER_COMPOSE="docker-compose" || DOCKER_COMPOSE="docker compose"
+
+# check dependencies
+[ -z "$BASH_VERSION" ] && exiterr "Bash not detected." 
+! docker &> /dev/null && exiterr "Docker not found in this system. Please install."
+! $DOCKER_COMPOSE &> /dev/null && echo "Docker compose not found in this system. Please install."
+! echo "a" | grep "a" &> /dev/null && echo "Grep not found in this system. Please install."
+
+
 # create .env from init.env on first execution
 if [ ! -f .env ]
 then
@@ -200,7 +207,7 @@ fi
 
 # load versions and pull init utils container
 export $(grep -v '^#' VERSION | xargs)
-docker pull arenaxrorg/arena-services-docker-init-utils:${ARENA_INIT_UTILS_VERSION}
+docker pull -q arenaxrorg/arena-services-docker-init-utils:${ARENA_INIT_UTILS_VERSION}
 
 # TMP: create arena-web-core/user/static
 [ ! -d "arena-web-core/user/static" ] && mkdir -p arena-web-core/user/static
@@ -210,6 +217,7 @@ while true; do
     case "$1" in
         -c)
             CONFIG_FILES_ONLY="true"
+            setup_filestore            
             init_config
             cleanup_and_exit $?
             ;;
