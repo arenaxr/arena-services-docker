@@ -13,7 +13,7 @@ if [ ! -d "conf" ] || [ ! -f .env ]; then
 fi 
 
 # make sure arena-web-core/conf folder exists
-if [ ! -d "arena-web-core/conf" ]; then && mkdir arena-web-core/conf
+[ ! -d "arena-web-core/conf" ] && mkdir arena-web-core/conf
 
 # get utils version
 export $(grep '^ARENA_INIT_UTILS_VERSION=' init-utils/VERSION | xargs)
