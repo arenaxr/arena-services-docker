@@ -72,8 +72,6 @@ services:
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:${CADVISOR_VERSION:-latest}
-    ports:
-      - 8080:8080
     volumes:
       - /:/rootfs:ro
       - /var/run:/var/run:rw
