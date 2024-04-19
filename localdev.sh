@@ -12,7 +12,6 @@ if [ ! -d "conf" ] || [ ! -f .env ]; then
     exit 1
 fi 
 
-
 # force static volumes to be created again on "up"
 if [[ "$*" == *up* ]]
 then

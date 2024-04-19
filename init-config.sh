@@ -110,13 +110,15 @@ fi # CONFIG_FILES_ONLY
 # load secrets
 export $(grep -v '^#' secret.env | xargs)
 
-if [ -z "$CONFIG_FILES_ONLY" ]; then 
+# fallback fs hash (this will change if filestore code changes; we try compute a new one below)
+FS_LAUNCH_JS_HASH="QZbQOePqGVDlvXBzWYldDkorWQkQ3CpEzm0yZkzV59k="
 
-    if [ "$STORE_TMP_PORT" == "none" ]
-    then
-        echocolor ${HIGHLIGHT} "### Skipping filestore share and hash setup (instance failed to start)."
-    else
-        echocolor ${HIGHLIGHT} "### Generating filestore public share and inline js hash."
+if [ "$STORE_TMP_PORT" == "none" ]
+then
+    echocolor ${HIGHLIGHT} "### Skipping filestore share and hash setup (instance failed to start)."
+else
+    if [ -z "$CONFIG_FILES_ONLY" ]; then 
+        echocolor ${HIGHLIGHT} "### Generating filestore public share."
         readprompt "Create a public share on filebrowser ? (y/N) "
         if [[ "$REPLY" =~ ^[Yy]$ ]]; then
             [ ! -d "store/public" ] && mkdir store/public
@@ -135,17 +137,21 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
                     echo "Share already exists: $FS_SHARE_HASH"
             fi
         fi
+    fi # CONFIG_FILES_ONLY
 
-        # gen hash of filebrowser javascript launch script for CSP
-        export FS_LAUNCH_JS_HASH=$(node ./init-utils/filebrowserScriptToHash.js http://host.docker.internal:$STORE_TMP_PORT)
-        if [ -z "$FS_LAUNCH_JS_HASH" ]; then 
-            echocolor ${WARNING} "No filestore hash created." 
-        else   
-            echo "New filestore hash: FS_LAUNCH_JS_HASH=$FS_LAUNCH_JS_HASH"
-        fi
-    fi
+    # gen hash of filebrowser javascript launch script for CSP
+    echo ""
+    FS_LAUNCH_JS_HASH="$(node ./init-utils/filebrowserScriptToHash.js http://host.docker.internal:$STORE_TMP_PORT)"
+    if [ -z "$FS_LAUNCH_JS_HASH" ]; then 
+        echocolor ${WARNING} "No filestore hash created. Using fallback value, which might not be up to date with latest filestore." 
+        FS_LAUNCH_JS_HASH="QZbQOePqGVDlvXBzWYldDkorWQkQ3CpEzm0yZkzV59k="
+    else 
+        echocolor ${BOLD} "New file store hash generated." 
+    fi       
+fi 
 
-fi # CONFIG_FILES_ONLY
+export CSP_FS_LAUNCH_JS_HASH="'sha256-"$FS_LAUNCH_JS_HASH"'"
+echo -e "CSP filestore hash: $CSP_FS_LAUNCH_JS_HASH\n"
 
 echocolor ${HIGHLIGHT} "### Creating config files (conf/*) from templates (conf-templates/*) and .env."
 echocolor ${BOLD} "Backups will be created in conf/. Please edit the file .env to reflect your setup (hostname, jisti host, ...)."

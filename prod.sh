@@ -31,7 +31,7 @@ then
 fi
 
 # pull versions in VERSION
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION pull
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION pull -q
 
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION $@
 

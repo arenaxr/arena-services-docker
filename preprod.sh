@@ -31,7 +31,7 @@ then
 fi
 
 # pull versions in VERSION.preprod
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod pull
+docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod pull -q
 
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod $@
 
