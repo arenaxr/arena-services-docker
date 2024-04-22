@@ -60,6 +60,15 @@ setup_filestore() {
         export START_COMPOSE_FILESTORE="YES"
     fi
 
+    # set filestore name; executes command and exit
+    docker run --rm \
+        --name storetmp \
+        -v ${PWD}/init-utils/store-config-for-init.json:/.filebrowser.json \
+        -v ${PWD}/data/arena-store:/arena-store/data:rw \
+            filebrowser/filebrowser:${ARENA_FILESTORE_VERSION:-latest} config set --branding.name "ARENA Store"
+
+    [[ $(docker ps | grep storetmp) ]] && docker stop storetmp || true
+
     echo "Starting temp filestore instance..."
     export STORE_TMP_PORT=8111
     # bring up a temp instance of filebrowser (used in init config; note: using store config in init-utils folder)
@@ -205,8 +214,12 @@ fi
 # make sure arena-web-core/conf folder exists
 [ ! -d "arena-web-core/conf" ] && mkdir arena-web-core/conf
 
-# load versions and pull init utils container
-export $(grep -v '^#' VERSION | xargs)
+# load versions
+set -o allexport
+source VERSION
+set +o allexport
+
+# pull init utils container
 docker pull -q arenaxrorg/arena-services-docker-init-utils:${ARENA_INIT_UTILS_VERSION}
 
 # TMP: create arena-web-core/user/static

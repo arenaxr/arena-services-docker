@@ -108,10 +108,9 @@ fi # CONFIG_FILES_ONLY
 [ ! $(wc -l <secret.env) -ge 5 ] && exiterr "File secret.env has too few lines. This is required to generate config. Did you run init.sh? Must generate service keys successfuly."
 
 # load secrets
-export $(grep -v '^#' secret.env | xargs)
-
-# fallback fs hash (this will change if filestore code changes; we try compute a new one below)
-FS_LAUNCH_JS_HASH="QZbQOePqGVDlvXBzWYldDkorWQkQ3CpEzm0yZkzV59k="
+set -o allexport
+source secret.env 
+set +o allexport
 
 if [ "$STORE_TMP_PORT" == "none" ]
 then
@@ -144,14 +143,19 @@ else
     FS_LAUNCH_JS_HASH="$(node ./init-utils/filebrowserScriptToHash.js http://host.docker.internal:$STORE_TMP_PORT)"
     if [ -z "$FS_LAUNCH_JS_HASH" ]; then 
         echocolor ${WARNING} "No filestore hash created. Using fallback value, which might not be up to date with latest filestore." 
-        FS_LAUNCH_JS_HASH="QZbQOePqGVDlvXBzWYldDkorWQkQ3CpEzm0yZkzV59k="
+        FS_LAUNCH_JS_HASH="sha256-E+YjJus/4mG3oc4/5MFHV2hutQxdsE7ZIfTG8WSBRWA="
     else 
         echocolor ${BOLD} "New file store hash generated." 
     fi       
+
+    # if already in FILESTORE_CSP_HASH, dont add again
+    if echo "$FILESTORE_CSP_HASH" | grep -q "$FS_LAUNCH_JS_HASH"; then
+      FS_LAUNCH_JS_HASH=""
+    fi
 fi 
 
-export CSP_FS_LAUNCH_JS_HASH="'sha256-"$FS_LAUNCH_JS_HASH"'"
-echo -e "CSP filestore hash: $CSP_FS_LAUNCH_JS_HASH\n"
+export FILESTORE_CSP_HASH=$(echo -n "$FILESTORE_CSP_HASH" | tr -d '"') $FS_LAUNCH_JS_HASH
+echo -e "Filestore CSP hash: $FILESTORE_CSP_HASH\n"
 
 echocolor ${HIGHLIGHT} "### Creating config files (conf/*) from templates (conf-templates/*) and .env."
 echocolor ${BOLD} "Backups will be created in conf/. Please edit the file .env to reflect your setup (hostname, jisti host, ...)."
