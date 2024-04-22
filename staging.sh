@@ -18,8 +18,11 @@ then
     docker volume rm arena-services-docker_account-static-content
 fi
 
-docker-compose -f -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION pull -q
+docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION pull -q
 
 docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION $@
 
-./update-custom-website.sh
+if [[ "$*" == *up* ]]
+then
+    ./update-custom-website.sh
+fi

@@ -35,4 +35,7 @@ docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VER
 
 docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod $@
 
-./update-custom-website.sh
+if [[ "$*" == *up* ]]
+then
+    ./update-custom-website.sh
+fi
