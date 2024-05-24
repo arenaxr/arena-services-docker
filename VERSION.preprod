@@ -12,4 +12,5 @@ PROM_EXPORTER_VERSION=latest
 PROMETHEUS_VERSION=latest
 GRAFANA_VERSION=latest
 # filestore hash; these might change with filestore version; (leave as is; if csp errors accessing filestore, insert hashes indicated in the browser console)
-FILESTORE_CSP_HASH='sha256-4y/gEB2/KIwZFTfNqwXJq4olzvmQ0S214m9jwKgNXoc=' 'sha256-+5XkZFazzJo8n0iOP4ti/cLCMUudTf//Mzkb7xNPXIc=' 'sha256-E+YjJus/4mG3oc4/5MFHV2hutQxdsE7ZIfTG8WSBRWA='
+# current FILESTORE_CSP_HASH is for filebrowser v2.30.0
+FILESTORE_CSP_HASH='sha256-yNTydNtcQFfnMzCSBadob7A74LLeLadTe78GNVnkXU0=' 'sha256-+5XkZFazzJo8n0iOP4ti/cLCMUudTf//Mzkb7xNPXIc=' 'sha256-VA8O2hAdooB288EpSTrGLl7z3QikbWU9wwoebO/QaYk='
