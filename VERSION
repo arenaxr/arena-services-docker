@@ -1,8 +1,8 @@
 # this file is automatically updated by update-versions.sh  
 ARENA_SERVICES_VERSION=v1.0.3
-ARENA_WEB_CORE_VERSION=v1.26.4
+ARENA_WEB_CORE_VERSION=v1.27.0
 ARENA_PERSIST_VERSION=v1.0.4
-ARENA_ACCOUNT_VERSION=v1.2.0
+ARENA_ACCOUNT_VERSION=v1.2.2
 ARENA_BROKER_VERSION=v1.6.10
 ARENA_FILESTORE_VERSION=v2.28.0
 ARENA_INIT_UTILS_VERSION=v1.0.4
@@ -13,4 +13,5 @@ PROM_EXPORTER_VERSION=v1.7.0
 PROMETHEUS_VERSION=v2.51.1
 GRAFANA_VERSION=10.4.2
 # filestore hash; these might change with filestore version; (leave as is; if csp errors accessing filestore, insert hashes indicated in the browser console)
+# current FILESTORE_CSP_HASH is for filebrowser v2.28.0
 FILESTORE_CSP_HASH="'sha256-4y/gEB2/KIwZFTfNqwXJq4olzvmQ0S214m9jwKgNXoc=' 'sha256-+5XkZFazzJo8n0iOP4ti/cLCMUudTf//Mzkb7xNPXIc=' 'sha256-E+YjJus/4mG3oc4/5MFHV2hutQxdsE7ZIfTG8WSBRWA='"

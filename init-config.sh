@@ -145,16 +145,18 @@ else
         echocolor ${WARNING} "No filestore hash created. Using fallback value, which might not be up to date with latest filestore." 
         FS_LAUNCH_JS_HASH="sha256-E+YjJus/4mG3oc4/5MFHV2hutQxdsE7ZIfTG8WSBRWA="
     else 
-        echocolor ${BOLD} "New file store hash generated." 
+        echocolor ${BOLD} "New file store hash generated."
+        FS_LAUNCH_JS_HASH="'sha256-$FS_LAUNCH_JS_HASH""'"
     fi       
 
     # if already in FILESTORE_CSP_HASH, dont add again
     if echo "$FILESTORE_CSP_HASH" | grep -q "$FS_LAUNCH_JS_HASH"; then
       FS_LAUNCH_JS_HASH=""
     fi
+  
 fi 
 
-export FILESTORE_CSP_HASH=$(echo -n "$FILESTORE_CSP_HASH" | tr -d '"') $FS_LAUNCH_JS_HASH
+export FILESTORE_CSP_HASH=$(echo -n "$FILESTORE_CSP_HASH" | tr -d '"')" "$FS_LAUNCH_JS_HASH
 echo -e "Filestore CSP hash: $FILESTORE_CSP_HASH\n"
 
 echocolor ${HIGHLIGHT} "### Creating config files (conf/*) from templates (conf-templates/*) and .env."
