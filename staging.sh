@@ -18,7 +18,7 @@ then
     docker volume rm arena-services-docker_account-static-content
 fi
 
-docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION pull -q
+#docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION pull -q
 
 docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION $@
 
