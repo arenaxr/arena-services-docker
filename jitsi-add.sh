@@ -16,7 +16,7 @@ server {
     server_name         $JITSI_HOSTNAME_NOPORT;
     listen              80;
     location /.well-known/acme-challenge/ {
-        proxy_pass http://$JITSI_HOSTNAME_NOPORT:8000;
+        proxy_pass http://$JITSI_HOSTNAME_NOPORT:8000/.well-known/acme-challenge/;
     }
     location / {
         return 301 https://$JITSI_HOSTNAME\$request_uri;
