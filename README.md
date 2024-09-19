@@ -56,7 +56,7 @@ If you see no errors, you should be able to point your browser to `https://local
 * **docker:** https://docs.docker.com/get-docker/
 * **docker-compose:** https://docs.docker.com/compose/install/
 
-> **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need also: 
+> **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need also:
 > * **nodejs:** https://nodejs.org
 > * **parcel:** https://www.npmjs.com/package/parcel
 
@@ -101,6 +101,8 @@ The 'init.env' file has the following configuration that should be updated to re
 * ```GAUTH_CLIENTSECRET``` is the Google Web application Credential Client Secret.
 * ```GAUTH_INSTALLED_CLIENTID``` is the Google Desktop Credential Client Id.
 * ```GAUTH_INSTALLED_CLIENTSECRET``` is the Google Desktop Credential Client Secret.
+* ```GAUTH_DEVICE_CLIENTID``` is the Google TV and Limited Input Credential Client Id.
+* ```GAUTH_DEVICE_CLIENTSECRET``` is the Google TV and Limited Input Credential Client Secret.
 
 * ```DJANGO_SUPERUSER_NAME``` and ```DJANGO_SUPERUSER_EMAIL``` are the account admin user and email (usually can be kept as `admin` and `admin@example.com`).
 
@@ -134,16 +136,16 @@ The minimal set of edits you will have to perform is:
 
 The first time you run the script, you will want to answer **Y**es to execute all optional sections: create secrets, root keys, service tokens, config files, and certificates. The `-y` argument automatically answers 'yes' to all questions.
 
-> #### `init.sh` Arguments 
->`init.sh` supports the following arguments: 
+> #### `init.sh` Arguments
+>`init.sh` supports the following arguments:
 >* -y indicates that we answer 'yes' to all questions
 >* -t passes the 'staging' flag to lets encrypt to avoid request limits
->* -s forces the creation of a self-signed certificate 
->* -n skip certificate creation 
->* -c create config files ONLY (skip everything else) 
+>* -s forces the creation of a self-signed certificate
+>* -n skip certificate creation
+>* -c create config files ONLY (skip everything else)
 >* -i create certificates ONLY (skip everything else; requires stack to be DOWN)
 >* -r renew certificates ONLY (skip everything else; requires stack to be UP)
->* -b build arena-web-core js ONLY (skip everything else) 
+>* -b build arena-web-core js ONLY (skip everything else)
 >* -h print help
 >
 > When you create new secrets, root keys, service tokens, and certificates, you must recreate config files and restart the stack so that the changes take effect.
@@ -162,7 +164,7 @@ The init script will generate configuration files (from the templates in [conf-t
 > ```
 > The jitsi hostname should be a DNS CNAME to the machine's IP. **Run `jitsi-add.sh` to add a jitsi server block to redirect http requests to a Jitsi virtual host, reply '**Y**es'**.
 
-> **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need to: 
+> **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need to:
 > ```
 > cd arena-web-core
 > npm update
