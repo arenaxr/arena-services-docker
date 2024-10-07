@@ -22,7 +22,7 @@ services:
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   mongodb:
-    image: mongo:${MONGO_VERSION:-latest} # pull from https://hub.docker.com/_/mongo/    
+    image: mongo:${MONGO_VERSION:-latest} # pull from https://hub.docker.com/_/mongo/
     restart: unless-stopped
 
   arena-persist:
@@ -49,7 +49,7 @@ services:
 
   store:
     # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
-    image: "filebrowser/filebrowser:${ARENA_FILESTORE:-latest}"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
+    image: filebrowser/filebrowser:${ARENA_FILESTORE_VERSION:-latest}  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
 
 volumes:
   account-static-content:
