@@ -4,7 +4,7 @@ ARENA_WEB_CORE_VERSION=v1.29.0
 ARENA_PERSIST_VERSION=v1.0.4
 ARENA_ACCOUNT_VERSION=v1.3.0
 ARENA_BROKER_VERSION=v1.6.10
-ARENA_FILESTORE_VERSION=v2.31.1
+ARENA_FILESTORE_VERSION=v2.31.2
 ARENA_INIT_UTILS_VERSION=v1.0.4
 CERTBOT_VERSION=v2.9.0
 MONGO_VERSION=7
@@ -13,5 +13,5 @@ PROM_EXPORTER_VERSION=v1.7.0
 PROMETHEUS_VERSION=v2.51.1
 GRAFANA_VERSION=10.4.2
 # filestore hash; these might change with filestore version; (leave as is; if csp errors accessing filestore, insert hashes indicated in the browser console)
-# current FILESTORE_CSP_HASH is for filebrowser v2.31.1
-FILESTORE_CSP_HASH="'sha256-VA8O2hAdooB288EpSTrGLl7z3QikbWU9wwoebO/QaYk=' 'sha256-+5XkZFazzJo8n0iOP4ti/cLCMUudTf//Mzkb7xNPXIc=' 'sha256-73WkyH2I5qSGJWmARMlTcUtwinZro8Bu/K8ZjNSVc/8='"
+# current FILESTORE_CSP_HASH is for filebrowser v2.31.2
+FILESTORE_CSP_HASH="'sha256-VA8O2hAdooB288EpSTrGLl7z3QikbWU9wwoebO/QaYk=' 'sha256-+5XkZFazzJo8n0iOP4ti/cLCMUudTf//Mzkb7xNPXIc=' 'sha256-eRO8881kq2ZEu9hBXFHcxde04D+YFpHt0XZQYUTzS2A='"
