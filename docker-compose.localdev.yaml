@@ -74,7 +74,7 @@ services:
 
   store:
     # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
-    image: "filebrowser/filebrowser:${ARENA_FILESTORE:-latest}"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
+    image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
     volumes:
       - ./conf/store-config.json:/.filebrowser.json:ro
       - ./store-branding:/arena-store/frontend/arena-branding:ro
