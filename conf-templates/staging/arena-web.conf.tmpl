@@ -101,8 +101,8 @@ server {
         autoindex off;
     }
 
-    location ^~ /dashboard/ {
-         proxy_pass http://${HOSTNAME}:8001/;
+    location ^~ /programs/ {
+         proxy_pass http://172.17.0.1:8011/;  # assumes host ip should is 172.17.0.1 (true on docker for linux)
          proxy_http_version 1.1;
          proxy_set_header Upgrade ${ESC}http_upgrade;
          proxy_set_header Connection "Upgrade";
