@@ -22,7 +22,7 @@ prod_versions () {
     for sm in ${submodules}
     do
         cd $sm
-        #git fetch --tags
+        git fetch --tags
         version=$(git describe --tags --abbrev=0)
         envvar=$(echo ${sm}_VERSION | tr '[:lower:]' '[:upper:]' | sed 's/-/_/g')
         cd ..
