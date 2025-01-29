@@ -6,7 +6,9 @@ for sm in ${submodules}
 do
 	echo $sm
     cd $sm
-    git pull
+	git fetch --tags
+	version=$(git describe --tags --abbrev=0)
+	git checkout $version
     cd ..
 done
 
