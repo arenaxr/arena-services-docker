@@ -7,7 +7,7 @@ do
 	echo $sm
     cd $sm
 	git fetch --tags
-	version=$(git describe --tags --abbrev=0)
+	version=$(git describe --tags `git rev-list --tags --max-count=1`)
 	git checkout $version
     cd ..
 done

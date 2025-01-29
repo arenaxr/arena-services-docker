@@ -7,7 +7,7 @@ prod_versions () {
     cp VERSION VERSION.bak
 
     # get current docker services repo version and bump it
-    version=$(git describe --tags --abbrev=0 2>/dev/null)
+    version=$(git describe --tags `git rev-list --tags --max-count=1` 2>/dev/null)
     version=${version:-v0.0.0}
     echo -e "\n\nCurrent arena service stack version=$version"
     nversion=v$(docker run --rm -it -v $PWD:/app -w /app treeder/bump --input $version)
@@ -23,7 +23,7 @@ prod_versions () {
     do
         cd $sm
         git fetch --tags
-        version=$(git describe --tags --abbrev=0)
+        version=$(git describe --tags `git rev-list --tags --max-count=1`)
         envvar=$(echo ${sm}_VERSION | tr '[:lower:]' '[:upper:]' | sed 's/-/_/g')
         cd ..
         sed -i'' -e "s/$envvar=.*/$envvar=$version/" ./VERSION
