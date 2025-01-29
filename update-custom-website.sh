@@ -10,4 +10,3 @@ then
     docker cp custom-website arena-services-docker_arena-web_1:/usr/share/nginx/html/
     docker exec arena-services-docker_arena-web_1 sh -c "cp -R /usr/share/nginx/html/custom-website/* /usr/share/nginx/html"
 fi
-
