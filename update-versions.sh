@@ -14,8 +14,8 @@ prod_versions () {
     nversion=$version
     read -p "Enter the new arena service release version [$nversion]: " version
     ARENA_SERVICES_VERSION=${version:-$nversion}
-    #sed -i "s/ARENA_SERVICES=.*/ARENA_SERVICES_VERSION=$ARENA_SERVICES_VERSION/" ./VERSION
-    sed -i'' -e "s/ARENA_SERVICES=.*/ARENA_SERVICES_VERSION=$ARENA_SERVICES_VERSION/" ./VERSION
+    #sed -i "s/ARENA_SERVICES_VERSION=.*/ARENA_SERVICES_VERSION=$ARENA_SERVICES_VERSION/" ./VERSION
+    sed -i'' -e "s/ARENA_SERVICES_VERSION=.*/ARENA_SERVICES_VERSION=$ARENA_SERVICES_VERSION/" ./VERSION
 
     echo -e "\n\nCollecting production versions...\n"
     submodules=$(git config --file .gitmodules --name-only --get-regexp path | cut -d. -f2)
