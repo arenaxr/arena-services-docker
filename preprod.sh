@@ -1,6 +1,10 @@
 #!/bin/bash
 # usage: ./prod.sh [docker-compose SUBCOMMAND: up, down, ...]
 
+# prefer newer docker compose; fall back to older docker-compose
+[[ $(docker compose --help 2>&1) ]] && DOCKER_COMPOSE="docker compose" || DOCKER_COMPOSE="docker-compose"
+[[ $($DOCKER_COMPOSE --help 2>&1) ]] && echo "Docker compose not found. Please install."
+
 if [ $# -eq 0 ]; then
     >&2 echo "No arguments provided. Usage:"
     >&2 echo "$0 [docker-compose SUBCOMMAND: up, down, ...]"
@@ -31,9 +35,9 @@ then
 fi
 
 # pull versions in VERSION.preprod
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod pull -q
+$DOCKER_COMPOSE -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod pull -q
 
-docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod $@
+$DOCKER_COMPOSE -f docker-compose.yaml -f docker-compose.prod.yaml --env-file VERSION.preprod $@
 
 if [[ "$*" == *up* ]]
 then

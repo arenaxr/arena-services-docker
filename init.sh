@@ -184,8 +184,9 @@ done
 
 echocolor ${HIGHLIGHT} "### Setting up folders and dependencies ..."
 
-# some systems might not support older docker-compose ?
-[[ $(docker-compose --help) ]] && DOCKER_COMPOSE="docker-compose" || DOCKER_COMPOSE="docker compose"
+# prefer newer docker compose; fall back to older docker-compose
+[[ $(docker compose --help 2>&1) ]] && DOCKER_COMPOSE="docker compose" || DOCKER_COMPOSE="docker-compose"
+[[ $($DOCKER_COMPOSE --help 2>&1) ]] && echo "Docker compose not found. Please install."
 
 # check dependencies
 [ -z "$BASH_VERSION" ] && exiterr "Bash not detected." 

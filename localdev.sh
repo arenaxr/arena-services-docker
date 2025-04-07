@@ -1,6 +1,10 @@
 #!/bin/bash
 # usage: ./dev.sh [docker-compose SUBCOMMAND: up, down, ...]
 
+# prefer newer docker compose; fall back to older docker-compose
+[[ $(docker compose --help 2>&1) ]] && DOCKER_COMPOSE="docker compose" || DOCKER_COMPOSE="docker-compose"
+[[ $($DOCKER_COMPOSE --help 2>&1) ]] && echo "Docker compose not found. Please install."
+
 if [ $# -eq 0 ]; then
     >&2 echo "No arguments provided. Usage:"
     >&2 echo "$0 [docker-compose SUBCOMMAND: up, down, ...]"
@@ -18,4 +22,4 @@ then
     docker volume rm arena-services-docker_account-static-content
 fi
 
-docker compose -f docker-compose.localdev.yaml $@ # = docker-compose $@
+$DOCKER_COMPOSE -f docker-compose.localdev.yaml $@ # = docker-compose $@
