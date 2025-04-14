@@ -22,7 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
@@ -32,11 +32,15 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'arena-account', 'host.docke
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 MQTT_TOKEN_PRIVKEY = "/home/node/app/pubsubkey.pem"
 
-# TODO (mwfarb): this list can be reduced after webserver refactor
-# namespaces that are reserved for the webserver, see ARENA-core and nginx
+# namespaces that are reserved for the webserver, see arena-web-core and nginx
 USERNAME_RESERVED = [
     ".cache",
+    ".git",
     ".github",
+    ".gitignore",
+    ".gitmodules",
+    ".parcel-cache",
+    ".parcelrc",
     "aframe",
     "apriltag",
     "ar",
@@ -46,6 +50,7 @@ USERNAME_RESERVED = [
     "build",
     "chat",
     "conf",
+    "dashboard",  # proxy
     "dist",
     "face-tracking",
     "files",
@@ -56,15 +61,21 @@ USERNAME_RESERVED = [
     "media",
     "models",
     "mqtt",  # proxy
+    "mqtt1",  # proxy
+    "mqtt2",  # proxy
     "network",
     "node_modules",
+    "orchestrator",  # proxy
     "persist",  # proxy
+    "programs",  # proxy
     "public",  # public namespace (tentative)
+    "pythonrt",  # proxy
     "runtime-mngr",
-    "screenshare",
     "scene",
-    "src",
+    "scenes",
+    "screenshare",
     "signin",
+    "src",
     "static",
     "store",
     "storemng",  # proxy
@@ -118,10 +129,10 @@ REST_FRAMEWORK = {
     "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # allauth general config
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'  # https for docker, http for localhost:8000
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"  # https for docker, http for localhost:8000
 
 # allauth social accounts
 SITE_ID = 2  # must match our domain Site used in admin: Sites
@@ -140,7 +151,10 @@ SOCIALACCOUNT_PROVIDERS = {
             "secret": os.getenv("GAUTH_CLIENTSECRET"),
             "key": "",
         },
-        "SCOPE": ["profile", "email", ],
+        "SCOPE": [
+            "profile",
+            "email",
+        ],
         "AUTH_PARAMS": {
             "access_type": "online",
             "prompt": "select_account",
@@ -169,7 +183,7 @@ LOGGING = {
             "level": os.getenv("DJANGO_LOG_LEVEL", "INFO"),
             "class": "logging.StreamHandler",
             "stream": sys.stdout,
-            "formatter": "verbose"
+            "formatter": "verbose",
         },
     },
     "loggers": {
@@ -230,9 +244,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", },
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator", },
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator", },
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 
@@ -267,9 +287,7 @@ else:
 PUBSUB = {
     "mqtt_server": {
         "host": "${HOSTNAME}",
-        "port": 1883,
-        "ws_port": 9001,
-        "wss_port": 8083,
+        "port": 8883,
     },
     "mqtt_realm": "${ARENA_REALM}",
     "mqtt_username": "arena_account",
