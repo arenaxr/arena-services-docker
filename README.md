@@ -89,7 +89,7 @@ The 'init.env' file has the following configuration that should be updated to re
 
 * ```HOSTNAME``` is your host's fully qualified domain name (FQDN). If you don't have a FQDN, you can do a local setup;
 
-* ```JITSI_HOSTNAME``` is the fully qualified domain name (FQDN) of the jitsi server you will use (you can use a public/managed jitsi instance or [setup your own](https://jitsi.github.io/handbook/docs/devops-guide/)).
+* ```JITSI_HOSTNAME``` is the fully qualified domain name (FQDN) of the Jitsi server you will use (you can use a public/managed Jitsi instance or [setup your own](https://jitsi.github.io/handbook/docs/devops-guide/)).
 
 * ```EMAIL``` is the email to get the certificates with [letsencrypt](https://letsencrypt.org/).
 
@@ -156,13 +156,46 @@ The init script will generate configuration files (from the templates in [conf-t
 
 > **IMPORTANT**: The file ```init.env``` is used only the first time you run ```init.sh```; its contents are copied to ```.env``` after the first run, and ```.env``` is the file used at runtime.
 
-> ### Setup (public) jitsi in the same machine
+> ### Install Jitsi
 >
-> If you are going to setup a jitsi instance in the same machine, add the jitsi hostname to `.env`:
+> Follow the [quick start Jitsi docker install instructions](https://jitsi.github.io/handbook/docs/devops-guide/devops-guide-docker), with the following changes.
+> At minimum, in your Jitsi docker folder `.env` file set `PUBLIC_URL`, `LETSENCRYPT_DOMAIN`, `LETSENCRYPT_EMAIL`, `JWT_ASAP_KEYSERVER`, `XMPP_DOMAIN` and `XMPP_MUC_DOMAIN`.
+>
+> Set `PUBLIC_URL` to the hostname, with port 8443 (e.g. jitsi0.andrew.cmu.edu:8433):
 > ```
-> JITSI_HOSTNAME=<jitsi-hostname>
+> PUBLIC_URL=jitsi-hostname:8443
 > ```
-> The jitsi hostname should be a DNS CNAME to the machine's IP. **Run `jitsi-add.sh` to add a jitsi server block to redirect http requests to a Jitsi virtual host, reply '**Y**es'**.
+>
+> Set `LETSENCRYPT_DOMAIN` to Jitsi hostname and provide an `LETSENCRYPT_EMAIL`:
+> ```
+> LETSENCRYPT_DOMAIN=jitsi-hostname
+> LETSENCRYPT_EMAIL=some-email
+> ```
+>
+> Check JWT section below for `JWT_ASAP_KEYSERVER` (our docker setup places the public key in `/conf`, e.g. https://jitsi-hostname/conf):
+> ```
+> JWT_ASAP_KEYSERVER=https://<arena-webserver-hostname/where-public-jwt-key-is-located
+> ```
+>
+> Set `XMPP_DOMAIN` and `XMPP_MUC_DOMAIN` at least, and others if you need them:
+> ```
+> XMPP_AUTH_DOMAIN=auth.jitsi-hostname
+> XMPP_DOMAIN=jitsi-hostname
+> XMPP_INTERNAL_MUC_DOMAIN=internal-muc.jitsi-hostname
+> XMPP_MUC_DOMAIN=conference.jitsi-hostname
+> XMPP_RECORDER_DOMAIN=recorder.jitsi-hostname
+> XMPP_GUEST_DOMAIN=guest.jitsi-hostname
+> XMPP_SERVER=xmpp.jitsi-hostname
+> XMPP_BOSH_URL_BASE=http://xmpp.jitsi-hostname:5280
+> ```
+
+> ### Setup (public) Jitsi in the same machine
+>
+> If you are going to setup a Jitsi instance in the same machine, add the Jitsi hostname to `.env`:
+> ```
+> JITSI_HOSTNAME=jitsi-hostname
+> ```
+> The Jitsi hostname should be a DNS CNAME to the machine's IP. **Run `jitsi-add.sh` to add a Jitsi server block to redirect http requests to a Jitsi virtual host, reply '**Y**es'**.
 
 > **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need to:
 > ```
@@ -232,7 +265,7 @@ After updating the submodules, to have the updates of built containers (persist,
 * **init-utils:** Files to create a container with all dependencies of the init scripts.
 * **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
 * **init.sh:** Initialize config files. See [Init Config](#init-config) Section.
-* **jitsi-add.sh:** Add jitsi configuration if you are setting up a jistsi server on the same machine.
+* **jitsi-add.sh:** Add Jitsi configuration if you are setting up a Jitsi server on the same machine.
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**arena-web-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](#update-submodules)).
 * **update-versions.sh:** Update the versions indicated in ```VERSION``` by looking at the tags in the submodules.
 * **VERSION:** Release versions of the arena services stack used by the production deployment (```docker-compose.prod.yaml```).
