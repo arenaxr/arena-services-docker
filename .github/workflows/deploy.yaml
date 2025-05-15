@@ -1,4 +1,4 @@
-name: ARENAXR SSH Manual Deploy (lastest VERSION file)
+name: ARENAXR SSH Manual Deploy (latest VERSION file)
 
 on:
   workflow_dispatch:
