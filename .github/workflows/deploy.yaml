@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: ssh deploy
         #if: $GITHUB_SHA == github.event.inputs.confirm 
-        uses: appleboy/ssh-action@v1.2.1
+        uses: appleboy/ssh-action@master
         env:
           DEPLOY_TARGET: ${{ secrets.ARENAXR_DEPLOY_TARGET }}
         with:
