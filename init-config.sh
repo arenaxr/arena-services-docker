@@ -153,11 +153,10 @@ else
     # if echo "$FILESTORE_CSP_HASH" | grep -q "$FS_LAUNCH_JS_HASH"; then
     #   FS_LAUNCH_JS_HASH=""
     # fi
-
 fi
 
-# export FILESTORE_CSP_HASH=$(echo -n "$FILESTORE_CSP_HASH" | tr -d '"')" "$FS_LAUNCH_JS_HASH
-# echo -e "Filestore CSP hash: $FILESTORE_CSP_HASH\n"
+export FILESTORE_CSP_HASH=$(echo -n "$FILESTORE_CSP_HASH" | tr -d '"')" "$FS_LAUNCH_JS_HASH
+echo -e "Filestore CSP hash: $FILESTORE_CSP_HASH\n"
 
 echocolor ${HIGHLIGHT} "### Creating config files (conf/*) from templates (conf-templates/*) and .env."
 echocolor ${BOLD} "Backups will be created in conf/. Please edit the file .env to reflect your setup (hostname, jisti host, ...)."
