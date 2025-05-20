@@ -1,23 +1,23 @@
 #!/bin/bash
-# init arena config; creates root secrets and derives tokens for services; 
+# init arena config; creates root secrets and derives tokens for services;
 # creates config files from templates conf-templates -> conf
 #
 # NOTE: this script is called from init.sh; do not execute directly
 #
 # uses variables in .env and the following:
 #   ALWAYS_YES="true" indicates that we answer yes to all questions: create new secrets, tokens, regenerate config files
-#   CONFIG_FILES_ONLY="true" skip everything except config files creation 
+#   CONFIG_FILES_ONLY="true" skip everything except config files creation
 
 # load utils
-source init-utils/bash-common-utils.sh 
+source init-utils/bash-common-utils.sh
 
 if [ "$(id -u)" -ne 0 ]; then echo "Not running as root. Please run init.sh instead." >&2; exit 1; fi
 
-JWT_KEY_FILE_PRIV=./data/keys/jwt.priv.pem 
+JWT_KEY_FILE_PRIV=./data/keys/jwt.priv.pem
 JWT_KEY_FILE_PUBLIC=./data/keys/jwt.public.pem
 JWT_KEY_FILE_PUBLIC_DER=./data/keys/jwt.public.der
 
-if [ -z "$CONFIG_FILES_ONLY" ]; then 
+if [ -z "$CONFIG_FILES_ONLY" ]; then
 
     echocolor ${HIGHLIGHT} "### Creating data folders."
     data_folders=( "data/arena-store" "data/grafana"  "data/mongodb"  "data/prometheus" "data/account" "data/keys")
@@ -47,7 +47,7 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
 
     echocolor ${HIGHLIGHT} "### Creating RSA key pair for JWT (conf/keys/jwt.priv.pem). This will replace old keys (if exist; backup will be in data/keys/jwt.priv.pem.bak)."
     readprompt "Create RSA key pair ? (y/N) "
-    if [[ "$REPLY" =~ ^[Yy]$ ]]; then 
+    if [[ "$REPLY" =~ ^[Yy]$ ]]; then
       [ -f $JWT_KEY_FILE_PRIV ] && cp $JWT_KEY_FILE_PRIV $JWT_KEY_FILE_PRIV.bak
       rm ./data/keys/*
       openssl genrsa -out $JWT_KEY_FILE_PRIV 4096 && \
@@ -91,10 +91,10 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
       fi
 
       # NOTE: check for errors by looking at number of lines in secret.env
-      if [ $(wc -l <secret.env) -ge 5 ]; then 
+      if [ $(wc -l <secret.env) -ge 5 ]; then
         echo -e "Service tokens created.\n"
       else
-        exiterr "Too few lines in secret.env."; 
+        exiterr "Too few lines in secret.env.";
       fi
     fi
 
@@ -109,14 +109,14 @@ fi # CONFIG_FILES_ONLY
 
 # load secrets
 set -o allexport
-source secret.env 
+source secret.env
 set +o allexport
 
 if [ "$STORE_TMP_PORT" == "none" ]
 then
     echocolor ${HIGHLIGHT} "### Skipping filestore share and hash setup (instance failed to start)."
 else
-    if [ -z "$CONFIG_FILES_ONLY" ]; then 
+    if [ -z "$CONFIG_FILES_ONLY" ]; then
         echocolor ${HIGHLIGHT} "### Generating filestore public share."
         readprompt "Create a public share on filebrowser ? (y/N) "
         if [[ "$REPLY" =~ ^[Yy]$ ]]; then
@@ -138,30 +138,30 @@ else
         fi
     fi # CONFIG_FILES_ONLY
 
-    # gen hash of filebrowser javascript launch script for CSP
-    echo ""
-    FS_LAUNCH_JS_HASH="$(node ./init-utils/filebrowserScriptToHash.js http://host.docker.internal:$STORE_TMP_PORT)"
-    if [ -z "$FS_LAUNCH_JS_HASH" ]; then 
-        echocolor ${WARNING} "No filestore hash created. Using fallback value, which might not be up to date with latest filestore." 
-        FS_LAUNCH_JS_HASH="sha256-E+YjJus/4mG3oc4/5MFHV2hutQxdsE7ZIfTG8WSBRWA="
-    else 
-        echocolor ${BOLD} "New file store hash generated."
-        FS_LAUNCH_JS_HASH="'sha256-$FS_LAUNCH_JS_HASH""'"
-    fi       
+    # # gen hash of filebrowser javascript launch script for CSP
+    # echo ""
+    # FS_LAUNCH_JS_HASH="$(node ./init-utils/filebrowserScriptToHash.js http://host.docker.internal:$STORE_TMP_PORT)"
+    # if [ -z "$FS_LAUNCH_JS_HASH" ]; then
+    #     echocolor ${WARNING} "No filestore hash created. Using fallback value, which might not be up to date with latest filestore."
+    #     FS_LAUNCH_JS_HASH="sha256-E+YjJus/4mG3oc4/5MFHV2hutQxdsE7ZIfTG8WSBRWA="
+    # else
+    #     echocolor ${BOLD} "New file store hash generated."
+    #     FS_LAUNCH_JS_HASH="'sha256-$FS_LAUNCH_JS_HASH""'"
+    # fi
 
-    # if already in FILESTORE_CSP_HASH, dont add again
-    if echo "$FILESTORE_CSP_HASH" | grep -q "$FS_LAUNCH_JS_HASH"; then
-      FS_LAUNCH_JS_HASH=""
-    fi
-  
-fi 
+    # # if already in FILESTORE_CSP_HASH, dont add again
+    # if echo "$FILESTORE_CSP_HASH" | grep -q "$FS_LAUNCH_JS_HASH"; then
+    #   FS_LAUNCH_JS_HASH=""
+    # fi
 
-export FILESTORE_CSP_HASH=$(echo -n "$FILESTORE_CSP_HASH" | tr -d '"')" "$FS_LAUNCH_JS_HASH
-echo -e "Filestore CSP hash: $FILESTORE_CSP_HASH\n"
+fi
+
+# export FILESTORE_CSP_HASH=$(echo -n "$FILESTORE_CSP_HASH" | tr -d '"')" "$FS_LAUNCH_JS_HASH
+# echo -e "Filestore CSP hash: $FILESTORE_CSP_HASH\n"
 
 echocolor ${HIGHLIGHT} "### Creating config files (conf/*) from templates (conf-templates/*) and .env."
 echocolor ${BOLD} "Backups will be created in conf/. Please edit the file .env to reflect your setup (hostname, jisti host, ...)."
-echo 
+echo
 
 # setup escape var for envsubst templates
 export ESC="$"
@@ -178,7 +178,7 @@ do
   t="${fn/conf-templates/conf}" # conf-templates -> conf
   e="${fn##*.}" # save extension
   f="${t/.tmpl/}" # remove .tmpl extension
-  d="$(dirname $t)" # get folder 
+  d="$(dirname $t)" # get folder
   # skip mac os files and .md files
   if [ "$e" == "md" ] || [ "$e" == "DS_Store" ]; then continue; fi
   echo -e "\t $fn -> $f"
@@ -211,7 +211,7 @@ do
     cp conf/arena-web-conf/* $sf/arena-web-conf/
   else
     echocolor ${WARNING} "Setup folder $sf not found; skipping."
-  fi 
+  fi
 done
 
 [ -d conf ] && [ $(ls conf/* | wc -l) -ge 20 ] && echo -e "\nConfig files created.\n" || exiterr "Folder conf/ not found or too few config files found."
@@ -256,4 +256,3 @@ done
 #         cat $TMPFN >> ./conf/arena-web-staging.conf
 #         rm $TMPFN
 # fi
-
