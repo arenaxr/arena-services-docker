@@ -27,9 +27,11 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'arena-account', 'host.docker.internal', $HOSTNAMES_LIST]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "[::1]", "arena-account", "host.docker.internal", $HOSTNAMES_LIST]
+ALLOWED_SCHEME = "https://"
+CSRF_TRUSTED_ORIGINS = [ALLOWED_SCHEME + host for host in ALLOWED_HOSTS]
 
-X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = "SAMEORIGIN"
 MQTT_TOKEN_PRIVKEY = "/home/node/app/pubsubkey.pem"
 
 # namespaces that are reserved for the webserver, see arena-web-core and nginx
@@ -264,8 +266,6 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 
 USE_I18N = True
-
-USE_L10N = True
 
 USE_TZ = True
 
