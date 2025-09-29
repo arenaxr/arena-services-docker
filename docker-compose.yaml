@@ -42,7 +42,7 @@ services:
 
   arena-account:
     volumes:
-      - ./conf/account-settings.py:/usr/src/app/arena_account/settings.py:ro      
+      - ./conf/account-settings.py:/usr/src/app/arena_account/settings.py:ro
       - account-static-content:/usr/src/app/static # static content
       - ./data/account:/usr/src/app/db # account db
       - ./data/keys/jwt.priv.pem:/home/node/app/pubsubkey.pem:ro # pubsub key available to service
@@ -63,11 +63,10 @@ services:
       - 8883:8883/tcp # mqtt-tls
 
   store:
-    image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser    
+    image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
     volumes:
-      - ./conf/store-config.json:/.filebrowser.json:ro
+      - ./conf/store-config.json:/config/settings.json:ro
       - ./store-branding:/arena-store/frontend/arena-branding:ro
       - ./store:/srv-files:rw
-      - ./data/arena-store:/arena-store/data:rw
+      - ./data/arena-store/database.db:/database/filebrowser.db:rw
     restart: unless-stopped # service will respawn unless we tell docker to stop it
-
