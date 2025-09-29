@@ -3,7 +3,7 @@
 # usage: ./init.sh [-yntsclbh] (see below)
 
 # load utils
-source init-utils/bash-common-utils.sh 
+source init-utils/bash-common-utils.sh
 
 usage () {
 printf "\nInit ARENA stack config \n \
@@ -26,7 +26,7 @@ where: \n \
 
 cleanup_and_exit () {
     if [[ $1 == 0 ]]; then
-        echo "" && echocolor ${BOLD} "Init Done. If you are going to setup a Jitsi server on this machine, run jitsi-add.sh next." && echo ""       
+        echo "" && echocolor ${BOLD} "Init Done. If you are going to setup a Jitsi server on this machine, run jitsi-add.sh next." && echo ""
     else
         echo "" && echoerr "Stopping here."
     fi
@@ -38,8 +38,8 @@ cleanup_and_exit () {
     # sync filestore password
     export $(grep '^STORE_ADMIN_PASSWORD' secret.env | xargs)
     [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it \
-            -v ${PWD}/init-utils/store-config-for-init.json:/.filebrowser.json \
-            -v ${PWD}/data/arena-store:/arena-store/data:rw \
+            -v ${PWD}/init-utils/store-config-for-init.json:/config/settings.json \
+            -v ${PWD}/data/arena-store/database.db:/database/filebrowser.db:rw \
             filebrowser/filebrowser users update admin -p $STORE_ADMIN_PASSWORD
     # start compose filebrowser, if we stopped it
     [[ ! -z "${START_COMPOSE_FILESTORE}" ]] && $DOCKER_COMPOSE up -d store
@@ -63,8 +63,8 @@ setup_filestore() {
     # set filestore name; executes command and exit
     docker run --rm \
         --name storetmp \
-        -v ${PWD}/init-utils/store-config-for-init.json:/.filebrowser.json \
-        -v ${PWD}/data/arena-store:/arena-store/data:rw \
+        -v ${PWD}/init-utils/store-config-for-init.json:/config/settings.json \
+        -v ${PWD}/data/arena-store/database.db:/database/filebrowser.db:rw \
             filebrowser/filebrowser:${ARENA_FILESTORE_VERSION:-latest} config set --branding.name "ARENA Store"
 
     [[ $(docker ps | grep storetmp) ]] && docker stop storetmp || true
@@ -74,10 +74,10 @@ setup_filestore() {
     # bring up a temp instance of filebrowser (used in init config; note: using store config in init-utils folder)
     docker run --rm \
         --name storetmp \
-        -v ${PWD}/init-utils/store-config-for-init.json:/.filebrowser.json \
+        -v ${PWD}/init-utils/store-config-for-init.json:/config/settings.json \
         -v ${PWD}/store-branding:/arena-store/frontend/arena-branding \
         -v ${PWD}/store:/srv-files \
-        -v ${PWD}/data/arena-store:/arena-store/data:rw \
+        -v ${PWD}/data/arena-store/database.db:/database/filebrowser.db:rw \
         -p $STORE_TMP_PORT:8080 \
         filebrowser/filebrowser:${ARENA_FILESTORE_VERSION:-latest} &
 
@@ -88,7 +88,7 @@ setup_filestore() {
         export STORE_TMP_PORT="none"
     else
         echo "Filestore instance ready."
-    fi   
+    fi
 }
 
 init_config() {
@@ -107,7 +107,7 @@ init_config() {
 }
 
 create_cert() {
-    if [ -z "$NOCERTS" ]; then 
+    if [ -z "$NOCERTS" ]; then
         echocolor ${HIGHLIGHT} "### Create certificate"
 
         # bring up a temp instance of nginx
@@ -178,7 +178,7 @@ while true; do
             shift
             break
             ;;
-        * ) break ;;            
+        * ) break ;;
     esac
 done
 
@@ -189,7 +189,7 @@ echocolor ${HIGHLIGHT} "### Setting up folders and dependencies ..."
 [[ $($DOCKER_COMPOSE --help 2>&1) ]] && echo "Docker compose not found. Please install."
 
 # check dependencies
-[ -z "$BASH_VERSION" ] && exiterr "Bash not detected." 
+[ -z "$BASH_VERSION" ] && exiterr "Bash not detected."
 ! docker &> /dev/null && exiterr "Docker not found in this system. Please install."
 ! $DOCKER_COMPOSE &> /dev/null && echo "Docker compose not found in this system. Please install."
 ! echo "a" | grep "a" &> /dev/null && echo "Grep not found in this system. Please install."
@@ -204,7 +204,7 @@ then
         echoerr "No init.env file found! This is needed for a correct init. Running from arena-services-docker repository root ?"
         exit 1
     fi
-else 
+else
   echocolor ${WARNING} "NOTE: A .env file was found (init.sh was executed before?). Loading config from .env instead of init.env."
   echo -e "You can use cleanup.sh to clear a previous init.sh.\n"
 fi
@@ -231,7 +231,7 @@ while true; do
     case "$1" in
         -c)
             CONFIG_FILES_ONLY="true"
-            setup_filestore            
+            setup_filestore
             init_config
             cleanup_and_exit $?
             ;;
@@ -251,7 +251,7 @@ while true; do
             shift
             break
             ;;
-        * ) break ;;            
+        * ) break ;;
     esac
 done
 
@@ -261,4 +261,3 @@ setup_filestore
 init_config
 create_cert
 cleanup_and_exit 0
-
