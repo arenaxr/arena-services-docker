@@ -48,7 +48,6 @@ services:
     restart: unless-stopped
 
   store:
-    # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
     image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
 
   cadvisor:
@@ -63,11 +62,11 @@ services:
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   arena-host-stats:
-    image: prom/node-exporter:latest    
+    image: prom/node-exporter:latest
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   prometheus:
-    image: prom/prometheus:latest    
+    image: prom/prometheus:latest
     user: "root"
     volumes:
       - ./conf/staging/prometheus.yml:/etc/prometheus/prometheus.yml:ro
