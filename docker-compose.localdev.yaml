@@ -75,10 +75,10 @@ services:
   store:
     image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
     volumes:
-      - ./conf/store-config.json:/.filebrowser.json:ro
+      - ./conf/store-config.json:/config/settings.json:ro
       - ./store-branding:/arena-store/frontend/arena-branding:ro
       - ./store:/srv-files:rw
-      - ./data/arena-store:/arena-store/data:rw
+      - ./data/arena-store/database.db:/database/filebrowser.db:rw
 
 volumes:
   account-static-content:
