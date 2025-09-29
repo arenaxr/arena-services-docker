@@ -31,7 +31,7 @@ services:
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'" # check for certificate updates every 12h
 
   mongodb:
-    image: mongo:${MONGO_VERSION:-latest} # pull from https://hub.docker.com/_/mongo/    
+    image: mongo:${MONGO_VERSION:-latest} # pull from https://hub.docker.com/_/mongo/
     restart: unless-stopped
 
   arena-persist:
@@ -67,7 +67,6 @@ services:
     restart: unless-stopped
 
   store:
-    # version #, settings, and full inline script from /storemng must match ./init-utils/filebrowserScriptToHash.js values
     image: filebrowser/filebrowser:${ARENA_FILESTORE_VERSION:-latest}  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
 
   cadvisor:
