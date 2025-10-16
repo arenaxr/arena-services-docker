@@ -23,7 +23,7 @@ then
 fi
 
 # pull versions in VERSION
-# $DOCKER_COMPOSE -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION pull -q
+$DOCKER_COMPOSE -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION pull -q
 
 $DOCKER_COMPOSE -f docker-compose.yaml -f docker-compose.staging.yaml --env-file VERSION $@
 
