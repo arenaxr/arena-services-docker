@@ -60,9 +60,6 @@ setup_filestore() {
         export START_COMPOSE_FILESTORE="YES"
     fi
 
-    # default filebrowser user on docker is 1000, so permissions must be set: https://github.com/filebrowser/filebrowser/releases/tag/v2.33.0
-    sudo chown 1000:1000 data/arena-store
-
     # set filestore name; executes command and exit
     docker run --rm \
         --name storetmp \
