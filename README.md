@@ -54,7 +54,7 @@ If you see no errors, you should be able to point your browser to `https://local
 ### Install:
 
 * **docker:** https://docs.docker.com/get-docker/
-* **docker-compose:** https://docs.docker.com/compose/install/
+* **docker compose:** https://docs.docker.com/compose/install/
 
 > **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need also:
 > * **nodejs:** https://nodejs.org

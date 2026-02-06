@@ -1,7 +1,7 @@
 # this is the demo docker compose; setup a stack for demonstration, based on the production config
 #
 # run demo:
-#    docker-compose -f docker-compose.yaml -f docker-compose.demo.yaml up -d
+#    docker compose -f docker-compose.yaml -f docker-compose.demo.yaml up -d
 #
 
 version: '3'

@@ -1,7 +1,7 @@
 # this is the development docker compose; does not include containers not needed and adds some config for development
 #
 # run development:
-#    docker-compose up -d
+#    docker compose up -d
 #
 
 version: '3'
