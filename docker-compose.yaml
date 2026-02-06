@@ -1,16 +1,16 @@
 # this is the base docker compose
 #
 # run production stack (arenaxr; extend docker-compose.yaml):
-#    docker-compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
+#    docker compose -f docker-compose.yaml -f docker-compose.prod.yaml up -d
 #
 # run staging stack (dev1; extend docker-compose.yaml):
-#    docker-compose -f docker-compose.yaml -f docker-compose.staging.yaml up -d
+#    docker compose -f docker-compose.yaml -f docker-compose.staging.yaml up -d
 #
 # run local development stack (does not extend docker-compose.yaml):
-#    docker-compose -f docker-compose.localdev.yaml up -d
+#    docker compose -f docker-compose.localdev.yaml up -d
 #
 # run demo stack (does not extend docker-compose.yaml):
-#    docker-compose -f docker-compose.demo.yaml up -d
+#    docker compose -f docker-compose.demo.yaml up -d
 
 version: '3'
 
