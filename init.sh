@@ -42,7 +42,7 @@ cleanup_and_exit () {
             -v ${PWD}/data/arena-store/database.db:/database/filebrowser.db:rw \
             filebrowser/filebrowser users update admin -p $STORE_ADMIN_PASSWORD
     # start compose filebrowser, if we stopped it
-    [[ ! -z "${START_COMPOSE_FILESTORE}" ]] && $DOCKER_COMPOSE up -d store
+    [[ ! -z "${START_COMPOSE_FILESTORE}" ]] && docker compose up -d store
     exit $1
 }
 
@@ -56,7 +56,7 @@ setup_filestore() {
     START_COMPOSE_FILESTORE=""
     # stop filestore if up
     if docker ps | grep -q "arena-services-docker_store_1"; then
-        $DOCKER_COMPOSE stop store
+        docker compose stop store
         export START_COMPOSE_FILESTORE="YES"
     fi
 
@@ -184,14 +184,12 @@ done
 
 echocolor ${HIGHLIGHT} "### Setting up folders and dependencies ..."
 
-# prefer newer docker compose; fall back to older docker-compose
-[[ $(docker compose --help 2>&1) ]] && DOCKER_COMPOSE="docker compose" || DOCKER_COMPOSE="docker-compose"
-[[ $($DOCKER_COMPOSE --help 2>&1) ]] && echo "Docker compose not found. Please install."
+
 
 # check dependencies
 [ -z "$BASH_VERSION" ] && exiterr "Bash not detected."
 ! docker &> /dev/null && exiterr "Docker not found in this system. Please install."
-! $DOCKER_COMPOSE &> /dev/null && echo "Docker compose not found in this system. Please install."
+! docker compose version &> /dev/null && echo "Docker compose not found in this system. Please install."
 ! echo "a" | grep "a" &> /dev/null && echo "Grep not found in this system. Please install."
 
 
