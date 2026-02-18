@@ -104,10 +104,6 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
-    "rest_framework",
-    "rest_framework.authtoken",
-    "rest_framework_swagger",
-    "drf_yasg",
     "users.apps.UsersConfig",
 ]
 
@@ -115,21 +111,6 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 )
-
-REST_FRAMEWORK = {
-    "DEFAULT_RENDERER_CLASSES": [
-        "rest_framework.renderers.JSONRenderer",
-        "rest_framework.renderers.BrowsableAPIRenderer",
-        "rest_framework.renderers.OpenAPIRenderer",
-    ],
-    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
-    "DEFAULT_PARSER_CLASSES": [
-        "rest_framework.parsers.FormParser",
-        "rest_framework.parsers.MultiPartParser",
-        "rest_framework.parsers.JSONParser",
-    ],
-    "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
-}
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
@@ -206,6 +187,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "users.middleware.VersioningMiddleware",
 ]
 
 ROOT_URLCONF = "arena_account.urls"
