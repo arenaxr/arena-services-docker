@@ -50,7 +50,7 @@ services:
       - .env
       - secret.env
     depends_on:
-      - arena-persist
+      - mongodb
       - store
     command: "python manage.py runserver 0.0.0.0:8000"
 
