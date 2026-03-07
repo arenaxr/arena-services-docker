@@ -15,6 +15,10 @@ Source repositories (such as arena-web-core, arena-account, arena-persist) are s
 
 Nginx and mosquitto are configured with TLS/SSL using certificates created by certbot (running as a service in a container), which will periodically attempt to renew the certificates. On the first execution, the configuration files must be initialized by running **init.sh**.
 
+## Documentation
+- [Requirements & Architecture](REQUIREMENTS.md)
+- [Contributing](CONTRIBUTING.md)
+
 ## Hardware
 ARENA has some minimum hardware requirements to run:
 - CPU: 4 cores (more will allow you to scale more users)
