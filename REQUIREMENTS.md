@@ -7,16 +7,16 @@
 ```mermaid
 graph TD
     subgraph stack["arena-services-docker"]
-        nginx["Nginx\n(Web Server / Reverse Proxy)\nPorts: 80, 443"]
-        mqtt["Mosquitto\n(MQTT Broker)\nPorts: 8833, 8883, 9001, 8083"]
-        mongo[("MongoDB\n(Document Store)")]
-        persist["arena-persist\n(Node.js)"]
-        account["arena-account\n(Django)"]
-        webcore["arena-web-core\n(A-Frame/three.js)"]
-        store["File Store\n(filebrowser)"]
-        certbot["Certbot\n(Let's Encrypt)"]
-        backup["Backup\n(Container)"]
-        silverline["Silverline\n(Runtime Orchestrator)"]:::external
+        nginx["Nginx<br/>(Web Server / Reverse Proxy)<br/>Ports: 80, 443"]
+        mqtt["Mosquitto<br/>(MQTT Broker)<br/>Ports: 8833, 8883, 9001, 8083"]
+        mongo[("MongoDB<br/>(Document Store)")]
+        persist["arena-persist<br/>(Node.js)"]
+        account["arena-account<br/>(Django)"]
+        webcore["arena-web-core<br/>(A-Frame/three.js)"]
+        store["File Store<br/>(filebrowser)"]
+        certbot["Certbot<br/>(Let's Encrypt)"]
+        backup["Backup<br/>(Container)"]
+        silverline["Silverline<br/>(Runtime Orchestrator)"]:::external
     end
 
     nginx -->|serves| webcore
@@ -33,9 +33,9 @@ graph TD
     backup -->|dump| mongo
 
     subgraph clients["Clients"]
-        browser["Web Browser\n(arena-web-core)"]
-        pylib["arena-py\n(Python)"]
-        unity["arena-unity\n(Unity C#)"]
+        browser["Web Browser<br/>(arena-web-core)"]
+        pylib["arena-py<br/>(Python)"]
+        unity["arena-unity<br/>(Unity C#)"]
     end
 
     browser -->|HTTPS| nginx
