@@ -7,9 +7,11 @@ Creates several containers with ARENA services:
 * Pubsub (mosquitto)
 * Persistence service
 * Auth service
-* ARTS
 * File Store
 * Certbot
+* Silverline
+
+> **Note:** The Silverline runtime manager is managed as an entirely separate stack. See [silverline-services-docker](https://github.com/arenaxr/silverline-services-docker). For a complete ARENA environment with runtime capabilities, set up and start `arena-services-docker` first, then proceed to configure `silverline-services-docker`.
 
 Source repositories (such as arena-web-core, arena-account, arena-persist) are submodules of this repo. Containers are created from these files. The nginx container serves arena-web-core.
 
@@ -237,7 +239,7 @@ To update the repositories added as submodules (**arena-web-core** and **arena-p
 ./update-submodules.sh
 ```
 
-After updating the submodules, to have the updates of built containers (persist, arts, python-rt) reflected live, you will need to restart the services and rebuild the containers as follows.
+After updating the submodules, to have the updates of built containers (persist, account, store, mongodb, web) reflected live, you will need to restart the services and rebuild the containers as follows.
 
 - For production:
 ```bash
