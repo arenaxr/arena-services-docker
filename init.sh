@@ -37,7 +37,7 @@ cleanup_and_exit () {
     [[ $(docker ps | grep nginxtmp) ]] && docker stop nginxtmp || true
     # sync filestore password
     export $(grep '^STORE_ADMIN_PASSWORD' secret.env | xargs)
-    [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it \
+    [[ ! -z "${STORE_ADMIN_PASSWORD}" ]] && docker run -it --user 0:0 \
             -v ${PWD}/init-utils/store-config-for-init.json:/config/settings.json \
             -v ${PWD}/data/arena-store/database.db:/database/filebrowser.db:rw \
             filebrowser/filebrowser users update admin -p $STORE_ADMIN_PASSWORD
@@ -61,7 +61,7 @@ setup_filestore() {
     fi
 
     # set filestore name; executes command and exit
-    docker run --rm \
+    docker run --rm --user 0:0 \
         --name storetmp \
         -v ${PWD}/init-utils/store-config-for-init.json:/config/settings.json \
         -v ${PWD}/data/arena-store/database.db:/database/filebrowser.db:rw \
@@ -72,7 +72,7 @@ setup_filestore() {
     echo "Starting temp filestore instance..."
     export STORE_TMP_PORT=8111
     # bring up a temp instance of filebrowser (used in init config; note: using store config in init-utils folder)
-    docker run --rm \
+    docker run --rm --user 0:0 \
         --name storetmp \
         -v ${PWD}/init-utils/store-config-for-init.json:/config/settings.json \
         -v ${PWD}/store-branding:/arena-store/frontend/arena-branding \
