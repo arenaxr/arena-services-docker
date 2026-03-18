@@ -75,6 +75,7 @@ services:
 
   store:
     image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
+    user: "root:root" # match base docker-compose to fix permissions
     volumes:
       - ./conf/store-config.json:/config/settings.json:ro
       - ./store-branding:/arena-store/frontend/arena-branding:ro
