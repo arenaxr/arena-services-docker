@@ -65,7 +65,7 @@ setup_filestore() {
         --name storetmp \
         -v ${PWD}/init-utils/store-config-for-init.json:/config/settings.json \
         -v ${PWD}/data/arena-store/database.db:/database/filebrowser.db:rw \
-            filebrowser/filebrowser:${ARENA_FILESTORE_VERSION:-latest} config set --branding.name "ARENA Store"
+            filebrowser/filebrowser:${ARENA_FILESTORE_VERSION:-latest} config set --branding.name "ARENA Store" --fileMode 0644 --dirMode 0755
 
     [[ $(docker ps | grep storetmp) ]] && docker stop storetmp || true
 
