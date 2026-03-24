@@ -9,3 +9,6 @@
 [submodule "arena-account"]
 	path = arena-account
 	url = https://github.com/arenaxr/arena-account 
+[submodule "arena-recorder"]
+	path = arena-recorder
+	url = https://github.com/arenaxr/arena-recorder
