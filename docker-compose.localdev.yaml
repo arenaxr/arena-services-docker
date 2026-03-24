@@ -28,6 +28,7 @@ services:
       - arena-persist
       - store
       - arena-account
+      - arena-recorder
 
   mongodb:
     image: mongo:7.0 # TODO (mwfarb): restore latest; pull from https://hub.docker.com/_/mongo/
@@ -81,6 +82,15 @@ services:
       - ./store-branding:/arena-store/frontend/arena-branding:ro
       - ./store:/srv-files:rw
       - ./data/arena-store/database.db:/database/filebrowser.db:rw
+
+  arena-recorder:
+    build: "arena-recorder" # builds container from arena-recorder Dockerfile
+    volumes:
+      - ./data/recording-store:/recording-store:rw
+      - ./conf/persist-config.json:/app/config.json:ro
+    depends_on:
+      - mqtt
+      - arena-persist
 
 volumes:
   account-static-content:

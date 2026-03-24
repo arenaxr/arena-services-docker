@@ -43,6 +43,10 @@ services:
     build: "arena-account" # builds container from arena-account Dockerfile
     restart: unless-stopped
 
+  arena-recorder:
+    build: "arena-recorder" # builds container from arena-recorder Dockerfile
+    restart: unless-stopped
+
   mqtt:
     image: conixcenter/arena-broker # pulls from https://hub.docker.com/repository/docker/conixcenter/arena-broker
     restart: unless-stopped
