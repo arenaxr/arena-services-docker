@@ -87,7 +87,7 @@ services:
     build: "arena-recorder" # builds container from arena-recorder Dockerfile
     volumes:
       - ./data/recording-store:/recording-store:rw
-      - ./conf/persist-config.json:/app/config.json:ro
+      - ./conf/recorder-config.json:/app/config.json:ro
       - ./data/keys/jwt.public.pem:/app/jwt.public.pem:ro
     depends_on:
       - mqtt
