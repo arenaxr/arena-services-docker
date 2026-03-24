@@ -88,6 +88,7 @@ services:
     volumes:
       - ./data/recording-store:/recording-store:rw
       - ./conf/persist-config.json:/app/config.json:ro
+      - ./data/keys/jwt.public.pem:/app/jwt.public.pem:ro
     depends_on:
       - mqtt
       - arena-persist
