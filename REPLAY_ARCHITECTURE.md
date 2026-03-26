@@ -24,7 +24,7 @@ A dedicated backend service built in **Go 1.20** to handle high-throughput, conc
 
 ---
 
-## Phase 2: Data Ingestion & Playback Engine (Next Up)
+## Phase 2: Data Ingestion & Playback Engine (Completed)
 
 This phase will focus on actually capturing the live MQTT traffic, flushing it to disk, and parsing it back in the frontend client.
 
