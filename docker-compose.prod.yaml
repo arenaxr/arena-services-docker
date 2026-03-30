@@ -42,6 +42,10 @@ services:
     image: arenaxrorg/arena-account:${ARENA_ACCOUNT_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-account
     restart: unless-stopped
 
+  arena-recorder:
+    image: arenaxrorg/arena-recorder:${ARENA_RECORDER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-recorder
+    restart: unless-stopped
+
   mqtt:
     image: arenaxrorg/arena-broker:${ARENA_BROKER_VERSION:-latest} # pulls from https://hub.docker.com/repository/docker/arenaxrorg/arena-broker
     restart: unless-stopped
