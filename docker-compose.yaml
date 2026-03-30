@@ -72,3 +72,15 @@ services:
       - ./store:/srv-files:rw
       - ./data/arena-store/database.db:/database/filebrowser.db:rw
     restart: unless-stopped # service will respawn unless we tell docker to stop it
+
+  arena-recorder:
+    build:
+      context: ./arena-recorder
+    volumes:
+      - ./data/recording-store:/recording-store:rw
+      - ./conf/recorder-config.json:/app/config.json:ro
+      - ./data/keys/jwt.public.pem:/app/jwt.public.pem:ro
+    depends_on:
+      - mqtt
+      - arena-persist
+    restart: unless-stopped

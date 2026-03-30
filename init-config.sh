@@ -73,7 +73,7 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
       grep -v '^SERVICE_' secret.env > secret.tmp # remove all service tokens
       cp secret.env secret.env.bak
       cp secret.tmp secret.env
-      services=("arena_persist" "arena_arts" "py_runtime" "mqttbr")
+      services=("arena_persist" "arena_arts" "py_runtime" "mqttbr" "arena_recorder")
       for s in "${services[@]}"
       do
         tn="SERVICE_${s^^}_JWT"
@@ -82,7 +82,8 @@ if [ -z "$CONFIG_FILES_ONLY" ]; then
       # generate a token for cli tools (for developers) and announce it in slack
       cli_token_json=$(python ./init-utils/genjwt.py -i $HOSTNAME -k $JWT_KEY_FILE_PRIV -j cli)
       echo $cli_token_json > ./data/keys/cli_token.json
-      if [ ! -z "$SLACK_DEV_CHANNEL_WEBHOOK" ]; then
+      # Only push to Slack for remote deployments (blacklist common local development hostnames)
+      if [ ! -z "$SLACK_DEV_CHANNEL_WEBHOOK" ] && [[ "$HOSTNAME" != "localhost" && "$HOSTNAME" != "mac" && "$HOSTNAME" != "arena.local" && "$HOSTNAME" != *.local ]]; then
         username=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['username'])")
         cli_token=$(echo $cli_token_json | python3 -c "import sys, json; print(json.load(sys.stdin)['token'])")
         alias_name="${HOSTNAME%%.*}"
