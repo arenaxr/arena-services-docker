@@ -14,7 +14,7 @@ This document covers **development rules and conventions** specific to this repo
 
 To develop `arena-services-docker` scripts or configurations locally:
 1. Run `./init.sh -y` to generate local keys and certificates.
-2. Use `./dev.sh` (or `docker-compose -f docker-compose.localdev.yaml up -d`) to deploy the local stack.
+2. Use `./localdev.sh` (or `docker-compose -f docker-compose.localdev.yaml up -d`) to deploy the local stack.
 
 ## Code Style
 - Follow standard shell scripting guidelines (`shellcheck`) for `.sh` files.

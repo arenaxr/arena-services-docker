@@ -63,7 +63,7 @@ graph TD
 | [init.env](init.env) | Initial environment config | `HOSTNAME`, `JITSI_HOSTNAME`, `EMAIL`, `GAUTH_*` |
 | [prod.sh](prod.sh) | Production launcher | `docker-compose` with prod YAML |
 | [staging.sh](staging.sh) | Staging launcher | `docker-compose` with staging YAML |
-| [dev.sh](dev.sh) | Dev launcher | `docker-compose` with localdev YAML |
+| [localdev.sh](localdev.sh) | Dev launcher | `docker-compose` with localdev YAML |
 | [demo.sh](demo.sh) | Demo launcher | `docker-compose` with demo YAML |
 | [update-submodules.sh](update-submodules.sh) | Submodule updater | pulls latest `arena-web-core`, `arena-persist`, `arena-account` |
 | [update-versions.sh](update-versions.sh) | Version tracker | updates `VERSION` from submodule tags |
@@ -110,7 +110,7 @@ graph TD
 |----|-------------|--------|
 | REQ-SD-030 | Production deployment with versioned images and monitoring | [prod.sh](prod.sh), [docker-compose.prod.yaml](docker-compose.prod.yaml) |
 | REQ-SD-031 | Staging deployment with dev folder on web server | [staging.sh](staging.sh), [docker-compose.staging.yaml](docker-compose.staging.yaml) |
-| REQ-SD-032 | Local development with source-built containers | [dev.sh](dev.sh), [docker-compose.localdev.yaml](docker-compose.localdev.yaml) |
+| REQ-SD-032 | Local development with source-built containers | [localdev.sh](localdev.sh), [docker-compose.localdev.yaml](docker-compose.localdev.yaml) |
 | REQ-SD-033 | Demo deployment with minimal pre-built config | [demo.sh](demo.sh), [docker-compose.demo.yaml](docker-compose.demo.yaml) |
 
 ### Deployment & Versioning

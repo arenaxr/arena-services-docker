@@ -62,13 +62,13 @@ If you see no errors, you should be able to point your browser to `https://local
 * **docker:** https://docs.docker.com/get-docker/
 * **docker compose:** https://docs.docker.com/compose/install/
 
-> **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need also:
+> **WARNING**: If you use the **localdev.sh** script below, it requires you to build the web source manually, so you will need also:
 > * **nodejs:** https://nodejs.org
 > * **parcel:** https://www.npmjs.com/package/parcel
 
 ### Assumptions:
 
-* **init.sh, prod.sh, dev.sh, staging.sh:** assume a bash shell
+* **init.sh, prod.sh, localdev.sh, staging.sh:** assume a bash shell
 * **GNU core utils:** You may need to install GNU core utils to ensure some bash commands we use (`timeout`, ...) are available, **particularly on MacOS**.
 * **backup user:**  The ```backup``` container tries to change to the owner of the files backed up to a user indicated in `.env`. This is the ```user:group``` of the *host machine user* that you want to have access to the files backed up by this container.
 * **OAuth:** You will need to set up [Google Web OAuth for your domain](https://developers.google.com/identity/protocols/oauth2/web-server) for the ARENA web client as well as [Google Desktop OAuth](https://developers.google.com/identity/protocols/oauth2/native-app) for the ARENA Python and Unity clients. Detailed instructions are available at our [arena-account repo](https://github.com/arenaxr/arena-account).
@@ -203,7 +203,7 @@ The init script will generate configuration files (from the templates in [conf-t
 > ```
 > The Jitsi hostname should be a DNS CNAME to the machine's IP. **Run `jitsi-add.sh` to add a Jitsi server block to redirect http requests to a Jitsi virtual host, reply '**Y**es'**.
 
-> **WARNING**: If you use the **dev.sh** script below, it requires you to build the web source manually, so you will need to:
+> **WARNING**: If you use the **localdev.sh** script below, it requires you to build the web source manually, so you will need to:
 > ```
 > cd arena-web-core
 > npm update
@@ -225,7 +225,7 @@ The init script will generate configuration files (from the templates in [conf-t
 
 - For development (no monitoring/backups):
 ```bash
- ./dev.sh up -d
+ ./localdev.sh up -d
 ```
 
 > You might need to execute the above commands with ```sudo``` (e.g. ```sudo ./prod.sh up```) if [your user does not have permission to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
@@ -243,10 +243,10 @@ After updating the submodules, to have the updates of built containers (persist,
 
 - For production:
 ```bash
-[./prod.sh | ./staging.sh | ./dev.sh] up -d --force-recreate --build
+[./prod.sh | ./staging.sh | ./localdev.sh] up -d --force-recreate --build
 ```
 
-* Use ```demo.sh```, ```prod.sh```, ```staging.sh``` or ```dev.sh``` depending on which configuration you want to use.
+* Use ```demo.sh```, ```prod.sh```, ```staging.sh``` or ```localdev.sh``` depending on which configuration you want to use.
 > You might need to execute the above commands with ```sudo``` if [your user does not have permission to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/).
 > See [utility scripts](#utility-scripts) for the description of these commands.
 
@@ -278,16 +278,16 @@ After updating the submodules, to have the updates of built containers (persist,
 
 ## Utility Scripts
 
-You can use the ```demo.sh```, ```prod.sh```, ```dev.sh``` and  ```staging.sh``` utility scripts (with a bash shell). These scripts call ```docker-compose``` with the right compose config files, where some files [extend each other](https://docs.docker.com/compose/extends/). The docker compose config files are used as follows:
+You can use the ```demo.sh```, ```prod.sh```, ```localdev.sh``` and  ```staging.sh``` utility scripts (with a bash shell). These scripts call ```docker-compose``` with the right compose config files, where some files [extend each other](https://docs.docker.com/compose/extends/). The docker compose config files are used as follows:
 * **demo.sh**: Demo compose config using a minimal set of pre-created docker images and config files (```docker-compose.yaml``` and ```docker-compose.demo.yaml```);
 * **prod.sh**: Production compose config using pre-created docker images with fixed versions and additional monitoring services (```docker-compose.yaml``` and ```docker-compose.prod.yaml```);
 * **staging.sh**: Staging compose config that builds images from submodules and adds folders for remote development (```docker-compose.yaml``` and ```docker-compose.staging.yaml```);
-* **dev.sh**: Local development compose config that builds images from submodules (```docker-compose.localdev.yaml```).
+* **localdev.sh**: Local development compose config that builds images from submodules (```docker-compose.localdev.yaml```).
 
 Call the script by passing any ```docker-compose``` subcommands (such as ```up```, ```down```), e.g.:
 * ```./prod.sh up -d```
 * ```./prod.sh down```
-* ```./dev.sh up```
+* ```./localdev.sh up```
 * ...
 
 > *You might need to execute the scripts with ```sudo``` if [your user does not have permission to access the docker service](https://docs.docker.com/engine/install/linux-postinstall/)*.
@@ -298,27 +298,27 @@ The utility scripts pass the arguments to **docker-compose**. You can use them w
 
 **Start services and see their output/logs**
 
-- ```[./demo.sh | ./prod.sh | ./dev.sh | ./staging.sh] up``` (add ```--force-recreate --build``` to recreate abd build containers; useful after updating code in submodules)
+- ```[./demo.sh | ./prod.sh | ./localdev.sh | ./staging.sh] up``` (add ```--force-recreate --build``` to recreate abd build containers; useful after updating code in submodules)
 
 **Start the services in "detached" (daemon) mode (-d)**
 
-- ```[./demo.sh | ./prod.sh | ./dev.sh | ./staging.sh] up -d``` (add ```--force-recreate  --build``` to recreate abd build containers)
+- ```[./demo.sh | ./prod.sh | ./localdev.sh | ./staging.sh] up -d``` (add ```--force-recreate  --build``` to recreate abd build containers)
 
 **Start just a particular service**
 
-- ```[./demo.sh | ./prod.sh | ./dev.sh | ./staging.sh] up <service name in docker-compose*.yaml>```
+- ```[./demo.sh | ./prod.sh | ./localdev.sh | ./staging.sh] up <service name in docker-compose*.yaml>```
 
 **Stop services**
 
-- ```[./demo.sh | ./prod.sh | ./dev.sh | ./staging.sh] down```
+- ```[./demo.sh | ./prod.sh | ./localdev.sh | ./staging.sh] down```
 
 **Start a particular service**
 
-- ```[./demo.sh | ./prod.sh | ./dev.sh | ./staging.sh] stop <service name in docker-compose*.yaml>```
+- ```[./demo.sh | ./prod.sh | ./localdev.sh | ./staging.sh] stop <service name in docker-compose*.yaml>```
 
 **See logs**
 
-- ```[./demo.sh | ./prod.sh | ./dev.sh | ./staging.sh] logs```
+- ```[./demo.sh | ./prod.sh | ./localdev.sh | ./staging.sh] logs```
 
 ## Production release/deployment
 

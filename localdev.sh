@@ -1,5 +1,5 @@
 #!/bin/bash
-# usage: ./dev.sh [docker compose SUBCOMMAND: up, down, ...]
+# usage: ./localdev.sh [docker compose SUBCOMMAND: up, down, ...]
 
 
 
