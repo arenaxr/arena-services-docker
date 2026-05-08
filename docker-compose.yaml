@@ -74,8 +74,6 @@ services:
     restart: unless-stopped # service will respawn unless we tell docker to stop it
 
   arena-recorder:
-    build:
-      context: ./arena-recorder # TODO (mwfarb): migrate this container to docker hub
     volumes:
       - ./data/recording-store:/recording-store:rw
       - ./conf/recorder-config.json:/app/config.json:ro
