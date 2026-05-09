@@ -3,7 +3,6 @@
 # run staging:
 #    docker compose -f docker-compose.yaml -f docker-compose.staging.yaml up -d
 #
-version: '3'
 
 services:
 

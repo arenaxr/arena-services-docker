@@ -5,7 +5,6 @@
 #
 # NOTE: Image versions (defined in file VERSION) should be loaded into environment
 
-version: '3'
 
 services:
 
