@@ -4,7 +4,6 @@
 #    docker compose -f docker-compose.yaml -f docker-compose.demo.yaml up -d
 #
 
-version: '3'
 
 services:
 
