@@ -12,7 +12,6 @@
 # run demo stack (does not extend docker-compose.yaml):
 #    docker compose -f docker-compose.demo.yaml up -d
 
-version: '3'
 
 services:
   arena-web: # create a container named "arena-web"; other service containers in this file can resolve its name (arena-web)
