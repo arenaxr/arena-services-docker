@@ -15,7 +15,7 @@ prod_versions () {
     read -p "Enter the new arena service release version [$nversion]: " version
     ARENA_SERVICES_VERSION=${version:-$nversion}
     #sed -i "s/ARENA_SERVICES_VERSION=.*/ARENA_SERVICES_VERSION=$ARENA_SERVICES_VERSION/" ./VERSION
-    sed -i'' -e "s/ARENA_SERVICES_VERSION=.*/ARENA_SERVICES_VERSION=$ARENA_SERVICES_VERSION/" ./VERSION
+    sed -i.tmp -e "s/ARENA_SERVICES_VERSION=.*/ARENA_SERVICES_VERSION=$ARENA_SERVICES_VERSION/" ./VERSION
 
     echo -e "\n\nCollecting production versions...\n"
     submodules=$(git config --file .gitmodules --name-only --get-regexp path | cut -d. -f2)
@@ -26,7 +26,7 @@ prod_versions () {
         version=$(git describe --tags `git rev-list --tags --max-count=1`)
         envvar=$(echo ${sm}_VERSION | tr '[:lower:]' '[:upper:]' | sed 's/-/_/g')
         cd ..
-        sed -i'' -e "s/$envvar=.*/$envvar=$version/" ./VERSION
+        sed -i.tmp -e "s/$envvar=.*/$envvar=$version/" ./VERSION
     done
 
     # fetch versions of repos that are not a submodule
@@ -38,13 +38,15 @@ prod_versions () {
             | tail -n 1 \
             | cut -d '/' -f 3)
         #echo $envvar=$version
-        sed -i'' -e "s/$envvar=.*/$envvar=$version/" ./VERSION
+        sed -i.tmp -e "s/$envvar=.*/$envvar=$version/" ./VERSION
     done
 
     # get utils version
     export $(grep '^ARENA_INIT_UTILS_VERSION=' init-utils/VERSION | xargs)
     ARENA_INIT_UTILS_VERSION=${ARENA_INIT_UTILS_VERSION:-latest:} # default to latest
-    sed -i'' -e "s/ARENA_INIT_UTILS_VERSION=.*/ARENA_INIT_UTILS_VERSION=$ARENA_INIT_UTILS_VERSION/" ./VERSION
+    sed -i.tmp -e "s/ARENA_INIT_UTILS_VERSION=.*/ARENA_INIT_UTILS_VERSION=$ARENA_INIT_UTILS_VERSION/" ./VERSION
+
+    rm -f VERSION.tmp
 
     docker pull arenaxrorg/arena-services-docker-init-utils:$ARENA_INIT_UTILS_VERSION
     echo -e "\n### SPDX from template:"
