@@ -113,8 +113,9 @@ server {
         add_header Cache-Control "public";
     }
 
+    # Proxy dev version across the boundary of the containers
     location ^~ /dashboard/ {
-         proxy_pass http://${HOSTNAME}:8001/;
+         proxy_pass http://host.docker.internal:8001/;
          proxy_http_version 1.1;
          proxy_set_header Upgrade ${ESC}http_upgrade;
          proxy_set_header Connection "Upgrade";
