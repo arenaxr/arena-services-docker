@@ -205,14 +205,15 @@ The init script will generate configuration files (from the templates in [conf-t
 >
 > ### Fix Jitsi certificate renewal (required)
 >
-> After the Jitsi Docker stack has been started at least once (so that its initial certificate is issued), **run `jitsi-fix-acme.sh`** to switch Jitsi's `acme.sh` from standalone mode to webroot mode:
+> After the Jitsi Docker stack has been started at least once (so that its initial certificate is issued), **re-run `jitsi-add.sh`** (with `sudo`) to fix Jitsi's `acme.sh` certificate renewal:
 > ```bash
-> ./jitsi-fix-acme.sh
+> sudo ./jitsi-add.sh
 > ```
+> You can skip the nginx server block prompt (it was already added on the first run) — the script will automatically detect and fix the acme.sh configuration.
 >
 > **Why this is needed:** By default, Jitsi's `acme.sh` uses standalone mode for certificate renewal, which stops nginx to bind port 80 for the ACME challenge. When running Jitsi on the same machine as ARENA (where port 80 is handled by ARENA's nginx), the standalone ACME challenge fails, and nginx is **not restarted** on failure. This causes Jitsi to go down for ~24 hours every ~60 days when the certificate is due for renewal.
 >
-> The fix switches to webroot mode, where ACME challenge files are served by nginx through the existing ARENA proxy (configured by `jitsi-add.sh`), so nginx is never stopped during renewal.
+> The fix switches to webroot mode, where ACME challenge files are served by nginx through the existing ARENA proxy, so nginx is never stopped during renewal.
 
 > **WARNING**: If you use the **localdev.sh** script below, it requires you to build the web source manually, so you will need to:
 > ```
@@ -282,8 +283,7 @@ After updating the submodules, to have the updates of built containers (persist,
 * **init-utils:** Files to create a container with all dependencies of the init scripts.
 * **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
 * **init.sh:** Initialize config files. See [Init Config](#init-config) Section.
-* **jitsi-add.sh:** Add Jitsi configuration if you are setting up a Jitsi server on the same machine.
-* **jitsi-fix-acme.sh:** Fix Jitsi's acme.sh certificate renewal to use webroot mode instead of standalone. Must be run after Jitsi Docker initial setup (see [Fix Jitsi certificate renewal](#fix-jitsi-certificate-renewal-required)).
+* **jitsi-add.sh:** Add Jitsi configuration if you are setting up a Jitsi server on the same machine. Also fixes Jitsi's acme.sh certificate renewal to use webroot mode (see [Fix Jitsi certificate renewal](#fix-jitsi-certificate-renewal-required)).
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**arena-web-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](#update-submodules)).
 * **update-versions.sh:** Update the versions indicated in ```VERSION``` by looking at the tags in the submodules.
 * **VERSION:** Release versions of the arena services stack used by the production deployment (```docker-compose.prod.yaml```).
