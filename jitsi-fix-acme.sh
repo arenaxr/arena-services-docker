@@ -19,10 +19,22 @@
 
 set -euo pipefail
 
-# load env
-export $(grep -v '^#' .env | xargs)
+# Determine JITSI_HOSTNAME from available .env files
+# Supports running from either the ARENA services dir or the Jitsi docker dir
+if [[ -f .env ]]; then
+    JITSI_HOSTNAME=$(grep -m1 '^JITSI_HOSTNAME=' .env 2>/dev/null | cut -d= -f2 || true)
+    if [[ -z "${JITSI_HOSTNAME:-}" ]]; then
+        # Jitsi .env uses LETSENCRYPT_DOMAIN instead of JITSI_HOSTNAME
+        JITSI_HOSTNAME=$(grep -m1 '^LETSENCRYPT_DOMAIN=' .env 2>/dev/null | cut -d= -f2 || true)
+    fi
+fi
 
-# Determine Jitsi config path
+if [[ -z "${JITSI_HOSTNAME:-}" ]]; then
+    echo "ERROR: Could not find JITSI_HOSTNAME or LETSENCRYPT_DOMAIN in .env"
+    echo "Run this script from either the arena-services-docker or jitsi-docker directory."
+    exit 1
+fi
+
 JITSI_HOSTNAME_NOPORT=$(echo "${JITSI_HOSTNAME}" | cut -f1 -d":")
 JITSI_CONFIG="${HOME}/.jitsi-meet-cfg"
 
