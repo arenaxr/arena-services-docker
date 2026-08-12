@@ -7,11 +7,11 @@ jobs:
   copy-to-branches:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@0717577d45739eb3c851188b29f50ed6c0b2194e # v2.8.0
         with:
           fetch-depth: 0
       - name: Copy To Branches Action
-        uses: planetoftheweb/copy-to-branches@v1.3
+        uses: planetoftheweb/copy-to-branches@8a8a05b3f22dec3acf38c6af4c7074b39911e586 # v1.3.0
         env:
           key: master
           branches: prod master
