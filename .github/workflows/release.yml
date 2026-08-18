@@ -12,12 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: arenaservices
-        uses: pozetroninc/github-action-get-latest-release@5ac6001ed175b443484c81ab32a20e12132be99c # v0.1.0
+        uses: pozetroninc/github-action-get-latest-release@0d47d0bdcfca7df6fcc280ebd77148ead1ca279d # v0.1.0
         with:
           repository: conix-center/arena-services-docker  
       - name: ssh deploy
         #if: endsWith( github.ref, 'deploy') # run for branches or tags ending with 'deploy'
-        uses: appleboy/ssh-action@b838bc2f27cd449b957159452d432aff91697637 # v1.2.0
+        uses: appleboy/ssh-action@7eaf76671a0d7eec5d98ee897acda4f968735a17 # v1.2.0
         env:
           DEPLOY_TARGET: ${{ secrets.ARENAXR_DEPLOY_TARGET }}
         with:
