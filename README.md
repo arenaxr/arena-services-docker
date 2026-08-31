@@ -19,6 +19,7 @@ Nginx and mosquitto are configured with TLS/SSL using certificates created by ce
 
 ## Documentation
 - [Requirements & Architecture](REQUIREMENTS.md)
+- [Maintenance Runbook](RUNBOOK.md) — periodic tasks for a running deployment: what to check monthly/quarterly, and how to rotate secrets, tokens, keys, and certificates
 - [Contributing](CONTRIBUTING.md)
 
 ## Hardware

@@ -5,6 +5,7 @@ Orientation for agents (and humans) working in this repo. Detailed docs live in 
 ## Start here
 - [README.md](README.md) — what ARENA Services Docker is, Docker Compose orchestration of ARENA services (Nginx, MQTT, persistence, accounts, web client, file store).
 - [REQUIREMENTS.md](REQUIREMENTS.md) — machine- and human-readable reference for features, architecture, and source layout.
+- [RUNBOOK.md](RUNBOOK.md) — maintenance calendar and rotation procedures (secrets, tokens, keys, certificates) for a running deployment.
 
 ## Conventions & development rules
 - [CONTRIBUTING.md](CONTRIBUTING.md) — mandatory rules for all contributors, **including agents**: development conventions specific to this repository.
