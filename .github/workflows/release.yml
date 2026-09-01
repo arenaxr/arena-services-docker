@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: arenaservices
-        uses: pozetroninc/github-action-get-latest-release@0d47d0bdcfca7df6fcc280ebd77148ead1ca279d # v0.1.0
+        uses: pozetroninc/github-action-get-latest-release@2a61c339ea7ef0a336d1daa35ef0cb1418e7676c # v0.8.0
         with:
           repository: conix-center/arena-services-docker  
       - name: ssh deploy
