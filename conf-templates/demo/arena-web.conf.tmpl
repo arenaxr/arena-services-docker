@@ -1,5 +1,17 @@
 # we produce the final config file by passing this file through envsubst (will substitute env variables like ${HOSTNAME}, ...)
 # IMPORTANT: to avoid substitution on nginx variables, use '${ESC}' on the their '$' signs
+# Revalidate the web client's html/css/js on every load: Cache-Control: no-cache (via `expires epoch`)
+# makes browsers check the ETag, a cheap 304 when unchanged, so a deploy takes effect at once. Without a
+# cache policy, browsers cache these unversioned files heuristically for days to weeks after a deploy.
+# Other content (models, images, media) keeps the default, heuristic caching.
+map ${ESC}sent_http_content_type ${ESC}arena_web_expires {
+    default                     off;
+    ~^text/html                 epoch;
+    ~^text/css                  epoch;
+    ~^application/javascript    epoch;
+    ~^text/javascript           epoch;
+}
+
 server {
     server_name         ${HOSTNAME};
     server_tokens off;
@@ -100,6 +112,7 @@ server {
     location ^~ /conf/ {
         root /usr/share/nginx/html;
         autoindex off;
+        expires ${ESC}arena_web_expires; # see map above
     }
 
     location ^~ /dashboard/ {
@@ -130,6 +143,9 @@ set ${ESC}CSP "${ESC}{CSP}        manifest-src 'self' blob:;";
         root /usr/share/nginx/html;
         index custom_landing.html landing.html index.html;
         disable_symlinks off;
+        # see map above; inherited by the nested locations below (a nested regex location that only
+        # matched .css/.html/.js never ran, since the catch-all location above it always matches first)
+        expires ${ESC}arena_web_expires;
 
         add_header 'Access-Control-Allow-Origin' '*';
         add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
@@ -152,12 +168,6 @@ set ${ESC}CSP "${ESC}{CSP}        manifest-src 'self' blob:;";
         location ~* / {
             try_files ${ESC}uri ${ESC}uri/ /index.html;
         }
-
-        location ~ \.(css|html|js)$ {
-            expires -1;
-            add_header 'Cache-Control' 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0';
-        }
-
     }
 
 }
