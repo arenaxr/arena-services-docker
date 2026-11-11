@@ -32,8 +32,6 @@ services:
 
   mongodb:
     image: mongo:8 # pull from https://hub.docker.com/_/mongo/
-    environment:
-      - GLIBC_TUNABLES=glibc.pthread.rseq=1
     restart: unless-stopped
 
   arena-persist:

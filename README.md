@@ -285,6 +285,7 @@ After updating the submodules, to have the updates of built containers (persist,
 * **init-letsencrypt.sh:** Initialize certbot. Called by **init.sh**.
 * **init.sh:** Initialize config files. See [Init Config](#init-config) Section.
 * **jitsi-add.sh:** Add Jitsi configuration if you are setting up a Jitsi server on the same machine. Also fixes Jitsi's acme.sh certificate renewal to use webroot mode (see [Fix Jitsi certificate renewal](#fix-jitsi-certificate-renewal-required)).
+* **mongo-upgrade.sh:** Upgrade the MongoDB data files in ```data/mongodb``` to the pinned major version, one major at a time, with a backup first. See [Upgrading MongoDB](#upgrading-mongodb).
 * **update-submodules.sh:** Run this to get the latest updates from the repositories added as submodules (**arena-web-core**, **arena-persist**). You will need to restart the services to have the changes live (see [Update Submodules](#update-submodules)).
 * **update-versions.sh:** Update the versions indicated in ```VERSION``` by looking at the tags in the submodules.
 * **VERSION:** Release versions of the arena services stack used by the production deployment (```docker-compose.prod.yaml```).
@@ -344,3 +345,27 @@ To release an arena services stack version, make sure all submodules are pointin
 For a production deployment, start the services stack using ```prod.sh```. This script starts the compose stack from ```docker-compose.prod.yaml```, which uses the versions described in the ```VERSION``` file (these are the release versions of the images started).
 
 After starting the stack, you can see versions deployed at ```http://<arena-instance>/conf/versions.html```
+
+### Upgrading MongoDB
+
+The MongoDB image is pinned: `MONGO_VERSION` in `VERSION` for `prod.sh`/`demo.sh`, and the image tag in `docker-compose.staging.yaml` / `docker-compose.localdev.yaml`. When a release moves that pin to a new **major** version, the database files under `data/mongodb` have to be upgraded before the new image will serve them:
+
+* MongoDB only upgrades **one major at a time** (4.2 → 4.4 → 5.0 → 6.0 → 7.0 → 8.0). Skipping a major makes `mongod` refuse to start (`Failed to start up WiredTiger under any compatibility version`).
+* Each step also requires the data's *featureCompatibilityVersion* (FCV) to already be at the previous major, and the new version must have its FCV set afterwards or the **next** upgrade will fail. Starting a new image with `up` does neither by itself.
+
+`mongo-upgrade.sh` does the whole walk for you, using throwaway `docker run` containers on `data/mongodb`, so it is the same in every environment. It takes a `mongodump` of all databases first (`data/backup/mongo-upgrade/`), then for each major in order starts that version, sets its FCV, and shuts it down cleanly.
+
+```bash
+git pull                       # brings the new MONGO_VERSION / compose pin
+./prod.sh down                 # or staging.sh / localdev.sh / demo.sh — mongod must not be running
+./mongo-upgrade.sh -n          # dry run: shows detected current version, target, and steps
+./mongo-upgrade.sh             # walks current → MONGO_VERSION; -t 8 to override the target
+./prod.sh up -d
+```
+
+The current version is detected from the (stopped) mongodb container's image; if it has been removed, pass the version the data was last run with, e.g. `./mongo-upgrade.sh -f 6 -t 8`. You can also run one major per invocation (`-t 7`, then `-f 7 -t 8`) if you want to check the stack between steps. Run `./mongo-upgrade.sh -h` for all options.
+
+Notes:
+* **MongoDB 8 on Linux kernel 6.19+** refuses to start unless `GLIBC_TUNABLES=glibc.pthread.rseq=1` is set in its environment ([SERVER-121912](https://jira.mongodb.org/browse/SERVER-121912)). The base compose file and the upgrade script set it; it is harmless on older versions.
+* **macOS Docker Desktop with VirtioFS file sharing** presents bind-mounted files as root-owned, so `mongod` (which runs as user `mongodb` and opens files with `O_NOATIME`) dies with `Operation not permitted`. Either switch Docker Desktop to *gRPC FUSE* file sharing (Settings → General → file sharing implementation), or run mongod as root. The upgrade script defaults to root on macOS for this reason.
+* Downgrades are not supported by MongoDB; to go back, restore the pre-upgrade dump into an empty `data/mongodb` with the old image (the script prints the exact `mongorestore` command).
