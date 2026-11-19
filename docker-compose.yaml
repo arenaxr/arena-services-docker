@@ -62,6 +62,10 @@ services:
     ports:
       - 8083:8083/tcp # mqtt-wss
       - 8883:8883/tcp # mqtt-tls
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 1024      
 
   store:
     image: "filebrowser/filebrowser:latest"  # pulls from https://hub.docker.com/r/filebrowser/filebrowser
