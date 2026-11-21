@@ -25,6 +25,8 @@ services:
       - arena-account
 
   mongodb:
+    environment:
+      - GLIBC_TUNABLES=glibc.pthread.rseq=1 # required by MongoDB 8 on Linux kernel 6.19+ (SERVER-121912); harmless on older versions
     volumes:
       - ./data/mongodb:/data/db:rw # permanent storage on the host
       - ./data/backup:/backup:rw # backup storage on the host

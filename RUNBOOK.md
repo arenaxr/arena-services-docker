@@ -90,6 +90,8 @@ Related tracking issues from the 2026-08 credential security review: [#51](https
 
 Not duplicated here — see [README.md → Update Submodules / Production release](README.md) (release flow, VERSION bumps, deploy action, verify at `https://<your-host>/conf/versions.html`).
 
+- **MongoDB major version bump** (`MONGO_VERSION` in `VERSION`, or the image tag in the staging/localdev compose): the data files must be walked up **one major at a time** with the FCV set at each step, *before* the new image is started. Stack down → `./mongo-upgrade.sh -n` (plan) → `./mongo-upgrade.sh` (takes a `mongodump` to `data/backup/mongo-upgrade/` first) → stack up. Full notes: [README → Upgrading MongoDB](README.md#upgrading-mongodb). Verify: `docker compose -p arena-services-docker exec mongodb mongosh --quiet --eval 'db.adminCommand({getParameter:1,featureCompatibilityVersion:1}).featureCompatibilityVersion.version'` prints the new major.
+
 ## Scope of this file
 
 - **This file** — the calendar, credential rotation, and verification one-liners for any deployment of this repo. If a task recurs, it gets a row here even when the procedure lives elsewhere.
